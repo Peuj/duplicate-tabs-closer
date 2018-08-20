@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>Duplicate Tabs Closer Panel</title>
+  <link rel="stylesheet" href="../ext_lib/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../ext_lib/bootstrap/css/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="popup.css">
+</head>
+
+<body>
+  <div class="panel-group">
+
+    <div class="panel panel-default ">
+      <div class="panel-heading group-expanded" id="panelHeadingOptions">
+        <span i18n-content="options"></span>
+        <label class="glyphicon glyphicon-cog span-glyphicon-menu pull-right"></label>
+      </div>
+      <div class="panel-body list-group-collapsible" id="panelOptions">
+        <ul class="list-group">
+          <li class="list-group-item subitem-title group-expanded" href="#" id="onDuplicateTabDetectedGroup">
+            <span i18n-content="onDuplicateTabDetected"></span>
+            <input class="pinChecked" id="onDuplicateTabDetectedGroupPinChecked" type="checkbox"></input>
+            <label for="onDuplicateTabDetectedGroupPinChecked" class="glyphicon glyphicon-pushpin span-glyphicon-pushpin pull-right"
+              id="onDuplicateTabDetectedGroupPin"></label>
+          </li>
+          <div class="list-group-collapsible">
+            <li class="list-group-item subitem">
+              <select class="form-control combobox-xs" id="onDuplicateTabDetected">
+                <option value="N" i18n-content="doNothing"></option>
+                <option value="A" i18n-content="autoCloseTab"></option>
+              </select>
+              <div id="onRemainingTabGroup">
+                <label class="control-label" id="onRemainingTabLabel" i18n-content="onRemainingTab"></label>
+                <select class="form-control combobox-xs" id="onRemainingTab">
+                  <option value="N" i18n-content="doNothing"></option>
+                  <option value="A" i18n-content="activateKeptTab"></option>
+                  <option value="B" i18n-content="defaultTabBehavior"></option>
+                </select>
+              </div>
+            </li>
+          </div>
+
+          <li class="list-group-item subitem-title group-expanded" href="#" id="priorityTabGroup">
+            <span i18n-content="tabPriority"></span>
+            <input class="pinChecked" id="priorityTabGroupPinChecked" type="checkbox"></input>
+            <label for="priorityTabGroupPinChecked" class="glyphicon glyphicon-pushpin span-glyphicon-pushpin pull-right" id="priorityTabGroupPin"></label>
+          </li>
+          <div class="list-group-collapsible" id="priorityTabGroupBody">
+            <li class="list-group-item subitem">
+              <select class="form-control combobox-xs" id="keepTabBasedOnAge">
+                <option value="N" i18n-content="keepNewerTab"></option>
+                <option value="O" i18n-content="keepOlderTab"></option>
+              </select>
+              <div id="checkbox-container-priority">
+                <div class="checkbox">
+                  <label class="checkbox-inline" for="keepTabWithHttps">
+                    <input type="checkbox" id="keepTabWithHttps">
+                    <span i18n-content="keepTabWithHttps"></span>
+                  </label>
+                </div>
+                <div class="checkbox">
+                  <label class="checkbox-inline" for="keepPinnedTab">
+                    <input type="checkbox" id="keepPinnedTab">
+                    <span i18n-content="keepPinnedTab"></span>
+                  </label>
+                </div>
+              </div>
+            </li>
+          </div>
+
+          <li class="list-group-item subitem-title group-expanded" href="#" id="filtersGroup">
+            <span i18n-content="filters"></span>
+            <input class="pinChecked" id="filtersGroupPinChecked" type="checkbox"></input>
+            <label for="filtersGroupPinChecked" class="glyphicon glyphicon-pushpin span-glyphicon-pushpin pull-right" id="filtersGroupPin"></label>
+          </li>
+          <div class="list-group-collapsible" id="filtersGroupBody">
+            <li class="list-group-item subitem">
+              <div id="checkbox-container-filter">
+                <div class="checkbox">
+                  <label>
+                    <input class="checkbox-filter" type="checkbox" id="ignoreHashPart">
+                    <span i18n-content="ignoreHashPart"></span>
+                  </label>
+                </div>
+                <div class="checkbox">
+                  <label>
+                    <input class="checkbox-filter" type="checkbox" id="ignoreSearchPart">
+                    <span i18n-content="ignoreSearchPart"></span>
+                  </label>
+                </div>
+                <div class="checkbox">
+                  <label>
+                    <input class="checkbox-filter" type="checkbox" id="ignorePathPart">
+                    <span i18n-content="ignorePathPart"></span>
+                  </label>
+                </div>
+                <div class="checkbox">
+                  <label>
+                    <input class="checkbox-filter" type="checkbox" id="compareWithTitle">
+                    <span i18n-content="compareWithTitle"></span>
+                  </label>
+                </div>
+              </div>
+            </li>
+          </div>
+
+          <li class="list-group-item subitem-title group-expanded" href="#" id="scopeGroup">
+            <span i18n-content="scope"></span>
+            <input class="pinChecked" id="scopeGroupPinChecked" type="checkbox"></input>
+            <label for="scopeGroupPinChecked" class="glyphicon glyphicon-pushpin span-glyphicon-pushpin pull-right" id="scopeGroupPin"></label>
+          </li>
+          <div class="list-group-collapsible" id="scopeGroupBody">
+            <li class="list-group-item subitem">
+              <select class="form-control combobox-xs" id="scope">
+                <option value="O" i18n-content="container" id="containerItem"></option>
+                <option value="C" i18n-content="activeWindow"></option>
+                <option value="A" i18n-content="allWindows"></option>
+              </select>
+            </li>
+          </div>
+
+        </ul>
+      </div>
+    </div>
+
+    <div class="panel panel-default ">
+      <div class="panel-heading" id="panelHeadingDuplicateTabs">
+        <span i18n-content="duplicateTabs"></span>
+      </div>
+      <div class="panel-body" id="panelDuplicateTabs">
+        <div class="table-scrollable">
+          <table style="width:100%" class="table-hover" id="duplicateTabsTable">
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+        <button type="button" class="btn btn-block btn-sm btn-close-tabs disabled" id="closeDuplicateTabsBtn" i18n-content="closeAllDuplicateTabs"></button>
+      </div>
+    </div>
+
+  </div>
+  <script src="../ext_lib/jquery/jquery.min.js"></script>
+  <script src="../ext_lib/bootstrap/js/bootstrap.min.js"></script>
+  <script src="popup.js"></script>
+</body>
+
+</html>
