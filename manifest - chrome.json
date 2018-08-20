@@ -1,0 +1,49 @@
+{
+  "manifest_version": 2,
+  "name": "Duplicate Tabs Closer",
+  "version": "3.1.6",
+  "author": "Peuj",
+  "default_locale": "en",
+  "description": "Duplicate Tabs Closer",
+  "icons": {
+    "48": "images/auto_close_32.png"
+  },
+  "background": {
+    "scripts": [
+      "helper.js",
+      "options.js",
+      "urlUtils.js",
+      "badge.js",
+      "worker.js",
+      "messageListener.js",
+      "background.js"
+    ]
+  },
+  "browser_action": {
+    "browser_style": false,
+    "default_icon": {
+      "16": "images/auto_close_16.png",
+      "32": "images/auto_close_32.png"
+    },
+    "default_title": "Duplicate Tabs Closer",
+    "default_popup": "popup/popup.html"
+  },
+  "permissions": [
+    "cookies",
+    "tabs",
+    "webNavigation",
+    "storage"
+  ],
+  "commands": {
+    "close-duplicate-tabs": {
+      "suggested_key": {
+        "default": "Alt+Shift+W"
+      },
+      "description": "Close all duplicate tabs"
+    }
+  },
+  "options_ui": {
+    "page": "optionPage/optionPage.html",
+    "open_in_tab": true
+  }
+}

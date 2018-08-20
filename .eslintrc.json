@@ -1,0 +1,57 @@
+{
+    "env": {
+        "browser": true,
+        "es6": true,
+        "jquery": true,
+        "webextensions": true
+    },
+    "extends": [
+        "eslint:recommended"
+    ],
+    "parserOptions": {
+        "ecmaVersion": 2017
+    },
+    "rules": {
+        "no-console": "off",
+        "no-var": "warn",
+        "prefer-const": "warn",
+        "semi": "warn",
+        "no-unused-vars": "warn"
+    },
+    "globals": {
+        "searchAndCloseNewDuplicateTabs": true,
+        "refreshAllDuplicateTabs": true,
+        "closeDuplicateTabs": true,
+        "getDuplicateTabs": true,
+        "initializeOptions": true,
+        "setBadgeIcon": true,
+        "setTabBadge": true,
+        "updateActiveTabsBadge": true,
+        "hasDuplicatedTabs": true,
+        "isBlankUrl": true,
+        "matchingURL": true,
+        "setStoredOption": true,
+        "setPopupOptionState": true,
+        "setTabOptionState": true,
+        "isOptionOpen": true,
+        "getTab": true,
+        "getTabs": true,
+        "updateTab": true,
+        "activateTab": true,
+        "moveTab": true,
+        "activateWindow": true,
+        "getWindow": true,
+        "getWindows": true,
+        "updateWindow": true,
+        "getActiveWindowId": true,
+        "tabComplete": true,
+        "tabLoading": true,
+        "getBadgeText": true,
+        "getActiveTab": true,
+        "getPlatformInfo": true,
+        "getStoredOptions": true,
+        "clearStoredOptions": true,
+        "saveStoredOptions": true,
+        "options": true
+    }
+}

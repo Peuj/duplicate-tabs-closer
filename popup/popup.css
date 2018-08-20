@@ -1,0 +1,249 @@
+body {
+  margin: 5px;
+  font-size: 12px;
+  overflow: hidden;
+  width: 320px;
+  color: rgb(60, 72, 89);
+}
+
+.panel-group {
+  margin-bottom: 0px;
+}
+
+.panel-heading {
+  height: 30px;
+  line-height: 9px;
+}
+
+.span-glyphicon-menu:hover {
+  cursor: pointer;
+  transform: scale(1.2);
+}
+
+#panelHeadingOptions {
+  font-size: 15px;
+  background-image: none;
+  background-color: #0FACF3;
+  border: 1px solid #07A3E9;
+  color: #FFFFFF;
+  margin-left: -1px;
+  margin-right: -0.5px;
+  margin-top: -1px;
+}
+
+#panelHeadingOptions:hover {
+  cursor: pointer;
+}
+
+#panelHeadingOptions.group-expanded {
+  border-radius: 3px 3px 0px 0px;
+}
+
+#panelHeadingOptions.group-collapsed {
+  border-radius: 3px 3px 3px 3px;
+}
+
+.span-glyphicon-menu {
+  margin-top: -4px;
+}
+
+#panelOptions {
+  padding: 0px;
+  margin: 0px;
+}
+
+.subitem-title {
+  height: 32px;
+  font-weight: bold;
+  line-height: 12px;
+}
+
+.subitem-title.group-expanded {
+  color: #0FACF3;
+}
+
+.subitem-title.group-collapsed {
+  color: #9FACBD;
+}
+
+.subitem-title:hover {
+  cursor: pointer;
+  color: #3C4852;
+}
+
+.span-glyphicon-pushpin {
+  margin-top: -2px;
+  margin-left: 5px;
+}
+
+.pinChecked {
+  display: none;
+}
+
+.span-glyphicon-pushpin:hover {
+  cursor: pointer;
+  transform: scale(1.2);
+}
+
+.pinChecked:checked + .span-glyphicon-pushpin {
+  color: #FF8C00;
+}
+
+.pinChecked:not(:checked) + .span-glyphicon-pushpin {
+  color: #A9A9A9;
+}
+
+#panelOptions>.list-group {
+  margin-bottom: 0;
+}
+
+#panelOptions>.list-group .list-group-item {
+  border-radius: 0px;
+  border-width: 1px 0px;
+  margin-bottom: -1px;
+}
+
+#panelOptions>.list-group .subitem {
+  border-top: 0px;
+  padding-top: 4px;
+  padding-bottom: 12px;
+}
+
+#panelOptions>.list-group .subitem-title.group-collapsed:last-of-type {
+  border-radius: 0px 0px 3px 3px;
+}
+
+#panelOptions>.list-group .subitem-title.group-expanded:last-of-type + .list-group-collapsible .list-group-item {
+  border-radius: 0px 0px 3px 3px;
+}
+
+#onRemainingTabLabel {
+  margin-top: 8px;
+  margin-left: 2px;
+  font-weight: normal;
+  font-size: 13px;
+}
+
+.combobox-xs {
+  margin-top: -3px;
+  margin-bottom: -4px;
+  height: 26px;
+  padding: 2px 5px;
+  font-size: 13px;
+  border-radius: 3px;
+}
+
+#checkbox-container-priority {
+  padding-left: 1px;
+  margin-top: 5px;
+  margin-bottom: -11px;
+}
+
+#checkbox-container-filter {
+  padding-left: 1px;
+  margin-top: -10px;
+  margin-bottom: -10px;
+}
+
+.checkbox {
+  margin-top: 3px;
+  margin-bottom: 3px;
+  line-height: 22px;
+}
+
+/* set DuplicateTabs Panel */
+
+#panelHeadingDuplicateTabs {
+  font-size: 15px;
+  background-image: none;
+  background-color: #0FACF3;
+  border: 1px solid #07A3E9;
+  color: #FFFFFF;
+  margin-left: -1px;
+  margin-right: -0.5px;
+  margin-top: -1px;
+}
+
+#panelDuplicateTabs {
+  padding: 0px;
+  margin: 8px;
+}
+
+.table-scrollable {
+  overflow: auto;
+}
+
+#duplicateTabsTable {
+  width: 100%;
+}
+
+#duplicateTabsTable td {
+  padding: 2px;
+}
+
+.td-tab-link {
+  max-width: 280px;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.td-tab-link img {
+  float: left;
+  height: 16px;
+  width: 16px;
+  margin-right: 8px;
+}
+
+.td-close-button {
+  width: 5px;
+}
+
+#closeDuplicateTabsBtn {
+  margin-top: 5px;
+  margin-bottom: -2px;
+}
+
+.btn-close-tabs {
+  background-color: #18A9EB;
+  color: #FFFFFF;
+  border: 1px solid #18A9EB;
+}
+
+.btn-close-tabs:hover,
+.btn-close-tabs:focus,
+.btn-close-tabs:active,
+.btn-close-tabs.active,
+.open .dropdown-toggle.btn-close-tabs {
+  background-color: #009AC9;
+  color: #FFFFFF;
+  border: 1px solid #008EBA;
+}
+
+.btn-close-tabs:active,
+.btn-close-tabs.active,
+.open .dropdown-toggle.btn-close-tabs {
+  background-image: none;
+}
+
+.btn-close-tabs.disabled,
+.btn-close-tabs[disabled],
+fieldset[disabled] .btn-close-tabs,
+.btn-close-tabs.disabled:hover,
+.btn-close-tabs[disabled]:hover,
+fieldset[disabled] .btn-close-tabs:hover,
+.btn-close-tabs.disabled:focus,
+.btn-close-tabs[disabled]:focus,
+fieldset[disabled] .btn-close-tabs:focus,
+.btn-close-tabs.disabled:active,
+.btn-close-tabs[disabled]:active,
+fieldset[disabled] .btn-close-tabs:active,
+.btn-close-tabs.disabled.active,
+.btn-close-tabs[disabled].active,
+fieldset[disabled] .btn-close-tabs.active {
+  background-color: #18A9EB;
+  color: #FFFFFF;
+  border: 1px solid #18A9EB;
+}
