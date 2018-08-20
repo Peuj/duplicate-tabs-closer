@@ -17,7 +17,6 @@ Duplicate Tabs Closer detects and closes duplicate tabs.
 ### On remaining tab:
 (used with option *Close tab automatically*):
 
-
 * **Do nothing** *(default)*: nothing is done after the duplicate tab is closed.
 * **Activate**: once the duplicate tab is closed, the remaining tab is activated.
 * **Apply opening tab behavior**: once the duplicate tab is closed, depending on the default tab behavior, the remaining tab will be moved to the position of the closed tab and activated if needed.
@@ -45,6 +44,13 @@ Duplicate Tabs Closer detects and closes duplicate tabs.
 * **Container**: only closes/displays duplicate tabs that belong to a same container.
 * **Active window** *(default)*: only closes/displays duplicate tabs that belong to a same window.
 * **All window**: closes/displays duplicate tabs for all windows.
+
+
+### Customization:
+(only accessible from the *page Options* - opened from extension popup panel by clicking on top right icon or by opening the Extensions panel and select extension's options )
+
+* **Duplicate tabs badge color**: Set the badge color for duplicate tabs
+* **No duplicate tab badge color**: Set the badge color for no duplicate tabs
 
 
 ### Hotkey:
