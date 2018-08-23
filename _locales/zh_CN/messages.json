@@ -1,0 +1,144 @@
+{
+    "options": {
+        "message": "选项",
+        "description": "Options",
+        "hash": "531dad0078a72193602b18495f0ad4e9"
+    },
+    "onDuplicateTabDetected": {
+        "message": "检测到重复标签页时",
+        "description": "On duplicate tab detected",
+        "hash": "4193a78ce76ecf58828768b4c6fabc7f"
+    },
+    "doNothing": {
+        "message": "无操作",
+        "description": "Do nothing",
+        "hash": "a0a28b9a09a44d3e69599b6500e47a0e"
+    },
+    "autoCloseTab": {
+        "message": "自动关闭标签页",
+        "description": "Close tab automatically",
+        "hash": "6096376eef1def5290ffc9e691152903"
+    },
+    "showPanel": {
+        "message": "显示面板",
+        "description": "Show panel",
+        "hash": "3519be2a903e741db8c653b0e7e341e8"
+    },
+    "tabPriority": {
+        "message": "优先级",
+        "description": "Priority",
+        "hash": "a47af5c8632e36b75d0299167f2b38e0"
+    },
+    "keepNewerTab": {
+        "message": "保留新的标签页",
+        "description": "Keep newer tab",
+        "hash": "a3aa6ddd27496953c1d39e89d344f609"
+    },
+    "keepOlderTab": {
+        "message": "保留旧的标签页",
+        "description": "Keep older tab",
+        "hash": "17c1cecef3fb5c4c822c709e32428724"
+    },
+    "keepTabWithHistory": {
+        "message": "保留有历史记录的标签页",
+        "description": "Keep tab with history",
+        "hash": "23668f9ee2e1380d81db5eedce7e778b"
+    },
+    "keeptabwithHttps": {
+        "message": "保留 https 的标签页",
+        "description": "Keep tab with https",
+        "hash": "158afd64eff0d0d42ec5fcdc69456b39"
+    },
+    "keepPinnedTab": {
+        "message": "保留固定的标签页",
+        "description": "Keep pinned tab",
+        "hash": "eeded9a172a2db461ba5b29f7a4c9fce"
+    },
+    "onRemainingTab": {
+        "message": "剩余标签页",
+        "description": "On remaining tab",
+        "hash": "4d7dbd19c1c07d94821411eeecbe04af"
+    },
+    "activateKeptTab": {
+        "message": "激活",
+        "description": "Activate",
+        "hash": "1ca475dc17fb953961e503e67fab7000"
+    },
+    "defaultTabBehavior": {
+        "message": "默认标签页行为",
+        "description": "Default tab behaviour",
+        "hash": "bb896c5652054de371ffb4e161f7bc90"
+    },
+    "filters": {
+        "message": "过滤",
+        "description": "Filters",
+        "hash": "e86eed212e60224faadd11386632e100"
+    },
+    "ignoreHashPart": {
+        "message": "忽略标签页 URL 中的井字部分",
+        "description": "Ignore hash part in tab URL",
+        "hash": "bbeeddb75b5f0c1d72685cf06108c3e3"
+    },
+    "ignoreSearchPart": {
+        "message": "忽略标签页 URL 中的问号部分",
+        "description": "Ignore search part in tab URL",
+        "hash": "719a708f82ce50153de4e90a4b697a84"
+    },
+    "ignorePathPart": {
+        "message": "忽略标签页 URL 中的路径部分",
+        "description": "Ignore path part in tab URL",
+        "hash": "c05dc772b761f094ec2b99f692c26148"
+    },
+    "compareWithTitle": {
+        "message": "比较依据标签页标题",
+        "description": "Compare with tab title",
+        "hash": "940d9019e344f4935592346ddcb339ec"
+    },
+    "duplicatetabs": {
+        "message": "重复标签页",
+        "description": "Duplicate tabs",
+        "hash": "ad3b4cbbc93f5a2ec09c04fe10ef1524"
+    },
+    "scope": {
+        "message": "范围",
+        "description": "Scope",
+        "hash": "b06ab27384841fc6f17aa35b29084cc9"
+    },
+    "container": {
+        "message": "当前容器",
+        "description": "Container",
+        "hash": "2c649fcd504e8375c5960d17bb059666"
+    },
+    "activewindow": {
+        "message": "活动窗口",
+        "description": "Active window",
+        "hash": "5aa68dcaacbcb5ded524c104f3fa92d0"
+    },
+    "allwindows": {
+        "message": "所有窗口",
+        "description": "All windows",
+        "hash": "bc70cbd34d1cf4df02198f3b02ee0dd2"
+    },
+    "closeAllDuplicateTabs": {
+        "message": "关闭所有重复的标签页",
+        "description": "Close all duplicate tabs",
+        "hash": "2cee8df732a18dcd794ecdd8059591b7"
+    },
+    "misc": {
+        "message": "定制",
+        "description": "Customization",
+        "hash": "aeafd4e1ae3c69237d9cc057266d37a8"
+    },
+    "badgeColorDuplicateTabs": {
+        "message": "有重复标签页时数字背景色",
+        "description": "Badge color for duplicate tabs",
+        "hash": "07c8983751d1c0f9221393d8a87b7a2e"
+    },
+    "badgeColorNoDuplicateTab": {
+        "message": "无重复标签页时数字背景色",
+        "description": "Badge color for no duplicate tab",
+        "hash": "9d0bf86cc1cba04b3ddbbefe4e547ff3"
+    },
+
+    "__WET_LOCALE__": { "message": "zh-CN" }
+}
