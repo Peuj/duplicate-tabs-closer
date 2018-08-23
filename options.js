@@ -148,7 +148,7 @@ const setOptions = (storedOptions) => {
     options.searchInAllWindows = storedOptions["scope"].value === "A";
     options.badgeColorDuplicateTabs = storedOptions["badgeColorDuplicateTabs"].value;
     options.badgeColorNoDuplicateTab = storedOptions["badgeColorNoDuplicateTab"].value;
-    options.isFirefox = storedOptions["environment"].value === "Firefox";
+    options.isFirefox = storedOptions["environment"].value === "firefox";
 };
 
 let popupOptionOpen = false;
