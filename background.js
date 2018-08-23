@@ -13,6 +13,7 @@ const onCreatedTab = (tab) => {
 };
 
 const onBeforeNavigate = async (details) => {
+	
 	if (options.autoCloseTab && (details.frameId == 0) && (details.tabId !== -1) && !isBlankUrl(details.url)) {
 		const tab = await getTab(details.tabId);
 		if (tab) {
@@ -22,17 +23,18 @@ const onBeforeNavigate = async (details) => {
 };
 
 const onUpdatedTab = async (tabId, changeInfo, tab) => {
-	if (tab.active && changeInfo.url) {
-		const badgeText = await getBadgeText(tab.id);
-		if (!badgeText) setTabBadge(tab.id);
-	}
-	else if ((changeInfo.url || changeInfo.status) && (tab.status === "complete") && !isBlankUrl(tab.url)) {
+		
+	if ((changeInfo.url || changeInfo.status) && (tab.status === "complete") && !isBlankUrl(tab.url)) {
 		if (options.autoCloseTab) {
 			searchAndCloseNewDuplicateTabs({ tab: tab, eventType: "onUpdatedTab" });
 		}
 		else {
 			getDuplicateTabs(tab.windowId);
 		}
+	}
+	//else if (tab.active && (changeInfo.url || (tab.status === "complete")) {
+	else if (tab.active) {
+		setTabBadge(tab.id);
 	}
 };
 
@@ -69,7 +71,10 @@ const onActivatedTab = (activeInfo) => {
 
 const start = async () => {
 	await initializeOptions();
-	if (!options.isAndroid) await refreshAllDuplicateTabs();
+	if (!options.isAndroid) {
+		setBadgeIcon();
+		await refreshAllDuplicateTabs();
+	}
 	chrome.tabs.onCreated.addListener(onCreatedTab);
 	chrome.webNavigation.onBeforeNavigate.addListener(onBeforeNavigate);
 	chrome.tabs.onAttached.addListener(onAttached);
