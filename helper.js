@@ -73,9 +73,14 @@ const setIcon = (details) => {
     return new Promise((resolve) => chrome.browserAction.setIcon(details, () => resolve()));
 };
 
-/* exported getBadgeText */
-const getBadgeText = (tabId) => {
+/* exported getTabBadgeText */
+const getTabBadgeText = (tabId) => {
     return new Promise((resolve) => chrome.browserAction.getBadgeText({ tabId: tabId }, badgeText => resolve(badgeText)));
+};
+
+/* exported getWindowBadgeText */
+const getWindowBadgeText = (windowId) => {
+    return browser.browserAction.getBadgeText({ windowId: windowId });
 };
 
 /* exported getStoredOptions */

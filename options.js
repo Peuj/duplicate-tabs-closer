@@ -100,7 +100,6 @@ const initializeOptions = async () => {
     }
 
     setOptions(storedOptions);
-    setBadgeIcon();
 };
 
 /* exported setStoredOption */

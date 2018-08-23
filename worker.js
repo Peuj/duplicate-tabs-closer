@@ -148,7 +148,6 @@ const manageUniqueTab = (tab, tabMatchingId, uniqueTabIds, focusedWindowId, clos
         if (closeTabs) {
             if (keepIfPinnedTab(tab, uniqueTab) || keepIfHttps(tab.url, uniqueTab.url)
                 || ((tab.windowId === focusedWindowId) && (tab.active || (uniqueTab.windowId !== focusedWindowId)))) {
-                // || ((tab.windowId === focusedWindowId) && tab.active)) {
                 chrome.tabs.remove(uniqueTab.id);
                 uniqueTabIds.set(tabMatchingId, tab);
             }
@@ -202,7 +201,7 @@ const searchForDuplicateTabs = async (windowId, closeTabs, removedTabId) => {
 
     }
 
-    if (!closeTabs) updateActiveTabsBadge(duplicateGroupTabs, windowId);
+    if (!closeTabs) updateBadges(duplicateGroupTabs, windowId);
 
     if (isOptionOpen() && (!windowId || (windowId === focusedWindowId) || (windowId === chrome.windows.WINDOW_ID_CURRENT))) {
         const duplicateTabs = await setDuplicateTabs(duplicateGroupTabs);

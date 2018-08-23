@@ -34,7 +34,7 @@ const onUpdatedTab = async (tabId, changeInfo, tab) => {
 	}
 	//else if (tab.active && (changeInfo.url || (tab.status === "complete")) {
 	else if (tab.active) {
-		setTabBadge(tab.id);
+		setBadge(tab.id, tab.windowId);
 	}
 };
 
@@ -66,7 +66,7 @@ const onDetachedTab = (detachedTabId, detachInfo) => {
 
 const onActivatedTab = (activeInfo) => {
 	if (removingTab) return;
-	setTabBadge(activeInfo.tabId);
+	setBadge(activeInfo.tabId, activeInfo.windowId);
 };
 
 const start = async () => {
