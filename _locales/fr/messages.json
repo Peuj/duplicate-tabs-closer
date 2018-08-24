@@ -4,115 +4,115 @@
     "description": "Options"
   },
   "onDuplicateTabDetected": {
-    "message": "On duplicate tab detected",
+    "message": "À la détection d'un doublon",
     "description": "On duplicate tab detected"
   },
   "doNothing": {
-    "message": "Do nothing",
+    "message": "Ne rien faire",
     "description": "Do nothing"
   },
   "autoCloseTab": {
-    "message": "Close tab automatically",
+    "message": "Fermer l'onglet automatiquement",
     "description": "Close tab automatically"
   },
   "showPanel": {
-    "message": "Show panel",
+    "message": "Afficher le panneau",
     "description": "Show panel"
   },
   "tabPriority": {
-    "message": "Priority",
+    "message": "Priorité",
     "description": "Priority"
   },
   "keepNewerTab": {
-    "message": "Keep newer tab",
+    "message": "Conserver le nouvel onglet",
     "description": "Keep newer tab"
   },
   "keepOlderTab": {
-    "message": "Keep older tab",
+    "message": "Conserver l'ancien onglet",
     "description": "Keep older tab"
   },
   "keepTabWithHistory": {
-    "message": "Keep tab with history",
+    "message": "Conserver l'onglet ayant un historique",
     "description": "Keep tab with history"
   },
   "keeptabwithHttps": {
-    "message": "Keep tab with https",
+    "message": "Conserver l'onglet avec https",
     "description": "Keep tab with https"
   },
   "keepPinnedTab": {
-    "message": "Keep pinned tab",
+    "message": "Conserver l'onglet épinglé",
     "description": "Keep pinned tab"
   },
   "onRemainingTab": {
-    "message": "On remaining tab",
+    "message": "Sur l'onglet restant",
     "description": "On remaining tab"
   },
   "activateKeptTab": {
-    "message": "Activate",
+    "message": "Activer",
     "description": "Activate"
   },
   "defaultTabBehavior": {
-    "message": "Default tab behaviour",
+    "message": "Comportement par défaut de l'onglet",
     "description": "Default tab behaviour"
   },
   "filters": {
-    "message": "Filters",
+    "message": "Filtres",
     "description": "Filters"
   },
   "ignoreHashPart": {
-    "message": "Ignore hash part in tab URL",
+    "message": "Ignorer la partie « hachage » de l'URL",
     "description": "Ignore hash part in tab URL"
   },
   "ignoreSearchPart": {
-    "message": "Ignore search part in tab URL",
+    "message": "Ignorer la partie « recherche » de l'URL",
     "description": "Ignore search part in tab URL"
   },
   "ignorePathPart": {
-    "message": "Ignore path part in tab URL",
+    "message": "Ignorer la partie « chemin » de l'URL",
     "description": "Ignore path part in tab URL"
   },
   "compareWithTitle": {
-    "message": "Compare with tab title",
+    "message": "Comparer avec le titre de l'onglet",
     "description": "Compare with tab title"
   },
   "duplicatetabs": {
-    "message": "Duplicate tabs",
+    "message": "Onglets en doublon",
     "description": "Duplicate tabs"
   },
   "scope": {
-    "message": "Scope",
+    "message": "Cadre",
     "description": "Scope"
   },
   "container": {
-    "message": "Container",
+    "message": "Contextes",
     "description": "Container"
   },
   "activewindow": {
-    "message": "Active window",
+    "message": "Fenêtre active",
     "description": "Active window"
   },
   "allwindows": {
-    "message": "All windows",
+    "message": "Toutes les fenêtres",
     "description": "All windows"
   },
   "closeAllDuplicateTabs": {
-    "message": "Close all duplicate tabs",
+    "message": "Fermer tous les onglets en doublon",
     "description": "Close all duplicate tabs"
   }  ,
   "customization": {
-    "message": "Customization",
+    "message": "Personnalisation",
     "description": "Customization"
   }  ,
   "badgeColorDuplicateTabs": {
-    "message": "Duplicate tabs badge color",
+    "message": "Couleur du bouton pour les onglets en doublon",
     "description": "Badge color for duplicate tabs"
   },
   "badgeColorNoDuplicateTabs": {
-    "message": "No duplicate tabs badge color",
-    "description": "Badge color for no duplicate tab"
+    "message": "Couleur du bouton pour aucun onglet en doublon",
+    "description": "Badge color for no duplicate tabs"
   },
   "noDuplicateTabs": {
-    "message": "No duplicate tabs",
+    "message": "Aucun onglet en doublon",
     "description": "No duplicate tabs"    
   }
 }

@@ -124,7 +124,7 @@
         "description": "Close all duplicate tabs",
         "hash": "2cee8df732a18dcd794ecdd8059591b7"
     },
-    "misc": {
+    "customization": {
         "message": "定制",
         "description": "Customization",
         "hash": "aeafd4e1ae3c69237d9cc057266d37a8"
