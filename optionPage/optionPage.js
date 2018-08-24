@@ -53,16 +53,6 @@ const changeAutoCloseOptionState = (state) => {
   $("#onRemainingTabGroup").toggleClass("hidden", state !== "A");
 };
 
-// Localize the popup
-const localizePopup = (node) => {
-  const attribute = "i18n-content";
-  const elements = node.querySelectorAll("[" + attribute + "]");
-  elements.forEach(element => {
-    const value = element.getAttribute(attribute);
-    element.textContent = chrome.i18n.getMessage(value);
-  });
-};
-
 const sendMessage = (action, data) => {
   return new Promise((resolve) => chrome.runtime.sendMessage({ action: action, data: data }, resolve));
 };
@@ -93,7 +83,7 @@ const setDuplicateTabsTable = (duplicateTabs) => {
   }
   else {
     $("#duplicateTabsTable").empty();
-    $("#duplicateTabsTable").append("<tr><td width='100% margin-left='5px'><font color='#9FACBD'><em>No duplicate tabs.</em></font></td></tr>");
+    $("#duplicateTabsTable").append("<tr><td width='100% margin-left='5px'><font color='#9FACBD'><em>" + chrome.i18n.getMessage("noDuplicateTabs") + ".</em></font></td></tr>");
     $("#closeDuplicateTabsBtn").toggleClass("disabled", true);
     $(".td-tab-link").css("max-width", "280px");
   }
@@ -125,6 +115,18 @@ const setPaneOptions = async () => {
   }
 
 };
+
+
+// Localize the popup
+const localizePopup = (node) => {
+  const attribute = "i18n-content";
+  const elements = node.querySelectorAll("[" + attribute + "]");
+  elements.forEach(element => {
+    const value = element.getAttribute(attribute);
+    element.textContent = chrome.i18n.getMessage(value);
+  });
+};
+
 
 chrome.runtime.onMessage.addListener((message) => {
   if (message.action === "updateDuplicateTabsTable") {

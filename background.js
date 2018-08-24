@@ -1,7 +1,6 @@
 "use strict";
 
 const onCreatedTab = (tab) => {
-
 	if (tab.status === "complete" && !isBlankUrl(tab.url)) {
 		if (options.autoCloseTab) {
 			searchAndCloseNewDuplicateTabs({ tab: tab, queryStatus: "complete", eventType: "onCreatedTab" });
@@ -13,7 +12,6 @@ const onCreatedTab = (tab) => {
 };
 
 const onBeforeNavigate = async (details) => {
-	
 	if (options.autoCloseTab && (details.frameId == 0) && (details.tabId !== -1) && !isBlankUrl(details.url)) {
 		const tab = await getTab(details.tabId);
 		if (tab) {

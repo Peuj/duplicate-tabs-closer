@@ -134,9 +134,9 @@
         "description": "Badge color for duplicate tabs",
         "hash": "07c8983751d1c0f9221393d8a87b7a2e"
     },
-    "badgeColorNoDuplicateTab": {
+    "badgeColorNoDuplicateTabs": {
         "message": "无重复标签页时数字背景色",
-        "description": "Badge color for no duplicate tab",
+        "description": "Badge color for no duplicates tab",
         "hash": "9d0bf86cc1cba04b3ddbbefe4e547ff3"
     },
 

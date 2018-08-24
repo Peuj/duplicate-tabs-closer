@@ -135,7 +135,7 @@ const setDuplicateTabsTable = (duplicateTabs) => {
   }
   else {
     $("#duplicateTabsTable").empty();
-    $("#duplicateTabsTable").append("<tr><td width='100%'align='center' valign='center'><font color='#9FACBD'><em>No duplicate tabs.</em></font></td></tr>");
+    $("#duplicateTabsTable").append("<tr><td width='100%'align='center' valign='center'><font color='#9FACBD'><em>" + chrome.i18n.getMessage("noDuplicateTabs") + ".</em></font></td></tr>");
     $("#closeDuplicateTabsBtn").toggleClass("disabled", true);
     $(".td-tab-link").css("max-width", "280px");
   }
@@ -151,16 +151,6 @@ const resizeDuplicateTabsPanel = () => {
 
 const setDuplicateTabsMaxWidth = () => {
   $(".table-scrollable").height() + $(".list-group").height() >= 450 ? $(".td-tab-link").css("max-width", "260px") : $(".td-tab-link").css("max-width", "280px");
-};
-
-// Localize the popup
-const localizePopup = (node) => {
-  const attribute = "i18n-content";
-  const elements = node.querySelectorAll("[" + attribute + "]");
-  elements.forEach(element => {
-    const value = element.getAttribute(attribute);
-    element.textContent = chrome.i18n.getMessage(value);
-  });
 };
 
 const sendMessage = (action, data) => {
@@ -201,6 +191,17 @@ const setPaneOptions = async () => {
   }
 
   return pinnedOptions.size;
+};
+
+
+// Localize the popup
+const localizePopup = (node) => {
+  const attribute = "i18n-content";
+  const elements = node.querySelectorAll("[" + attribute + "]");
+  elements.forEach(element => {
+    const value = element.getAttribute(attribute);
+    element.textContent = chrome.i18n.getMessage(value);
+  });
 };
 
 chrome.runtime.onMessage.addListener((message) => {

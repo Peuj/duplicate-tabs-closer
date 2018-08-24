@@ -49,7 +49,7 @@ const defaultOptions = {
     badgeColorDuplicateTabs: {
         value: "#f22121"
     },
-    badgeColorNoDuplicateTab: {
+    badgeColorNoDuplicateTabs: {
         value: "#1e90ff"
     },
     environment: {
@@ -85,14 +85,20 @@ const initializeOptions = async () => {
     }
     else if (JSON.stringify(storedKeys) != JSON.stringify(defaultKeys)) {
 
+        const obsoleteKeys = getNotInReferenceKeys(storedKeys, defaultKeys);
+        obsoleteKeys.forEach(key => {
+
+            // option typo change between 3.16 and 3.17 - to remove later
+            if (key === "badgeColorNoDuplicateTab") {
+                storedOptions["badgeColorNoDuplicateTabs"] = { value: storedOptions[key].value };
+            }
+
+            delete storedOptions[key];
+        });
+
         const missingKeys = getNotInReferenceKeys(defaultKeys, storedKeys);
         missingKeys.forEach(key => {
             storedOptions[key] = { value: defaultOptions[key].value };
-        });
-
-        const obsoleteKeys = getNotInReferenceKeys(storedKeys, defaultKeys);
-        obsoleteKeys.forEach(key => {
-            delete storedOptions[key];
         });
 
         await setEnvironmentOptions(storedOptions);
@@ -126,7 +132,7 @@ const options = {
     searchInCurrentWindow: false,
     searchInAllWindows: false,
     badgeColorDuplicateTabs: "",
-    badgeColorNoDuplicateTab: "",
+    badgeColorNoDuplicateTabs: "",
     isAndroid: false,
     isFirefox: false
 };
@@ -146,7 +152,7 @@ const setOptions = (storedOptions) => {
     options.searchInCurrentWindow = storedOptions["scope"].value === "C";
     options.searchInAllWindows = storedOptions["scope"].value === "A";
     options.badgeColorDuplicateTabs = storedOptions["badgeColorDuplicateTabs"].value;
-    options.badgeColorNoDuplicateTab = storedOptions["badgeColorNoDuplicateTab"].value;
+    options.badgeColorNoDuplicateTabs = storedOptions["badgeColorNoDuplicateTabs"].value;
     options.isFirefox = storedOptions["environment"].value === "firefox";
 };
 

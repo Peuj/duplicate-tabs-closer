@@ -13,6 +13,7 @@ const setBadgeIcon = () => {
 
 /* exported setBadge */
 const setBadge = async (tabId, windowId, nbDuplicateTabs) => {
+
 	if (!nbDuplicateTabs) {
 		nbDuplicateTabs = getNbDuplicatedTabs(windowId);
 		// const badgeText = options.isFirefox ? await getWindowBadgeText(windowId) : await getTabBadgeText(tabId);
@@ -20,10 +21,10 @@ const setBadge = async (tabId, windowId, nbDuplicateTabs) => {
 		if (nbDuplicateTabs === badgeText) return;
 	}
 	
-	const backgroundColor = (nbDuplicateTabs) => nbDuplicateTabs !== "0" ? options.badgeColorDuplicateTabs : options.badgeColorNoDuplicateTab;
+	const backgroundColor = (nbDuplicateTabs) => nbDuplicateTabs !== "0" ? options.badgeColorDuplicateTabs : options.badgeColorNoDuplicateTabs;
 	chrome.browserAction.setBadgeText({ tabId: tabId, text: nbDuplicateTabs });
 	chrome.browserAction.setBadgeBackgroundColor({ tabId: tabId, color: backgroundColor(nbDuplicateTabs) });
-	
+
 	// getBadgeText, setBadgeText and setBadgeBackgroundColor raised an error with windowId ??? need to check
 	
 	// if (options.isFirefox) {
