@@ -20,20 +20,35 @@ const onBeforeNavigate = async (details) => {
 	}
 };
 
-const onUpdatedTab = async (tabId, changeInfo, tab) => {
-		
-	if ((changeInfo.url || changeInfo.status) && (tab.status === "complete") && !isBlankUrl(tab.url)) {
-		if (options.autoCloseTab) {
-			searchAndCloseNewDuplicateTabs({ tab: tab, eventType: "onUpdatedTab" });
+const onUpdatedTab = (tabId, changeInfo, tab) => {
+
+	// if ((changeInfo.url || changeInfo.status) && (tab.status === "complete") && !isBlankUrl(tab.url)) {
+	// 	if (options.autoCloseTab) {
+	// 		searchAndCloseNewDuplicateTabs({ tab: tab, eventType: "onUpdatedTab" });
+	// 	}
+	// 	else {
+	// 		getDuplicateTabs(tab.windowId);
+	// 	}
+	// }
+	// else if (tab.active && (changeInfo.url || changeInfo.status)) {
+	// 	setBadge({ tabId: tab.id, windowId: tab.windowId });
+	// }
+
+	
+	if ((changeInfo.url || changeInfo.status) && !isBlankUrl(tab.url)) {
+		if (tab.status === "complete") {
+			if (options.autoCloseTab) {
+				searchAndCloseNewDuplicateTabs({ tab: tab, eventType: "onUpdatedTab" });
+			}
+			else {
+				getDuplicateTabs(tab.windowId);
+			}
 		}
-		else {
-			getDuplicateTabs(tab.windowId);
+		else if (tab.active) {
+			setBadge({ tabId: tab.id, windowId: tab.windowId });
 		}
 	}
-	//else if (tab.active && (changeInfo.url || (tab.status === "complete")) {
-	else if (tab.active) {
-		setBadge(tab.id, tab.windowId);
-	}
+
 };
 
 const onAttached = async (tabId) => {
@@ -64,7 +79,7 @@ const onDetachedTab = (detachedTabId, detachInfo) => {
 
 const onActivatedTab = (activeInfo) => {
 	if (removingTab) return;
-	setBadge(activeInfo.tabId, activeInfo.windowId);
+	setBadge({ tabId: activeInfo.tabId, windowId: activeInfo.windowId });
 };
 
 const start = async () => {
@@ -80,9 +95,7 @@ const start = async () => {
 	chrome.tabs.onUpdated.addListener(onUpdatedTab);
 	chrome.tabs.onRemoved.addListener(onRemovedTab);
 	chrome.tabs.onActivated.addListener(onActivatedTab);
-	chrome.commands.onCommand.addListener(command => {
-		if (command == "close-duplicate-tabs") closeDuplicateTabs(chrome.windows.WINDOW_ID_CURRENT);
-	});
+	chrome.commands.onCommand.addListener(command => { if (command == "close-duplicate-tabs") closeDuplicateTabs(chrome.windows.WINDOW_ID_CURRENT); });
 };
 
 start();

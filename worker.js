@@ -85,6 +85,8 @@ const searchAndCloseNewDuplicateTabs = async (searchInfo) => {
     }
 
     const signaledTab = searchInfo.tab;
+    const signaledWindowsId = signaledTab.windowId;
+    const signaledTabActive = signaledTab.active;
     const signaledTabUrl = searchInfo.loadingUrl ? searchInfo.loadingUrl : signaledTab.url;
     const matchingSignaledTabUrl = matchingURL(signaledTabUrl);
 
@@ -98,6 +100,7 @@ const searchAndCloseNewDuplicateTabs = async (searchInfo) => {
     }
 
     const openTabs = await getTabs(queryInfo);
+    let match = false;
 
     for (const openTab of openTabs) {
 
@@ -106,6 +109,8 @@ const searchAndCloseNewDuplicateTabs = async (searchInfo) => {
         }
 
         if ((matchingURL(openTab.url) === matchingSignaledTabUrl) || matchTitle(openTab, signaledTab)) {
+
+            match = true;
 
             const priority = getTabsPriority(signaledTab, signaledTabUrl, openTab);
 
@@ -116,6 +121,11 @@ const searchAndCloseNewDuplicateTabs = async (searchInfo) => {
             }
 
         }
+    }
+
+    if (!match) {
+        if (hasDuplicatedTabs(signaledWindowsId)) getDuplicateTabs(signaledWindowsId)
+        else if (signaledTabActive) setBadge({ windowId: signaledWindowsId });
     }
 };
 

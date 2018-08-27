@@ -12,30 +12,35 @@ const setBadgeIcon = () => {
 };
 
 /* exported setBadge */
-const setBadge = async (tabId, windowId, nbDuplicateTabs) => {
+const setBadge = async (badgeInfo) => {
 
-	if (!nbDuplicateTabs) {
-		nbDuplicateTabs = getNbDuplicatedTabs(windowId);
-		// const badgeText = options.isFirefox ? await getWindowBadgeText(windowId) : await getTabBadgeText(tabId);
-		const badgeText = await getTabBadgeText(tabId);
-		if (nbDuplicateTabs === badgeText) return;
+	if (!badgeInfo.tabId) {
+		const activeTab = await getActiveTab(badgeInfo.windowId);
+		badgeInfo.tabId = activeTab.id;
 	}
-	
+
+	if (!badgeInfo.nbDuplicateTabs) {
+		badgeInfo.nbDuplicateTabs = getNbDuplicatedTabs(badgeInfo.windowId);
+	}
+
+	const badgeText = await getTabBadgeText(badgeInfo.tabId);
+	if (badgeInfo.nbDuplicateTabs === badgeText) return;
+
 	const backgroundColor = (nbDuplicateTabs) => nbDuplicateTabs !== "0" ? options.badgeColorDuplicateTabs : options.badgeColorNoDuplicateTabs;
-	chrome.browserAction.setBadgeText({ tabId: tabId, text: nbDuplicateTabs });
-	chrome.browserAction.setBadgeBackgroundColor({ tabId: tabId, color: backgroundColor(nbDuplicateTabs) });
+	chrome.browserAction.setBadgeText({ tabId: badgeInfo.tabId, text: badgeInfo.nbDuplicateTabs });
+	chrome.browserAction.setBadgeBackgroundColor({ tabId: badgeInfo.tabId, color: backgroundColor(badgeInfo.nbDuplicateTabs) });
 
 	// getBadgeText, setBadgeText and setBadgeBackgroundColor raised an error with windowId ??? need to check
-	
+	// const badgeText = options.isFirefox ? await getWindowBadgeText(windowId) : await getTabBadgeText(tabId);
 	// if (options.isFirefox) {
-		// console.log("setBadge isFirefox windowId", windowId);
-		// browser.browserAction.setBadgeText({ text: nbDuplicateTabs, windowId: windowId });		
-		// browser.browserAction.setBadgeBackgroundColor({ color: backgroundColor(nbDuplicateTabs), windowId: windowId });
+	// console.log("setBadge isFirefox windowId", windowId);
+	// browser.browserAction.setBadgeText({ text: nbDuplicateTabs, windowId: windowId });		
+	// browser.browserAction.setBadgeBackgroundColor({ color: backgroundColor(nbDuplicateTabs), windowId: windowId });
 	// }
 	// else {
-		// console.log("setBadge not isFirefox");
-		// chrome.browserAction.setBadgeText({ tabId: tabId, text: nbDuplicateTabs });
-		// chrome.browserAction.setBadgeBackgroundColor({ tabId: tabId, color: backgroundColor(nbDuplicateTabs) });
+	// console.log("setBadge not isFirefox");
+	// chrome.browserAction.setBadgeText({ tabId: tabId, text: nbDuplicateTabs });
+	// chrome.browserAction.setBadgeBackgroundColor({ tabId: tabId, color: backgroundColor(nbDuplicateTabs) });
 	// }
 
 };
@@ -52,17 +57,18 @@ const countDuplicatedTabs = duplicateGroupTabs => {
 
 const updateBadge = async (windowId, nbDuplicateTabs) => {
 	setNbDuplicatedTabs(windowId, nbDuplicateTabs);
-	const activeTab = await getActiveTab(windowId);
-	setBadge(activeTab.id, windowId, nbDuplicateTabs);
+	setBadge({ windowId: windowId, nbDuplicateTabs: nbDuplicateTabs });
 
 	// getBadgeText, setBadgeText and setBadgeBackgroundColor raised an error with windowId ??? need to check
 
+	// const activeTab = await getActiveTab(windowId);
+	// setBadge(activeTab.id, windowId, nbDuplicateTabs);
 	// if (options.isFirefox) {
-		// setBadge(null, windowId, nbDuplicateTabs);
+	// setBadge(null, windowId, nbDuplicateTabs);
 	// }
 	// else {
-		// const activeTab = await getActiveTab(windowId);
-		// setBadge(activeTab.id, windowId, nbDuplicateTabs);
+	// const activeTab = await getActiveTab(windowId);
+	// setBadge(activeTab.id, windowId, nbDuplicateTabs);
 	// }
 };
 
