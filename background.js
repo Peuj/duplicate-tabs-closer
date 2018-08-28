@@ -21,19 +21,6 @@ const onBeforeNavigate = async (details) => {
 };
 
 const onUpdatedTab = (tabId, changeInfo, tab) => {
-
-	// if ((changeInfo.url || changeInfo.status) && (tab.status === "complete") && !isBlankUrl(tab.url)) {
-	// 	if (options.autoCloseTab) {
-	// 		searchAndCloseNewDuplicateTabs({ tab: tab, eventType: "onUpdatedTab" });
-	// 	}
-	// 	else {
-	// 		getDuplicateTabs(tab.windowId);
-	// 	}
-	// }
-	// else if (tab.active && (changeInfo.url || changeInfo.status)) {
-	// 	setBadge({ tabId: tab.id, windowId: tab.windowId });
-	// }
-
 	
 	if ((changeInfo.url || changeInfo.status) && !isBlankUrl(tab.url)) {
 		if (tab.status === "complete") {
