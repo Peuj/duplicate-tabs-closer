@@ -6,7 +6,7 @@ const onCreatedTab = (tab) => {
 			searchAndCloseNewDuplicateTabs({ tab: tab, queryStatus: "complete", eventType: "onCreatedTab" });
 		}
 		else {
-			getDuplicateTabs(tab.windowId);
+			refreshDuplicateTabsStatus(tab.windowId);
 		}
 	}
 };
@@ -21,14 +21,14 @@ const onBeforeNavigate = async (details) => {
 };
 
 const onUpdatedTab = (tabId, changeInfo, tab) => {
-	
+
 	if ((changeInfo.url || changeInfo.status) && !isBlankUrl(tab.url)) {
 		if (tab.status === "complete") {
 			if (options.autoCloseTab) {
 				searchAndCloseNewDuplicateTabs({ tab: tab, eventType: "onUpdatedTab" });
 			}
 			else {
-				getDuplicateTabs(tab.windowId);
+				refreshDuplicateTabsStatus(tab.windowId);
 			}
 		}
 		else if (tab.active) {
@@ -45,7 +45,7 @@ const onAttached = async (tabId) => {
 			searchAndCloseNewDuplicateTabs({ tab: tab, eventType: "onAttached" });
 		}
 		else {
-			getDuplicateTabs(tab.windowId);
+			refreshDuplicateTabsStatus(tab.windowId);
 		}
 	}
 };
@@ -55,13 +55,13 @@ let removingTab = false;
 const onRemovedTab = (removedTabId, removeInfo) => {
 	if (!removeInfo.isWindowClosing && hasDuplicatedTabs(removeInfo.windowId)) {
 		removingTab = true;
-		getDuplicateTabs(removeInfo.windowId, removedTabId);
+		refreshDuplicateTabsStatus(removeInfo.windowId, removedTabId);
 		setTimeout(() => removingTab = false, 50);
 	}
 };
 
 const onDetachedTab = (detachedTabId, detachInfo) => {
-	if (hasDuplicatedTabs(detachInfo.oldWindowId)) getDuplicateTabs(detachInfo.oldWindowId);
+	if (hasDuplicatedTabs(detachInfo.oldWindowId)) refreshDuplicateTabsStatus(detachInfo.oldWindowId);
 };
 
 const onActivatedTab = (activeInfo) => {
@@ -69,12 +69,20 @@ const onActivatedTab = (activeInfo) => {
 	setBadge({ tabId: activeInfo.tabId, windowId: activeInfo.windowId });
 };
 
+const onCommand = (command) => {
+	if (command == "close-duplicate-tabs") closeDuplicateTabs(chrome.windows.WINDOW_ID_CURRENT); 
+};
+
+
 const start = async () => {
+
 	await initializeOptions();
-	if (!options.isAndroid) {
+	
+	if (!environment.isAndroid) {
 		setBadgeIcon();
-		await refreshAllDuplicateTabs();
+		await refreshGlobalDuplicateTabsInfo();
 	}
+
 	chrome.tabs.onCreated.addListener(onCreatedTab);
 	chrome.webNavigation.onBeforeNavigate.addListener(onBeforeNavigate);
 	chrome.tabs.onAttached.addListener(onAttached);
@@ -82,7 +90,7 @@ const start = async () => {
 	chrome.tabs.onUpdated.addListener(onUpdatedTab);
 	chrome.tabs.onRemoved.addListener(onRemovedTab);
 	chrome.tabs.onActivated.addListener(onActivatedTab);
-	chrome.commands.onCommand.addListener(command => { if (command == "close-duplicate-tabs") closeDuplicateTabs(chrome.windows.WINDOW_ID_CURRENT); });
+	chrome.commands.onCommand.addListener(onCommand);
 };
 
 start();

@@ -31,6 +31,10 @@
     "message": "Keep older tab",
     "description": "Keep older tab"
   },
+  "keepReloadOlderTab": {
+    "message": "Keep and reload older tab",
+    "description": "Keep and reload older tab"
+  },
   "keepTabWithHistory": {
     "message": "Keep tab with history",
     "description": "Keep tab with history"
@@ -98,11 +102,11 @@
   "closeAllDuplicateTabs": {
     "message": "Close all duplicate tabs",
     "description": "Close all duplicate tabs"
-  }  ,
+  },
   "customization": {
     "message": "Customization",
     "description": "Customization"
-  }  ,
+  },
   "badgeColorDuplicateTabs": {
     "message": "Duplicate tabs badge color",
     "description": "Badge color for duplicate tabs"

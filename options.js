@@ -57,14 +57,13 @@ const defaultOptions = {
     }
 };
 
-const setEnvironmentOptions = async (storedOptions) => {
+const getDefaultOptions = async () => {
+    const newOptions = Object.assign({}, defaultOptions);
     const info = await getPlatformInfo();
     const environment = (info.os === "android") ? "android" : (typeof InstallTrigger !== "undefined") ? "firefox" : "chrome";
-    storedOptions.environment.value = environment;
-    if (environment === "android") {
-        storedOptions.scope.value = "A";
-        options.isAndroid = true;
-    }
+    newOptions.environment.value = environment;
+    if (environment === "android") newOptions.scope.value = "A";
+    return newOptions;
 };
 
 const getNotInReferenceKeys = (referenceKeys, keys) => {
@@ -80,19 +79,17 @@ const initializeOptions = async () => {
     const defaultKeys = Object.keys(defaultOptions).sort();
 
     if (storedKeys.length === 0) {
-        await setEnvironmentOptions(defaultOptions);
-        storedOptions = await saveStoredOptions(defaultOptions);
+        const newOptions = await getDefaultOptions();
+        storedOptions = await saveStoredOptions(newOptions);
     }
     else if (JSON.stringify(storedKeys) != JSON.stringify(defaultKeys)) {
 
         const obsoleteKeys = getNotInReferenceKeys(storedKeys, defaultKeys);
         obsoleteKeys.forEach(key => {
-
             // option typo change between 3.16 and 3.17 - to remove later
             if (key === "badgeColorNoDuplicateTab") {
                 storedOptions["badgeColorNoDuplicateTabs"] = { value: storedOptions[key].value };
             }
-
             delete storedOptions[key];
         });
 
@@ -101,11 +98,11 @@ const initializeOptions = async () => {
             storedOptions[key] = { value: defaultOptions[key].value };
         });
 
-        await setEnvironmentOptions(storedOptions);
         storedOptions = await saveStoredOptions(storedOptions, true);
     }
 
     setOptions(storedOptions);
+    await setEnvironment(storedOptions);
 };
 
 /* exported setStoredOption */
@@ -122,6 +119,7 @@ const options = {
     defaultTabBehavior: false,
     activateKeptTab: false,
     keepNewerTab: false,
+    keepReloadOlderTab: false,
     keepTabWithHttps: false,
     keepPinnedTab: false,
     ignoreHashPart: false,
@@ -132,9 +130,14 @@ const options = {
     searchInCurrentWindow: false,
     searchInAllWindows: false,
     badgeColorDuplicateTabs: "",
-    badgeColorNoDuplicateTabs: "",
+    badgeColorNoDuplicateTabs: ""
+};
+
+const environment = {
     isAndroid: false,
-    isFirefox: false
+    isFirefox: false,
+    isFirefox62Compatible: false,
+    isFirefox63Compatible: false
 };
 
 const setOptions = (storedOptions) => {
@@ -142,6 +145,7 @@ const setOptions = (storedOptions) => {
     options.defaultTabBehavior = storedOptions["onRemainingTab"].value === "B";
     options.activateKeptTab = storedOptions["onRemainingTab"].value === "A";
     options.keepNewerTab = storedOptions["keepTabBasedOnAge"].value === "N";
+    options.keepReloadOlderTab = storedOptions["keepTabBasedOnAge"].value === "R";
     options.keepTabWithHttps = storedOptions["keepTabWithHttps"].value;
     options.keepPinnedTab = storedOptions["keepPinnedTab"].value;
     options.ignoreHashPart = storedOptions["ignoreHashPart"].value;
@@ -153,21 +157,26 @@ const setOptions = (storedOptions) => {
     options.searchInAllWindows = storedOptions["scope"].value === "A";
     options.badgeColorDuplicateTabs = storedOptions["badgeColorDuplicateTabs"].value;
     options.badgeColorNoDuplicateTabs = storedOptions["badgeColorNoDuplicateTabs"].value;
-    options.isFirefox = storedOptions["environment"].value === "firefox";
 };
 
-let popupOptionOpen = false;
-let tabOptionOpen = false;
-
-/* exported setPopupOptionState */
-const setPopupOptionState = (value) => {
-    popupOptionOpen = value;
-};
-
-/* exported setTabOptionState */
-const setTabOptionState = (value) => {
-    tabOptionOpen = value;
+const setEnvironment = async (storedOptions) => {
+    if (storedOptions.environment.value === "android") {
+        environment.isAndroid = true;
+        environment.isFirefox = true;
+    }
+    else if (storedOptions.environment.value === "firefox") {
+        environment.isAndroid = false;
+        environment.isFirefox = true;
+        const majorVersion = await getFirefoxMajorVersion();
+        environment.isFirefox62Compatible = majorVersion >= 62 ? true : false;
+        environment.isFirefox63Compatible = majorVersion >= 63 ? true : false;
+    }
 };
 
 /* exported isOptionOpen */
-const isOptionOpen = () => (popupOptionOpen || tabOptionOpen) ? true : false;
+const isOptionOpen = () => {
+    const popups = chrome.extension.getViews({type: "popup"});
+    if (popups.length) return true;
+    const tabs = chrome.extension.getViews({type: "tab"});
+    return tabs.length ? true : false;
+};

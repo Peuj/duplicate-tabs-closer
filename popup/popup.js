@@ -1,27 +1,29 @@
 "use strict";
 
-
 const initialize = async () => {
+  const requestGetDuplicateTabsPromise = requestGetDuplicateTabs();
+  const setPanelOptionsPromise = setPanelOptions();
   localizePopup(document.documentElement);
-  const nbPinnedOptions = await setPaneOptions();
-  toggleOptionPanel(false, nbPinnedOptions);
-  requestGetDuplicateTabs();
-  sendMessage("setPopupOptionState", { "value": true });
+  const isPinnedOptions = await setPanelOptionsPromise;
+  await toggleOptionPanel(false, isPinnedOptions);
+  resizeDuplicateTabsPanel();
+  const duplicateTabs = await requestGetDuplicateTabsPromise;
+  setDuplicateTabsTable(duplicateTabs);
 };
 
-const loadEvents = () => {
+const loadPopupEvents = () => {
 
   // Save checkbox settings
   $(".list-group input[type='checkbox'").on("change", function () {
     saveOption(this.id, this.checked);
-    if (this.className === "checkbox-filter") requestRefreshAllDuplicateTabs(false);
+    if (this.className === "checkbox-filter") refreshGlobalDuplicateTabsInfo(false);
   });
 
   // Save combobox settings
   $(".list-group select").on("change", function () {
     saveOption(this.id, this.value);
     if (this.id === "onDuplicateTabDetected") changeAutoCloseOptionState(this.value, true);
-    else if (this.id === "scope") requestRefreshAllDuplicateTabs(true);
+    else if (this.id === "scope") refreshGlobalDuplicateTabsInfo(true);
   });
 
   // Open Option tab tab
@@ -66,19 +68,18 @@ const changeAutoCloseOptionState = (state, resize) => {
   if (resize) resizeDuplicateTabsPanel();
 };
 
-const toggleOptionPanel = async (clicked, nbPinnedOptions) => {
-
-  const toggleOptionsGroupPromises = [
-    toggleOptionsGroup("onDuplicateTabDetectedGroup"),
-    toggleOptionsGroup("priorityTabGroup"),
-    toggleOptionsGroup("scopeGroup"),
-    toggleOptionsGroup("filtersGroup")
-  ];
+const toggleOptionPanel = async (clicked, isPinnedOptions) => {
 
   if (clicked) {
     $("#panelHeadingOptions").toggleClass("group-collapsed group-expanded");
 
     if ($("#panelHeadingOptions").hasClass("group-expanded")) {
+      const toggleOptionsGroupPromises = [
+        toggleOptionsGroup("onDuplicateTabDetectedGroup"),
+        toggleOptionsGroup("priorityTabGroup"),
+        toggleOptionsGroup("scopeGroup"),
+        toggleOptionsGroup("filtersGroup")
+      ];
       await Promise.all(toggleOptionsGroupPromises);
     }
 
@@ -86,15 +87,20 @@ const toggleOptionPanel = async (clicked, nbPinnedOptions) => {
       resizeDuplicateTabsPanel();
     });
   }
-  else if (nbPinnedOptions === 0) {
-    $("#panelHeadingOptions").toggleClass("group-collapsed group-expanded");
-    $("#panelHeadingOptions").nextAll(".list-group-collapsible").first().slideToggle(0, "linear", () => {
-      resizeDuplicateTabsPanel();
-    });
-  }
-  else if (nbPinnedOptions > 0) {
-    await Promise.all(toggleOptionsGroupPromises);
-    resizeDuplicateTabsPanel();
+  else {
+    if (isPinnedOptions) {
+      const toggleOptionsGroupPromises = [
+        toggleOptionsGroup("onDuplicateTabDetectedGroup"),
+        toggleOptionsGroup("priorityTabGroup"),
+        toggleOptionsGroup("scopeGroup"),
+        toggleOptionsGroup("filtersGroup")
+      ];
+      await Promise.all(toggleOptionsGroupPromises);
+    }
+    else {
+      $("#panelHeadingOptions").toggleClass("group-collapsed group-expanded");
+      await $("#panelHeadingOptions").nextAll(".list-group-collapsible").first().slideToggle(0, "linear");
+    }
   }
 
 };
@@ -121,7 +127,7 @@ const toggleOptionsGroup = (groupId, clicked) => {
 
 const setDuplicateTabsTable = (duplicateTabs) => {
   if (duplicateTabs) {
-    chrome.windows.getCurrent({ windowTypes: ["normal"] }, focusedWindow => {
+    chrome.windows.getCurrent(null, focusedWindow => {
       $("#duplicateTabsTable").empty();
       $("#duplicateTabsTable").append("<tbody></tbody>");
       duplicateTabs.forEach(duplicateTab => {
@@ -130,38 +136,45 @@ const setDuplicateTabsTable = (duplicateTabs) => {
         $("#duplicateTabsTable > tbody").append("<tr tabId='" + duplicateTab.id + "' group='" + duplicateTab.group + "' windowId='" + duplicateTab.windowId + "'><td class='td-tab-link' " + containerStyle + "> <img src='" + duplicateTab.icon + "'>" + title + "</td><td class='td-close-button'><button type='button' class='close'>&times;</button></td></tr>");
       });
       $("#closeDuplicateTabsBtn").toggleClass("disabled", false);
-      setDuplicateTabsMaxWidth();
+      resizeDuplicateTabsPanel();
     });
   }
   else {
     $("#duplicateTabsTable").empty();
     $("#duplicateTabsTable").append("<tr><td width='100%'align='center' valign='center'><font color='#9FACBD'><em>" + chrome.i18n.getMessage("noDuplicateTabs") + ".</em></font></td></tr>");
     $("#closeDuplicateTabsBtn").toggleClass("disabled", true);
-    $(".td-tab-link").css("max-width", "280px");
+    resizeDuplicateTabsPanel();
   }
 };
 
 const resizeDuplicateTabsPanel = () => {
   const optionGroupHeight = $(".list-group").height();
-  const duplicateTabsPanelHeight = 550 - optionGroupHeight;
-  $("#panelDuplicateTabs").css("max-height", duplicateTabsPanelHeight);
-  $(".table-scrollable").css("max-height", duplicateTabsPanelHeight - 100);
-  setDuplicateTabsMaxWidth();
-};
-
-const setDuplicateTabsMaxWidth = () => {
-  $(".table-scrollable").height() + $(".list-group").height() >= 450 ? $(".td-tab-link").css("max-width", "260px") : $(".td-tab-link").css("max-width", "280px");
+  const duplicateTabsPanelMaxHeight = 550 - optionGroupHeight;
+  if ($(".table-scrollable").height() === 0) {
+    $("#duplicateTabsPanelHeight").css("height", duplicateTabsPanelMaxHeight);
+    $(".table-scrollable").css("height", duplicateTabsPanelMaxHeight - 100);
+  }
+  else {
+    $("#duplicateTabsPanelHeight").css("height", "");
+    $(".table-scrollable").css("height", "");
+    $("#panelDuplicateTabs").css("max-height", duplicateTabsPanelMaxHeight);
+    $(".table-scrollable").css("max-height", duplicateTabsPanelMaxHeight - 100);
+    $(".table-scrollable").height() + $(".list-group").height() >= 450 ? $(".td-tab-link").css("max-width", "260px") : $(".td-tab-link").css("max-width", "280px");
+  }
 };
 
 const sendMessage = (action, data) => {
-  return new Promise((resolve) => chrome.runtime.sendMessage({ action: action, data: data }, resolve));
+  return new Promise((resolve) => {
+    chrome.runtime.sendMessage({ action: action, data: data }, response => {
+      if (chrome.runtime.lastError) console.error("sendMessage error:", chrome.runtime.lastError.message);
+      resolve(response);
+    });
+  });
 };
 
-const requestRefreshAllDuplicateTabs = () => sendMessage("refreshAllDuplicateTabs", { "windowId": chrome.windows.WINDOW_ID_CURRENT });
+const refreshGlobalDuplicateTabsInfo = () => sendMessage("refreshGlobalDuplicateTabsInfo", { "windowId": chrome.windows.WINDOW_ID_CURRENT });
 
 const requestCloseDuplicateTabs = () => sendMessage("closeDuplicateTabs", { "windowId": chrome.windows.WINDOW_ID_CURRENT });
-
-const requestGetDuplicateTabs = () => sendMessage("getDuplicateTabs", { "windowId": chrome.windows.WINDOW_ID_CURRENT });
 
 const requestCloseDuplicateTab = (tabId) => sendMessage("closeDuplicateTab", { "tabId": tabId });
 
@@ -169,30 +182,48 @@ const activateSelectedTab = (tabId, windowId) => sendMessage("activateTab", { "t
 
 const saveOption = (name, value) => sendMessage("setStoredOption", { "name": name, "value": value });
 
-const setPaneOptions = async () => {
+const requestGetDuplicateTabs = async () => {
+  const response = await sendMessage("getDuplicateTabs", { "windowId": chrome.windows.WINDOW_ID_CURRENT });
+  return response.data;
+};
+
+const setPanelOptions = async () => {
   const response = await sendMessage("getOptions");
   const options = response.data;
-  const pinnedOptions = new Set();
+  let isPinnedOptions = false;
+
   for (const option in options) {
-    const data = options[option];
+    const value = options[option].value;
     if (option === "environment") {
-      if (data.value === "chrome") $("#containerItem").toggleClass("hidden", true);
+      if (value === "chrome") $("#containerItem").toggleClass("hidden", true);
     }
     else {
-      if (typeof (data.value) === "boolean") {
-        $("#" + option).prop("checked", data.value);
-        if (option.endsWith("Checked") && data.value) pinnedOptions.add(option);
+      if (typeof (value) === "boolean") {
+        $("#" + option).prop("checked", value);
+        if (option.endsWith("PinChecked") && value) isPinnedOptions = true;
       }
       else {
-        $("#" + option + " option[value='" + data.value + "']").prop("selected", true);
-        if (option === "onDuplicateTabDetected") changeAutoCloseOptionState(data.value, false);
+        $("#" + option + " option[value='" + value + "']").prop("selected", true);
+        if (option === "onDuplicateTabDetected") changeAutoCloseOptionState(value, false);
       }
     }
   }
 
-  return pinnedOptions.size;
+  return isPinnedOptions;
 };
 
+const handleMessage = (message) => {
+  if (message.action === "updateDuplicateTabsTable") setDuplicateTabsTable(message.data.duplicateTabs);
+};
+
+chrome.runtime.onMessage.addListener(handleMessage);
+
+const handleDOMContentLoaded = () => {
+  initialize();
+  loadPopupEvents();
+};
+
+document.addEventListener("DOMContentLoaded", handleDOMContentLoaded);
 
 // Localize the popup
 const localizePopup = (node) => {
@@ -203,18 +234,3 @@ const localizePopup = (node) => {
     element.textContent = chrome.i18n.getMessage(value);
   });
 };
-
-chrome.runtime.onMessage.addListener((message) => {
-  if (message.action === "updateDuplicateTabsTable") {
-    setDuplicateTabsTable(message.data.duplicateTabs);
-  }
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-  initialize();
-  loadEvents();
-});
-
-window.addEventListener("unload", () => {
-  sendMessage("setPopupOptionState", { "value": false });
-});

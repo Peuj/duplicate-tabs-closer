@@ -1,31 +1,32 @@
 "use strict";
 
-const initialize = () => {
+const initialize = async () => {
+  const requestGetDuplicateTabsPromise = requestGetDuplicateTabs();
+  setPanelOptions();
   localizePopup(document.documentElement);
-  setPaneOptions();
-  requestGetDuplicateTabs();
-  sendMessage("setTabOptionState", { "value": true });
+  const duplicateTabs = await requestGetDuplicateTabsPromise;
+  setDuplicateTabsTable(duplicateTabs);
 };
 
-const loadEvents = () => {
+const loadPageEvents = () => {
 
   // Save checkbox settings
   $(".list-group input[type='checkbox'").on("change", function () {
     saveOption(this.id, this.checked);
-    if (this.className === "checkbox-filter") requestRefreshAllDuplicateTabs();
+    if (this.className === "checkbox-filter") refreshGlobalDuplicateTabsInfo();
   });
 
   // Save combobox settings
   $(".list-group select").on("change", function () {
     saveOption(this.id, this.value);
     if (this.id === "onDuplicateTabDetected") changeAutoCloseOptionState(this.value);
-    else if (this.id === "scope") requestRefreshAllDuplicateTabs();
+    else if (this.id === "scope") refreshGlobalDuplicateTabsInfo();
   });
 
   // Save badge color settings
   $(".list-group input[type='color']").on("change", function () {
     saveOption(this.id, this.value);
-    requestRefreshAllDuplicateTabs();
+    refreshGlobalDuplicateTabsInfo();
   });
 
   // Active selected tab
@@ -54,23 +55,31 @@ const changeAutoCloseOptionState = (state) => {
 };
 
 const sendMessage = (action, data) => {
-  return new Promise((resolve) => chrome.runtime.sendMessage({ action: action, data: data }, resolve));
+  return new Promise((resolve) => {
+    chrome.runtime.sendMessage({ action: action, data: data }, response => {
+      if (chrome.runtime.lastError) console.error("sendMessage error:", chrome.runtime.lastError.message);
+      resolve(response);
+    });
+  });
 };
 
-const requestRefreshAllDuplicateTabs = () => sendMessage("refreshAllDuplicateTabs", { "windowId": chrome.windows.WINDOW_ID_CURRENT });
+const refreshGlobalDuplicateTabsInfo = () => sendMessage("refreshGlobalDuplicateTabsInfo", { "windowId": chrome.windows.WINDOW_ID_CURRENT });
 
 const requestCloseDuplicateTabs = () => sendMessage("closeDuplicateTabs", { "windowId": chrome.windows.WINDOW_ID_CURRENT });
-
-const requestGetDuplicateTabs = () => sendMessage("getDuplicateTabs", { "windowId": chrome.windows.WINDOW_ID_CURRENT });
 
 const requestCloseDuplicateTab = (tabId) => sendMessage("closeDuplicateTab", { "tabId": tabId });
 
 const activateSelectedTab = (tabId, windowId) => sendMessage("activateTab", { "tabId": tabId, "windowId": windowId });
 
+const requestGetDuplicateTabs = async () => {
+  const response = await sendMessage("getDuplicateTabs", { "windowId": chrome.windows.WINDOW_ID_CURRENT });
+  return response.data;
+};
+
 const setDuplicateTabsTable = (duplicateTabs) => {
 
   if (duplicateTabs) {
-    chrome.windows.getCurrent({ windowTypes: ["normal"] }, focusedWindow => {
+    chrome.windows.getCurrent(null, focusedWindow => {
       $("#duplicateTabsTable").empty();
       $("#duplicateTabsTable").append("<tbody></tbody>");
       duplicateTabs.forEach(duplicateTab => {
@@ -92,30 +101,45 @@ const setDuplicateTabsTable = (duplicateTabs) => {
 
 const saveOption = (name, value) => sendMessage("setStoredOption", { "name": name, "value": value });
 
-const setPaneOptions = async () => {
+const setPanelOption = (option, value) => {
+  if (option === "environment") {
+    if (value === "chrome") $("#containerItem").toggleClass("hidden", true);
+  }
+  else {
+    if (typeof (value) === "boolean") {
+      $("#" + option).prop("checked", value);
+    }
+    else if (value.startsWith("#")) {
+      $("#" + option).prop("value", value);
+    }
+    else {
+      $("#" + option + " option[value='" + value + "']").prop("selected", true);
+      if (option === "onDuplicateTabDetected") changeAutoCloseOptionState(value, false);
+    }
+  }
+};
+
+const setPanelOptions = async () => {
   const response = await sendMessage("getOptions");
   const options = response.data;
   for (const option in options) {
-    const data = options[option];
-    if (option === "environment") {
-      if (data.value === "chrome") $("#containerItem").toggleClass("hidden", true);
-    }
-    else {
-      if (typeof (data.value) === "boolean") {
-        $("#" + option).prop("checked", data.value);
-      }
-      else if (data.value.startsWith("#")) {
-        $("#" + option).prop("value", data.value);
-      }
-      else {
-        $("#" + option + " option[value='" + data.value + "']").prop("selected", true);
-        if (option === "onDuplicateTabDetected") changeAutoCloseOptionState(data.value, false);
-      }
-    }
+    setPanelOption(option, options[option].value);
   }
-
 };
 
+const handleMessage = (message) => {
+  if (message.action === "setStoredOption") setPanelOption(message.data.name, message.data.value);
+  else if (message.action === "updateDuplicateTabsTable") setDuplicateTabsTable(message.data.duplicateTabs);
+};
+
+chrome.runtime.onMessage.addListener(handleMessage);
+
+const handleDOMContentLoaded = () => {
+  initialize();
+  loadPageEvents();
+};
+
+document.addEventListener("DOMContentLoaded", handleDOMContentLoaded);
 
 // Localize the popup
 const localizePopup = (node) => {
@@ -126,19 +150,3 @@ const localizePopup = (node) => {
     element.textContent = chrome.i18n.getMessage(value);
   });
 };
-
-
-chrome.runtime.onMessage.addListener((message) => {
-  if (message.action === "updateDuplicateTabsTable") {
-    setDuplicateTabsTable(message.data.duplicateTabs);
-  }
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-  initialize();
-  loadEvents();
-});
-
-window.addEventListener("unload", () => {
-  sendMessage("setTabOptionState", { "value": false });
-});

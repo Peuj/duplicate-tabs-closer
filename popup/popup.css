@@ -182,7 +182,6 @@ body {
 }
 
 .td-tab-link {
-  max-width: 280px;
   width: 100%;
   overflow: hidden;
   white-space: nowrap;

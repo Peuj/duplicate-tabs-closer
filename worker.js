@@ -2,6 +2,70 @@
 
 const duplicateTabsClosing = new Set();
 
+const matchTitle = (openTab, signaledTab) => {
+
+    if (options.compareWithTitle) {
+        if ((tabComplete(openTab) && tabComplete(signaledTab)) && (openTab.title === signaledTab.title)) {
+            return true;
+        }
+    }
+
+    return false;
+};
+
+const getHttpsTab = (url1, url2) => {
+
+    if (options.keepTabWithHttps) {
+        const regex = /^https:\/\//i;
+        const match1 = regex.test(url1);
+        const match2 = regex.test(url2);
+
+        if (match1) {
+            return match2 ? 0 : 1;
+        }
+        else {
+            return match2 ? 2 : 0;
+        }
+    }
+
+    return 0;
+};
+
+const getPinnedTab = (tab1, tab2) => {
+
+    if (options.keepPinnedTab) {
+        const tab1Pinned = tab1.pinned;
+        const tab2Pinned = tab2.pinned;
+
+        if (tab1Pinned) {
+            return tab2Pinned ? 0 : 1;
+        }
+        else {
+            return tab2Pinned ? 2 : 0;
+        }
+    }
+
+    return 0;
+};
+
+const keepIfHttps = (tabToCloseUrl, tabToKeepurl) => {
+
+    if (options.keepTabWithHttps) {
+        const regex = /^https:\/\//i;
+        if (regex.test(tabToCloseUrl) && !regex.test(tabToKeepurl)) return true;
+    }
+
+    return false;
+};
+
+const keepIfPinnedTab = (tabToClose, tabToKeep) => {
+
+    if (options.keepPinnedTab) {
+        if (tabToClose.pinned && !tabToKeep.pinned) return true;
+    }
+
+    return false;
+};
 
 const getTabsPriority = (signaledTab, signaledTabUrl, openTab) => {
 
@@ -41,11 +105,13 @@ const getTabsPriority = (signaledTab, signaledTabUrl, openTab) => {
         priority.closeSignaledTab = false;
         priority.tabToClose = openTab;
         priority.tabToKeep = signaledTab;
+        priority.tabReload = false;
     }
     else if (tabToKeep == keepOpenTab) {
         priority.closeSignaledTab = true;
         priority.tabToClose = signaledTab;
         priority.tabToKeep = openTab;
+        priority.tabReload = options.keepReloadOlderTab ? true : false;
     }
 
     return priority;
@@ -62,88 +128,21 @@ const closeDuplicateTab = (priority) => {
 
         duplicateTabsClosing.delete(priority.tabToClose.id);
 
-        if (chrome.runtime.lastError) {
-            return;
-        }
+        if (chrome.runtime.lastError) return;
+
+        if (priority.tabReload) reloadTab(priority.tabToKeep.id);
 
         if (options.defaultTabBehavior) {
-            if (tabToCloseIndex > 0) await moveTab(priority.tabToKeep.id, { index: tabToCloseIndex });
-            if (tabToCloseActive) await activateTab(priority.tabToKeep.id);
+            if (priority.closeSignaledTab) {
+                if (tabToCloseIndex > 0) await moveTab(priority.tabToKeep.id, { index: tabToCloseIndex });
+                if (tabToCloseActive) await activateTab(priority.tabToKeep.id);
+            }
         }
         else if (options.activateKeptTab) {
             activateTab(priority.tabToKeep.id, priority.tabToKeep.windowId);
         }
 
     });
-};
-
-/* exported searchAndCloseNewDuplicateTabs */
-const searchAndCloseNewDuplicateTabs = async (searchInfo) => {
-
-    if (duplicateTabsClosing.has(searchInfo.tab.id)) {
-        return;
-    }
-
-    const signaledTab = searchInfo.tab;
-    const signaledWindowsId = signaledTab.windowId;
-    const signaledTabActive = signaledTab.active;
-    const signaledTabUrl = searchInfo.loadingUrl ? searchInfo.loadingUrl : signaledTab.url;
-    const matchingSignaledTabUrl = matchingURL(signaledTabUrl);
-
-    const queryInfo = {};
-
-    if (searchInfo.queryStatus) queryInfo.status = searchInfo.queryStatus;
-
-    if (!options.searchInAllWindows) {
-        queryInfo.windowId = signaledTab.windowId;
-        if (options.searchInSameContainer) queryInfo.cookieStoreId = signaledTab.cookieStoreId;
-    }
-
-    const openTabs = await getTabs(queryInfo);
-    let match = false;
-
-    for (const openTab of openTabs) {
-
-        if ((openTab.id === signaledTab.id) || isBlankUrl(openTab.url) || duplicateTabsClosing.has(openTab.id)) {
-            continue;
-        }
-
-        if ((matchingURL(openTab.url) === matchingSignaledTabUrl) || matchTitle(openTab, signaledTab)) {
-
-            match = true;
-
-            const priority = getTabsPriority(signaledTab, signaledTabUrl, openTab);
-
-            closeDuplicateTab(priority);
-
-            if (priority.closeSignaledTab) {
-                break;
-            }
-
-        }
-    }
-
-    if (!match) {
-        if (hasDuplicatedTabs(signaledWindowsId)) getDuplicateTabs(signaledWindowsId)
-        else if (signaledTabActive) setBadge({ windowId: signaledWindowsId });
-    }
-};
-
-/* exported closeDuplicateTabs */
-const closeDuplicateTabs = (windowId) => searchForDuplicateTabs(windowId, true);
-
-/* exported getDuplicateTabs */
-const getDuplicateTabs = (windowId, removedTabId) => searchForDuplicateTabs(windowId, false, removedTabId);
-
-/* exported refreshAllDuplicateTabs */
-const refreshAllDuplicateTabs = async () => {
-    if (options.searchInAllWindows) {
-        searchForDuplicateTabs();
-    }
-    else {
-        const windows = await getWindows();
-        windows.forEach(window => searchForDuplicateTabs(window.id));
-    }
 };
 
 const manageUniqueTab = (tab, tabMatchingId, uniqueTabIds, focusedWindowId, closeTabs, duplicateGroupTabs) => {
@@ -213,27 +212,81 @@ const searchForDuplicateTabs = async (windowId, closeTabs, removedTabId) => {
 
     if (!closeTabs) updateBadges(duplicateGroupTabs, windowId);
 
-    if (isOptionOpen() && (!windowId || (windowId === focusedWindowId) || (windowId === chrome.windows.WINDOW_ID_CURRENT))) {
-        const duplicateTabs = await setDuplicateTabs(duplicateGroupTabs);
-        chrome.runtime.sendMessage({ action: "updateDuplicateTabsTable", data: { "duplicateTabs": duplicateTabs } });
-    }
-
+    return { duplicateGroupTabs: duplicateGroupTabs, focusedWindowId: focusedWindowId };
 };
 
-const addDuplicateTab = async (tab, group, uniqueTabIds, duplicateTabs) => {
+/* exported searchAndCloseNewDuplicateTabs */
+const searchAndCloseNewDuplicateTabs = async (searchInfo) => {
 
-    if (uniqueTabIds.has(tab.id)) return;
+    if (duplicateTabsClosing.has(searchInfo.tab.id)) {
+        return;
+    }
+
+    const signaledTab = searchInfo.tab;
+    const signaledWindowsId = signaledTab.windowId;
+    const signaledTabActive = signaledTab.active;
+    const signaledTabUrl = searchInfo.loadingUrl ? searchInfo.loadingUrl : signaledTab.url;
+    const matchingSignaledTabUrl = matchingURL(signaledTabUrl);
+
+    const queryInfo = {};
+
+    if (searchInfo.queryStatus) queryInfo.status = searchInfo.queryStatus;
+
+    if (!options.searchInAllWindows) {
+        queryInfo.windowId = signaledTab.windowId;
+        if (options.searchInSameContainer) queryInfo.cookieStoreId = signaledTab.cookieStoreId;
+    }
+
+    const openTabs = await getTabs(queryInfo);
+    let match = false;
+
+    for (const openTab of openTabs) {
+
+        if ((openTab.id === signaledTab.id) || isBlankUrl(openTab.url) || duplicateTabsClosing.has(openTab.id)) {
+            continue;
+        }
+
+        if ((matchingURL(openTab.url) === matchingSignaledTabUrl) || matchTitle(openTab, signaledTab)) {
+
+            match = true;
+
+            const priority = getTabsPriority(signaledTab, signaledTabUrl, openTab);
+
+            closeDuplicateTab(priority);
+
+            if (priority.closeSignaledTab) {
+                break;
+            }
+
+        }
+    }
+
+    if (!match) {
+        if (hasDuplicatedTabs(signaledWindowsId)) refreshDuplicateTabsStatus(signaledWindowsId);
+        else if (signaledTabActive) setBadge({ windowId: signaledWindowsId });
+    }
+};
+
+/* exported closeDuplicateTabs */
+const closeDuplicateTabs = (windowId) => searchForDuplicateTabs(windowId, true);
+
+/* exported getDuplicateTabs */
+const getDuplicateTabs = async (windowId) => {
+    const searchInfo = await searchForDuplicateTabs(windowId, false);
+    return setDuplicateTabs(searchInfo.duplicateGroupTabs);
+};
+
+const addDuplicateTab = async (tab, group, duplicateTabs) => {
 
     let containerColor = "";
-
-    if (options.isFirefox) {
-        try {
+    try {
+        if (tab.cookieStoreId !== "firefox-default") {
             const getContext = await browser.contextualIdentities.get(tab.cookieStoreId);
             if (getContext) containerColor = getContext.color;
         }
-        catch (error) {
-            // console.error(error);
-        }
+    }
+    catch (error) {
+        // console.error(error);
     }
 
     duplicateTabs.add({
@@ -246,7 +299,6 @@ const addDuplicateTab = async (tab, group, uniqueTabIds, duplicateTabs) => {
         icon: tab.favIconUrl || "../images/default-favicon.png"
     });
 
-    uniqueTabIds.add(tab.id);
 };
 
 const setDuplicateTabs = async (duplicateGroupTabs) => {
@@ -262,81 +314,34 @@ const setDuplicateTabs = async (duplicateGroupTabs) => {
     const sortedGroupTabs = new Map([...duplicateGroupTabs.entries()].sort((entry1, entry2) => entry1[1][0] - entry2[1][0]));
 
     const sortedTabs = new Set();
-    const uniqueTabIds = new Set();
 
     for (const groupTab of sortedGroupTabs) {
         const group = groupTab[0];
         const duplicateTabs = groupTab[1];
-        for (const duplicateTab of duplicateTabs) {
-            await addDuplicateTab(duplicateTab, group, uniqueTabIds, sortedTabs);
-        }
+
+        const promises = [...duplicateTabs].map(duplicateTab => addDuplicateTab(duplicateTab, group, sortedTabs));
+        await Promise.all(promises);
     }
 
     return [...sortedTabs];
 };
 
-const matchTitle = (openTab, signaledTab) => {
-
-    if (options.compareWithTitle) {
-
-        if ((tabComplete(openTab) && tabComplete(signaledTab)) && (openTab.title === signaledTab.title)) {
-            return true;
-        }
+/* exported refreshDuplicateTabsStatus */
+const refreshDuplicateTabsStatus = async (windowId, removedTabId) => {
+    const searchInfo = await searchForDuplicateTabs(windowId, false, removedTabId);
+    if (isOptionOpen() && (!windowId || (windowId === searchInfo.focusedWindowId) || (windowId === chrome.windows.WINDOW_ID_CURRENT))) {
+        const duplicateTabs = await setDuplicateTabs(searchInfo.duplicateGroupTabs);
+        chrome.runtime.sendMessage({ action: "updateDuplicateTabsTable", data: { "duplicateTabs": duplicateTabs } });
     }
-
-    return false;
 };
 
-const getHttpsTab = (url1, url2) => {
-
-    if (options.keepTabWithHttps) {
-        const regex = /^https:\/\//i;
-        const match1 = regex.test(url1);
-        const match2 = regex.test(url2);
-
-        if (match1) {
-            return match2 ? 0 : 1;
-        }
-        else {
-            return match2 ? 2 : 0;
-        }
+/* exported refreshGlobalDuplicateTabsInfo */
+const refreshGlobalDuplicateTabsInfo = async () => {
+    if (options.searchInAllWindows) {
+        refreshDuplicateTabsStatus();
     }
-
-    return 0;
-};
-
-const getPinnedTab = (tab1, tab2) => {
-
-    if (options.keepPinnedTab) {
-        const tab1Pinned = tab1.pinned;
-        const tab2Pinned = tab2.pinned;
-
-        if (tab1Pinned) {
-            return tab2Pinned ? 0 : 1;
-        }
-        else {
-            return tab2Pinned ? 2 : 0;
-        }
+    else {
+        const windows = await getWindows();
+        windows.forEach(window => refreshDuplicateTabsStatus(window.id));
     }
-
-    return 0;
-};
-
-const keepIfHttps = (tabToCloseUrl, tabToKeepurl) => {
-
-    if (options.keepTabWithHttps) {
-        const regex = /^https:\/\//i;
-        if (regex.test(tabToCloseUrl) && !regex.test(tabToKeepurl)) return true;
-    }
-
-    return false;
-};
-
-const keepIfPinnedTab = (tabToClose, tabToKeep) => {
-
-    if (options.keepPinnedTab) {
-        if (tabToClose.pinned && !tabToKeep.pinned) return true;
-    }
-
-    return false;
 };

@@ -31,6 +31,10 @@
     "message": "Conserver l'ancien onglet",
     "description": "Keep older tab"
   },
+  "keepReloadOlderTab": {
+    "message": "Conserver et actualiser l'ancien onglet",
+    "description": "Keep and reload older tab"
+  },
   "keepTabWithHistory": {
     "message": "Conserver l'onglet ayant un historique",
     "description": "Keep tab with history"

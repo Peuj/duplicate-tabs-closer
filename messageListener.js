@@ -1,46 +1,41 @@
 "use strict";
 
-chrome.runtime.onMessage.addListener( (message, sender, response) => {
+const handleMessage = (message, sender, response) => {
 
     const sendResponse = (data) => response({ data: data });
 
     switch (message.action) {
-        case "setTabOptionState": {
-            setTabOptionState(message.data.value);
-            break;
-        }
-        case "setPopupOptionState": {
-            setPopupOptionState(message.data.value);
-            break;
-        }
         case "setStoredOption": {
             setStoredOption(message.data.name, message.data.value);
             break;
         }
         case "getOptions": {
-            chrome.storage.local.get(null, options => sendResponse(options));
-            return true;        
+            chrome.storage.local.get(null, storedOptions => sendResponse(storedOptions));
+            return true;
         }
         case "getDuplicateTabs": {
-            getDuplicateTabs(message.data.windowId);
-            break;
+            getDuplicateTabs(message.data.windowId).then(duplicateTabs => sendResponse(duplicateTabs));
+            return true;
         }
         case "closeDuplicateTabs": {
             closeDuplicateTabs(message.data.windowId);
             break;
         }
-        case "closeDuplicateTab": {   
+        case "closeDuplicateTab": {
             chrome.tabs.remove(message.data.tabId);
             break;
         }
-        case "activateTab": {   
+        case "activateTab": {
             activateTab(message.data.tabId, message.data.windowId);
             break;
-        }        
-        case "refreshAllDuplicateTabs": {
-            refreshAllDuplicateTabs(message.data.windowId);
+        }
+        case "refreshGlobalDuplicateTabsInfo": {
+            refreshGlobalDuplicateTabsInfo(message.data.windowId);
             break;
         }
     }
 
-});
+    sendResponse(undefined);
+};
+
+chrome.runtime.onMessage.addListener(handleMessage);
