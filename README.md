@@ -51,6 +51,7 @@ Duplicate Tabs Closer detects and closes duplicate tabs.
 
 * **Duplicate tabs badge color**: Set the badge color for duplicate tabs
 * **No duplicate tab badge color**: Set the badge color for no duplicate tabs
+* **"Show badge if no duplicate tab**: Show badge with value `0` if no duplicate tab
 
 
 ### Hotkey:

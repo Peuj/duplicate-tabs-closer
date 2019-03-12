@@ -116,8 +116,8 @@
     "description": "Badge color for no duplicate tab"
   },
   "showBadgeIfNoDuplicateTabs": {
-    "message": "Show Badge if no duplicate tab",
-    "description": "Show Badge if no duplicate tab"
+    "message": "Show badge if no duplicate tab",
+    "description": "Show badge if no duplicate tab"
   },
   "noDuplicateTabs": {
     "message": "No duplicate tabs",
