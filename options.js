@@ -2,49 +2,49 @@
 
 const defaultOptions = {
     onDuplicateTabDetected: {
-        value: "N",
+        value: "N"
     },
     onRemainingTab: {
-        value: "A",
+        value: "A"
     },
     keepTabBasedOnAge: {
-        value: "O",
+        value: "O"
     },
     keepTabWithHttps: {
-        value: true,
+        value: true
     },
     keepPinnedTab: {
-        value: true,
+        value: true
     },
     keepTabWithHistory: {
-        value: false,
+        value: false
     },
     scope: {
-        value: "C",
+        value: "C"
     },
     ignoreHashPart: {
-        value: false,
+        value: false
     },
     ignoreSearchPart: {
-        value: false,
+        value: false
     },
     ignorePathPart: {
-        value: false,
+        value: false
     },
     compareWithTitle: {
-        value: false,
+        value: false
     },
     onDuplicateTabDetectedGroupPinChecked: {
-        value: true,
+        value: true
     },
     priorityTabGroupPinChecked: {
-        value: true,
+        value: true
     },
     filtersGroupPinChecked: {
-        value: true,
+        value: true
     },
     scopeGroupPinChecked: {
-        value: true,
+        value: true
     },
     badgeColorDuplicateTabs: {
         value: "#f22121"
@@ -52,18 +52,21 @@ const defaultOptions = {
     badgeColorNoDuplicateTabs: {
         value: "#1e90ff"
     },
+    showBadgeIfNoDuplicateTabs: {
+        value: true
+    },
     environment: {
         value: "firefox"
     }
 };
 
 const getDefaultOptions = async () => {
-    const newOptions = Object.assign({}, defaultOptions);
+    const options = Object.assign({}, defaultOptions);
     const info = await getPlatformInfo();
     const environment = (info.os === "android") ? "android" : (typeof InstallTrigger !== "undefined") ? "firefox" : "chrome";
-    newOptions.environment.value = environment;
-    if (environment === "android") newOptions.scope.value = "A";
-    return newOptions;
+    options.environment.value = environment;
+    if (environment === "android") options.scope.value = "A";
+    return options;
 };
 
 const getNotInReferenceKeys = (referenceKeys, keys) => {
@@ -79,11 +82,10 @@ const initializeOptions = async () => {
     const defaultKeys = Object.keys(defaultOptions).sort();
 
     if (storedKeys.length === 0) {
-        const newOptions = await getDefaultOptions();
-        storedOptions = await saveStoredOptions(newOptions);
+        const options = await getDefaultOptions();
+        storedOptions = await saveStoredOptions(options);
     }
     else if (JSON.stringify(storedKeys) != JSON.stringify(defaultKeys)) {
-
         const obsoleteKeys = getNotInReferenceKeys(storedKeys, defaultKeys);
         obsoleteKeys.forEach(key => {
             // option typo change between 3.16 and 3.17 - to remove later
@@ -112,6 +114,7 @@ const setStoredOption = async (name, value) => {
     storedOptions = await saveStoredOptions(storedOptions);
     setOptions(storedOptions);
     if (name === "onDuplicateTabDetected") setBadgeIcon();
+    else if (name === "showBadgeIfNoDuplicateTabs") setBadge({ "windowId": chrome.windows.WINDOW_ID_CURRENT });
 };
 
 const options = {
@@ -130,14 +133,8 @@ const options = {
     searchInCurrentWindow: false,
     searchInAllWindows: false,
     badgeColorDuplicateTabs: "",
-    badgeColorNoDuplicateTabs: ""
-};
-
-const environment = {
-    isAndroid: false,
-    isFirefox: false,
-    isFirefox62Compatible: false,
-    isFirefox63Compatible: false
+    badgeColorNoDuplicateTabs: "",
+    showBadgeIfNoDuplicateTabs: false
 };
 
 const setOptions = (storedOptions) => {
@@ -157,6 +154,14 @@ const setOptions = (storedOptions) => {
     options.searchInAllWindows = storedOptions["scope"].value === "A";
     options.badgeColorDuplicateTabs = storedOptions["badgeColorDuplicateTabs"].value;
     options.badgeColorNoDuplicateTabs = storedOptions["badgeColorNoDuplicateTabs"].value;
+    options.showBadgeIfNoDuplicateTabs = storedOptions["showBadgeIfNoDuplicateTabs"].value;
+};
+
+const environment = {
+    isAndroid: false,
+    isFirefox: false,
+    isFirefox62Compatible: false,
+    isFirefox63Compatible: false
 };
 
 const setEnvironment = async (storedOptions) => {

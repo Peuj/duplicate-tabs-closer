@@ -15,15 +15,17 @@ const setBadgeIcon = () => {
 /* exported setBadge */
 const setBadge = async (badgeInfo) => {
 
-	const backgroundColor = (nbDuplicateTabs) => nbDuplicateTabs !== "0" ? options.badgeColorDuplicateTabs : options.badgeColorNoDuplicateTabs;
+	let nbDuplicateTabs = getNbDuplicatedTabs(badgeInfo.windowId);
 
-	const nbDuplicateTabs = getNbDuplicatedTabs(badgeInfo.windowId);
+	const backgroundColor = (nbDuplicateTabs !== "0") ? options.badgeColorDuplicateTabs : options.badgeColorNoDuplicateTabs;
+
+	if (nbDuplicateTabs === "0" && !options.showBadgeIfNoDuplicateTabs) nbDuplicateTabs = "";	
 
 	if (environment.isFirefox62Compatible) {
 		const badgeText = await getWindowBadgeText(badgeInfo.windowId);
 		if (nbDuplicateTabs === badgeText) return;
 		setWindowBadgeText(badgeInfo.windowId, nbDuplicateTabs);
-		setWindowBadgeBackgroundColor(badgeInfo.windowId, backgroundColor(nbDuplicateTabs));
+		setWindowBadgeBackgroundColor(badgeInfo.windowId, backgroundColor);
 	}
 	else {
 		if (!badgeInfo.tabId) {
@@ -33,7 +35,7 @@ const setBadge = async (badgeInfo) => {
 		const badgeText = await getTabBadgeText(badgeInfo.tabId);
 		if (nbDuplicateTabs === badgeText) return;
 		setTabBadgeText(badgeInfo.tabId, nbDuplicateTabs);
-		setTabBadgeBackgroundColor(badgeInfo.tabId, backgroundColor(nbDuplicateTabs));
+		setTabBadgeBackgroundColor(badgeInfo.tabId, backgroundColor);
 	}
 
 };

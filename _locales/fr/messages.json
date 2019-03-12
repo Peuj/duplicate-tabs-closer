@@ -115,6 +115,10 @@
     "message": "Couleur du bouton pour aucun onglet en doublon",
     "description": "Badge color for no duplicate tabs"
   },
+  "showBadgeIfNoDuplicateTabs": {
+    "message": "Afficher le badge si aucun onglet en doublon",
+    "description": "Affiche le badge si aucun onglet en doublon"
+  },
   "noDuplicateTabs": {
     "message": "Aucun onglet en doublon",
     "description": "No duplicate tabs"    
