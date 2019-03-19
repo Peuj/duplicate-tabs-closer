@@ -1,0 +1,126 @@
+{
+  "options": {
+    "message": "Options",
+    "description": "Options"
+  },
+  "onDuplicateTabDetected": {
+    "message": "On duplicate tab detected",
+    "description": "On duplicate tab detected"
+  },
+  "doNothing": {
+    "message": "Do nothing",
+    "description": "Do nothing"
+  },
+  "autoCloseTab": {
+    "message": "Close tab automatically",
+    "description": "Close tab automatically"
+  },
+  "showPanel": {
+    "message": "Show panel",
+    "description": "Show panel"
+  },
+  "tabPriority": {
+    "message": "Priority",
+    "description": "Priority"
+  },
+  "keepNewerTab": {
+    "message": "Keep newer tab",
+    "description": "Keep newer tab"
+  },
+  "keepOlderTab": {
+    "message": "Keep older tab",
+    "description": "Keep older tab"
+  },
+  "keepReloadOlderTab": {
+    "message": "Keep and reload older tab",
+    "description": "Keep and reload older tab"
+  },
+  "keepTabWithHistory": {
+    "message": "Keep tab with history",
+    "description": "Keep tab with history"
+  },
+  "keeptabwithHttps": {
+    "message": "Keep tab with https",
+    "description": "Keep tab with https"
+  },
+  "keepPinnedTab": {
+    "message": "Keep pinned tab",
+    "description": "Keep pinned tab"
+  },
+  "onRemainingTab": {
+    "message": "On remaining tab",
+    "description": "On remaining tab"
+  },
+  "activateKeptTab": {
+    "message": "Activate",
+    "description": "Activate"
+  },
+  "defaultTabBehavior": {
+    "message": "Default tab behaviour",
+    "description": "Default tab behaviour"
+  },
+  "filters": {
+    "message": "Filters",
+    "description": "Filters"
+  },
+  "ignoreHashPart": {
+    "message": "Ignore hash part in tab URL",
+    "description": "Ignore hash part in tab URL"
+  },
+  "ignoreSearchPart": {
+    "message": "Ignore search part in tab URL",
+    "description": "Ignore search part in tab URL"
+  },
+  "ignorePathPart": {
+    "message": "Ignore path part in tab URL",
+    "description": "Ignore path part in tab URL"
+  },
+  "compareWithTitle": {
+    "message": "Compare with tab title",
+    "description": "Compare with tab title"
+  },
+  "duplicatetabs": {
+    "message": "Duplicate tabs",
+    "description": "Duplicate tabs"
+  },
+  "scope": {
+    "message": "Scope",
+    "description": "Scope"
+  },
+  "container": {
+    "message": "Container",
+    "description": "Container"
+  },
+  "activewindow": {
+    "message": "Active window",
+    "description": "Active window"
+  },
+  "allwindows": {
+    "message": "All windows",
+    "description": "All windows"
+  },
+  "closeAllDuplicateTabs": {
+    "message": "Close all duplicate tabs",
+    "description": "Close all duplicate tabs"
+  },
+  "customization": {
+    "message": "Customization",
+    "description": "Customization"
+  },
+  "badgeColorDuplicateTabs": {
+    "message": "Duplicate tabs badge color",
+    "description": "Badge color for duplicate tabs"
+  },
+  "badgeColorNoDuplicateTabs": {
+    "message": "No duplicate tabs badge color",
+    "description": "Badge color for no duplicate tab"
+  },
+  "showBadgeIfNoDuplicateTabs": {
+    "message": "Show badge if no duplicate tab",
+    "description": "Show badge if no duplicate tab"
+  },
+  "noDuplicateTabs": {
+    "message": "No duplicate tabs",
+    "description": "No duplicate tabs"    
+  }
+}
