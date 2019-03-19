@@ -1,0 +1,126 @@
+{
+  "options": {
+    "message": "Параметры",
+    "description": "Options"
+  },
+  "onDuplicateTabDetected": {
+    "message": "Если обнаружен дубликат вкладки",
+    "description": "On duplicate tab detected"
+  },
+  "doNothing": {
+    "message": "Ничего не делать",
+    "description": "Do nothing"
+  },
+  "autoCloseTab": {
+    "message": "Закрыть вкладку автоматически",
+    "description": "Close tab automatically"
+  },
+  "showPanel": {
+    "message": "Показать панель",
+    "description": "Show panel"
+  },
+  "tabPriority": {
+    "message": "Приоритет",
+    "description": "Priority"
+  },
+  "keepNewerTab": {
+    "message": "Сохранить новейшую вкладку",
+    "description": "Keep newer tab"
+  },
+  "keepOlderTab": {
+    "message": "Сохранить старейшую вкладку",
+    "description": "Keep older tab"
+  },
+  "keepReloadOlderTab": {
+    "message": "Сохранить и обновить старейшую вкладку",
+    "description": "Keep and reload older tab"
+  },
+  "keepTabWithHistory": {
+    "message": "Сохранить вкладку с историей",
+    "description": "Keep tab with history"
+  },
+  "keeptabwithHttps": {
+    "message": "Сохранить вкладку с https",
+    "description": "Keep tab with https"
+  },
+  "keepPinnedTab": {
+    "message": "Сохранить закрепленную вкладку",
+    "description": "Keep pinned tab"
+  },
+  "onRemainingTab": {
+    "message": "Оставшуюся вкладку...",
+    "description": "On remaining tab"
+  },
+  "activateKeptTab": {
+    "message": "Сделать активной",
+    "description": "Activate"
+  },
+  "defaultTabBehavior": {
+    "message": "Поведение вкладки по умолчанию",
+    "description": "Default tab behaviour"
+  },
+  "filters": {
+    "message": "Фильтры",
+    "description": "Filters"
+  },
+  "ignoreHashPart": {
+    "message": "Игнорировать хэш-часть в URL вкладки",
+    "description": "Ignore hash part in tab URL"
+  },
+  "ignoreSearchPart": {
+    "message": "Игнорировать часть поиска в URL вкладки",
+    "description": "Ignore search part in tab URL"
+  },
+  "ignorePathPart": {
+    "message": "Игнорировать часть пути в URL вкладки",
+    "description": "Ignore path part in tab URL"
+  },
+  "compareWithTitle": {
+    "message": "Сравнить заголовки вкладок",
+    "description": "Compare with tab title"
+  },
+  "duplicatetabs": {
+    "message": "Дубликаты вкладок",
+    "description": "Duplicate tabs"
+  },
+  "scope": {
+    "message": "Границы поиска",
+    "description": "Scope"
+  },
+  "container": {
+    "message": "Контейнер",
+    "description": "Container"
+  },
+  "activewindow": {
+    "message": "Активное окно",
+    "description": "Active window"
+  },
+  "allwindows": {
+    "message": "Все окна",
+    "description": "All windows"
+  },
+  "closeAllDuplicateTabs": {
+    "message": "Закрыть все дубликаты вкладок",
+    "description": "Close all duplicate tabs"
+  },
+  "customization": {
+    "message": "Настройка",
+    "description": "Customization"
+  },
+  "badgeColorDuplicateTabs": {
+    "message": "Цвет значка о наличии дубликатов",
+    "description": "Badge color for duplicate tabs"
+  },
+  "badgeColorNoDuplicateTabs": {
+    "message": "Цвет значка об отсутствии дубликатов",
+    "description": "Badge color for no duplicate tab"
+  },
+  "showBadgeIfNoDuplicateTabs": {
+    "message": "Показывать значок когда дубликатов нет",
+    "description": "Show badge if no duplicate tab"
+  },
+  "noDuplicateTabs": {
+    "message": "Вкладок-дубликатов сейчас нет",
+    "description": "No duplicate tabs"    
+  }
+}
