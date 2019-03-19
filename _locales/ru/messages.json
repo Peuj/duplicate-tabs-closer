@@ -1,126 +1,126 @@
 {
   "options": {
-    "message": "Options",
+    "message": "Параметры",
     "description": "Options"
   },
   "onDuplicateTabDetected": {
-    "message": "On duplicate tab detected",
+    "message": "Если обнаружен дубликат вкладки",
     "description": "On duplicate tab detected"
   },
   "doNothing": {
-    "message": "Do nothing",
+    "message": "Ничего не делать",
     "description": "Do nothing"
   },
   "autoCloseTab": {
-    "message": "Close tab automatically",
+    "message": "Закрыть вкладку автоматически",
     "description": "Close tab automatically"
   },
   "showPanel": {
-    "message": "Show panel",
+    "message": "Показать панель",
     "description": "Show panel"
   },
   "tabPriority": {
-    "message": "Priority",
+    "message": "Приоритет",
     "description": "Priority"
   },
   "keepNewerTab": {
-    "message": "Keep newer tab",
+    "message": "Сохранить новейшую вкладку",
     "description": "Keep newer tab"
   },
   "keepOlderTab": {
-    "message": "Keep older tab",
+    "message": "Сохранить старейшую вкладку",
     "description": "Keep older tab"
   },
   "keepReloadOlderTab": {
-    "message": "Keep and reload older tab",
+    "message": "Сохранить и обновить старейшую вкладку",
     "description": "Keep and reload older tab"
   },
   "keepTabWithHistory": {
-    "message": "Keep tab with history",
+    "message": "Сохранить вкладку с историей",
     "description": "Keep tab with history"
   },
   "keeptabwithHttps": {
-    "message": "Keep tab with https",
+    "message": "Сохранить вкладку с https",
     "description": "Keep tab with https"
   },
   "keepPinnedTab": {
-    "message": "Keep pinned tab",
+    "message": "Сохранить закрепленную вкладку",
     "description": "Keep pinned tab"
   },
   "onRemainingTab": {
-    "message": "On remaining tab",
+    "message": "Оставшуюся вкладку...",
     "description": "On remaining tab"
   },
   "activateKeptTab": {
-    "message": "Activate",
+    "message": "Сделать активной",
     "description": "Activate"
   },
   "defaultTabBehavior": {
-    "message": "Default tab behaviour",
+    "message": "Поведение вкладки по умолчанию",
     "description": "Default tab behaviour"
   },
   "filters": {
-    "message": "Filters",
+    "message": "Фильтры",
     "description": "Filters"
   },
   "ignoreHashPart": {
-    "message": "Ignore hash part in tab URL",
+    "message": "Игнорировать хэш-часть в URL вкладки",
     "description": "Ignore hash part in tab URL"
   },
   "ignoreSearchPart": {
-    "message": "Ignore search part in tab URL",
+    "message": "Игнорировать часть поиска в URL вкладки",
     "description": "Ignore search part in tab URL"
   },
   "ignorePathPart": {
-    "message": "Ignore path part in tab URL",
+    "message": "Игнорировать часть пути в URL вкладки",
     "description": "Ignore path part in tab URL"
   },
   "compareWithTitle": {
-    "message": "Compare with tab title",
+    "message": "Сравнить заголовки вкладок",
     "description": "Compare with tab title"
   },
   "duplicatetabs": {
-    "message": "Duplicate tabs",
+    "message": "Дубликаты вкладок",
     "description": "Duplicate tabs"
   },
   "scope": {
-    "message": "Scope",
+    "message": "Границы поиска",
     "description": "Scope"
   },
   "container": {
-    "message": "Container",
+    "message": "Контейнер",
     "description": "Container"
   },
   "activewindow": {
-    "message": "Active window",
+    "message": "Активное окно",
     "description": "Active window"
   },
   "allwindows": {
-    "message": "All windows",
+    "message": "Все окна",
     "description": "All windows"
   },
   "closeAllDuplicateTabs": {
-    "message": "Close all duplicate tabs",
+    "message": "Закрыть все дубликаты вкладок",
     "description": "Close all duplicate tabs"
   },
   "customization": {
-    "message": "Customization",
+    "message": "Настройка",
     "description": "Customization"
   },
   "badgeColorDuplicateTabs": {
-    "message": "Duplicate tabs badge color",
+    "message": "Цвет значка о наличии дубликатов",
     "description": "Badge color for duplicate tabs"
   },
   "badgeColorNoDuplicateTabs": {
-    "message": "No duplicate tabs badge color",
+    "message": "Цвет значка об отсутствии дубликатов",
     "description": "Badge color for no duplicate tab"
   },
   "showBadgeIfNoDuplicateTabs": {
-    "message": "Show badge if no duplicate tab",
+    "message": "Показывать значок когда дубликатов нет",
     "description": "Show badge if no duplicate tab"
   },
   "noDuplicateTabs": {
-    "message": "No duplicate tabs",
+    "message": "Вкладок-дубликатов сейчас нет",
     "description": "No duplicate tabs"    
   }
 }
