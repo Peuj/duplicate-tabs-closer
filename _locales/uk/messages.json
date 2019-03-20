@@ -1,0 +1,126 @@
+{
+  "options": {
+    "message": "Опції",
+    "description": "Options"
+  },
+  "onDuplicateTabDetected": {
+    "message": "Якщо виявлено дублікат вкладки",
+    "description": "On duplicate tab detected"
+  },
+  "doNothing": {
+    "message": "Нічого не робити",
+    "description": "Do nothing"
+  },
+  "autoCloseTab": {
+    "message": "Закрити вкладку автоматично",
+    "description": "Close tab automatically"
+  },
+  "showPanel": {
+    "message": "Показати панель",
+    "description": "Show panel"
+  },
+  "tabPriority": {
+    "message": "Пріоритет",
+    "description": "Priority"
+  },
+  "keepNewerTab": {
+    "message": "Зберегти новішу вкладку",
+    "description": "Keep newer tab"
+  },
+  "keepOlderTab": {
+    "message": "Зберегти старішу вкладку",
+    "description": "Keep older tab"
+  },
+  "keepReloadOlderTab": {
+    "message": "Зберегти й оновити старішу вкладку",
+    "description": "Keep and reload older tab"
+  },
+  "keepTabWithHistory": {
+    "message": "Зберегти вкладку з історією",
+    "description": "Keep tab with history"
+  },
+  "keeptabwithHttps": {
+    "message": "Зберегти вкладку з https",
+    "description": "Keep tab with https"
+  },
+  "keepPinnedTab": {
+    "message": "Зберегти закріплену вкладку",
+    "description": "Keep pinned tab"
+  },
+  "onRemainingTab": {
+    "message": "Вкладку, що залишилася...",
+    "description": "On remaining tab"
+  },
+  "activateKeptTab": {
+    "message": "Зробити активною",
+    "description": "Activate"
+  },
+  "defaultTabBehavior": {
+    "message": "Поведінка вкладки за замовчуванням",
+    "description": "Default tab behaviour"
+  },
+  "filters": {
+    "message": "Фільтри",
+    "description": "Filters"
+  },
+  "ignoreHashPart": {
+    "message": "Ігнорувати хеш-частину в URL вкладки",
+    "description": "Ignore hash part in tab URL"
+  },
+  "ignoreSearchPart": {
+    "message": "Ігнорувати частина пошуку в URL вкладки",
+    "description": "Ignore search part in tab URL"
+  },
+  "ignorePathPart": {
+    "message": "Ігнорувати частину шляху в URL вкладки",
+    "description": "Ignore path part in tab URL"
+  },
+  "compareWithTitle": {
+    "message": "Порівняти заголовки вкладок",
+    "description": "Compare with tab title"
+  },
+  "duplicatetabs": {
+    "message": "Дублікати вкладок",
+    "description": "Duplicate tabs"
+  },
+  "scope": {
+    "message": "Межі пошуку",
+    "description": "Scope"
+  },
+  "container": {
+    "message": "Контейнер",
+    "description": "Container"
+  },
+  "activewindow": {
+    "message": "Активне вікно",
+    "description": "Active window"
+  },
+  "allwindows": {
+    "message": "Всі вікна",
+    "description": "All windows"
+  },
+  "closeAllDuplicateTabs": {
+    "message": "Закрити всі дублікати вкладок",
+    "description": "Close all duplicate tabs"
+  },
+  "customization": {
+    "message": "Налаштування",
+    "description": "Customization"
+  },
+  "badgeColorDuplicateTabs": {
+    "message": "Колір значка наявності дублікатів",
+    "description": "Badge color for duplicate tabs"
+  },
+  "badgeColorNoDuplicateTabs": {
+    "message": "Колір значка відсутності дублікатів",
+    "description": "Badge color for no duplicate tab"
+  },
+  "showBadgeIfNoDuplicateTabs": {
+    "message": "Показувати значок коли дублікатів немає",
+    "description": "Show badge if no duplicate tab"
+  },
+  "noDuplicateTabs": {
+    "message": "Вкладок-дублікатів наразі нема",
+    "description": "No duplicate tabs"    
+  }
+}
