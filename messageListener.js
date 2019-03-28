@@ -6,7 +6,7 @@ const handleMessage = (message, sender, response) => {
 
     switch (message.action) {
         case "setStoredOption": {
-            setStoredOption(message.data.name, message.data.value);
+            setStoredOption(message.data.name, message.data.value, message.data.refresh);
             break;
         }
         case "getOptions": {

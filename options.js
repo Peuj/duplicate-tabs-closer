@@ -46,6 +46,9 @@ const defaultOptions = {
     scopeGroupPinChecked: {
         value: true
     },
+    whiteList: {
+        value: "aaaaaa"
+    },
     badgeColorDuplicateTabs: {
         value: "#f22121"
     },
@@ -84,20 +87,23 @@ const initializeOptions = async () => {
     if (storedKeys.length === 0) {
         const options = await getDefaultOptions();
         storedOptions = await saveStoredOptions(options);
-    }
-    else if (JSON.stringify(storedKeys) != JSON.stringify(defaultKeys)) {
+    } else if (JSON.stringify(storedKeys) != JSON.stringify(defaultKeys)) {
         const obsoleteKeys = getNotInReferenceKeys(storedKeys, defaultKeys);
         obsoleteKeys.forEach(key => {
             // option typo change between 3.16 and 3.17 - to remove later
             if (key === "badgeColorNoDuplicateTab") {
-                storedOptions["badgeColorNoDuplicateTabs"] = { value: storedOptions[key].value };
+                storedOptions["badgeColorNoDuplicateTabs"] = {
+                    value: storedOptions[key].value
+                };
             }
             delete storedOptions[key];
         });
 
         const missingKeys = getNotInReferenceKeys(defaultKeys, storedKeys);
         missingKeys.forEach(key => {
-            storedOptions[key] = { value: defaultOptions[key].value };
+            storedOptions[key] = {
+                value: defaultOptions[key].value
+            };
         });
 
         storedOptions = await saveStoredOptions(storedOptions, true);
@@ -108,13 +114,16 @@ const initializeOptions = async () => {
 };
 
 /* exported setStoredOption */
-const setStoredOption = async (name, value) => {
+const setStoredOption = async (name, value, refresh) => {
     let storedOptions = await getStoredOptions();
     storedOptions[name].value = value;
     storedOptions = await saveStoredOptions(storedOptions);
     setOptions(storedOptions);
-    if (name === "onDuplicateTabDetected") setBadgeIcon();
-    else if (name === "showBadgeIfNoDuplicateTabs") setBadge({ "windowId": chrome.windows.WINDOW_ID_CURRENT });
+    if (refresh) refreshGlobalDuplicateTabsInfo(chrome.windows.WINDOW_ID_CURRENT);
+    else if (name === "onDuplicateTabDetected") setBadgeIcon();
+    else if (name === "showBadgeIfNoDuplicateTabs") setBadge({
+        "windowId": chrome.windows.WINDOW_ID_CURRENT
+    });
 };
 
 const options = {
@@ -132,6 +141,7 @@ const options = {
     searchInSameContainer: false,
     searchInCurrentWindow: false,
     searchInAllWindows: false,
+    whiteList: [],
     badgeColorDuplicateTabs: "",
     badgeColorNoDuplicateTabs: "",
     showBadgeIfNoDuplicateTabs: false
@@ -152,6 +162,7 @@ const setOptions = (storedOptions) => {
     options.searchInSameContainer = storedOptions["scope"].value === "O";
     options.searchInCurrentWindow = storedOptions["scope"].value === "C";
     options.searchInAllWindows = storedOptions["scope"].value === "A";
+    options.whiteList = whiteListToPattern(storedOptions["whiteList"].value);
     options.badgeColorDuplicateTabs = storedOptions["badgeColorDuplicateTabs"].value;
     options.badgeColorNoDuplicateTabs = storedOptions["badgeColorNoDuplicateTabs"].value;
     options.showBadgeIfNoDuplicateTabs = storedOptions["showBadgeIfNoDuplicateTabs"].value;
@@ -168,8 +179,7 @@ const setEnvironment = async (storedOptions) => {
     if (storedOptions.environment.value === "android") {
         environment.isAndroid = true;
         environment.isFirefox = true;
-    }
-    else if (storedOptions.environment.value === "firefox") {
+    } else if (storedOptions.environment.value === "firefox") {
         environment.isAndroid = false;
         environment.isFirefox = true;
         const majorVersion = await getFirefoxMajorVersion();
@@ -180,8 +190,30 @@ const setEnvironment = async (storedOptions) => {
 
 /* exported isOptionOpen */
 const isOptionOpen = () => {
-    const popups = chrome.extension.getViews({type: "popup"});
+    const popups = chrome.extension.getViews({
+        type: "popup"
+    });
     if (popups.length) return true;
-    const tabs = chrome.extension.getViews({type: "tab"});
+    const tabs = chrome.extension.getViews({
+        type: "tab"
+    });
     return tabs.length ? true : false;
+};
+
+const whiteListToPattern = (whiteList) => {
+
+    const whiteListPatterns = new Set();
+    const whiteListLines = whiteList.split('\n').map(line => line.trim());
+
+    whiteListLines.forEach(whiteListLine => {
+        const length = whiteListLine.length;
+        let pattern = '^';
+        for (let index = 0; index < length; index++) {
+            const character = whiteListLine.charAt(index);
+            pattern = (character === '*') ? pattern + '.*' : pattern + character;
+        }
+        whiteListPatterns.add(new RegExp(pattern + '$'));
+    });
+
+    return Array.from(whiteListPatterns);
 };

@@ -1,6 +1,7 @@
 "use strict";
 
 const initialize = async () => {
+  console.log("initialize");
   const requestGetDuplicateTabsPromise = requestGetDuplicateTabs();
   setPanelOptions();
   localizePopup(document.documentElement);
@@ -12,22 +13,69 @@ const loadPageEvents = () => {
 
   // Save checkbox settings
   $(".list-group input[type='checkbox'").on("change", function () {
-    saveOption(this.id, this.checked);
-    if (this.className === "checkbox-filter") refreshGlobalDuplicateTabsInfo();
+    const refresh = this.className === "checkbox-filter";
+    saveOption(this.id, this.checked, refresh);
   });
 
   // Save combobox settings
   $(".list-group select").on("change", function () {
-    saveOption(this.id, this.value);
+    const refresh = this.id === "scope";
+    saveOption(this.id, this.value, refresh);
     if (this.id === "onDuplicateTabDetected") changeAutoCloseOptionState(this.value);
-    else if (this.id === "scope") refreshGlobalDuplicateTabsInfo();
   });
 
   // Save badge color settings
   $(".list-group input[type='color']").on("change", function () {
-    saveOption(this.id, this.value);
-    refreshGlobalDuplicateTabsInfo();
+    saveOption(this.id, this.value, true);
   });
+
+  // Save whiteList settings
+  let oldWhiteListValue = "";
+  $("#whiteList").on("change", function () {
+    const currentValue = $(this).val();
+    console.log(currentValue);
+    if (currentValue == oldWhiteListValue) {
+      console.log("check to prevent multiple simultaneous triggers");
+      return; //check to prevent multiple simultaneous triggers
+    }
+
+    removeBlankLines(currentValue);
+
+    console.log(currentValue);
+
+    oldWhiteListValue = currentValue;
+    $("#whiteList").val() = currentValue;
+    saveOption(this.id, currentValue, false);
+  });
+
+  function removeBlankLines(whiteList) {
+
+    const whiteListCleaned = new Set();
+    const whiteListLines = whiteList.split('\n');
+
+    for (let whiteListLine of whiteListLines) {
+      whiteListLine = whiteListLine.trim();
+      if (whiteListLine !== 0) whiteListCleaned.add(whiteListLine);
+    }
+
+    return Array.from(whiteListCleaned).join('\n');
+
+    // whiteList.split('\n').filter(line => line.trim() != "").map(line => line.trim());;
+
+    // for (let v of whiteListLines)
+    //   if (v.key == 'B') v.mark = 'marked';
+    // var temp = [""];
+    // var x = 0;
+
+    // for (var i = 0; i < stringArray.length; i++) {
+    //   if (stringArray[i].trim() != "") {
+    //     temp[x] = stringArray[i];
+    //     x++;
+    //   }
+    // }
+
+    // return temp.join('\n');
+  }
 
   // Active selected tab
   $("#duplicateTabsTable").on("click", ".td-tab-link", function () {
@@ -55,24 +103,39 @@ const changeAutoCloseOptionState = (state) => {
 };
 
 const sendMessage = (action, data) => {
+  console.log(action);
   return new Promise((resolve) => {
-    chrome.runtime.sendMessage({ action: action, data: data }, response => {
+    chrome.runtime.sendMessage({
+      action: action,
+      data: data
+    }, response => {
       if (chrome.runtime.lastError) console.error("sendMessage error:", chrome.runtime.lastError.message);
       resolve(response);
     });
   });
 };
 
-const refreshGlobalDuplicateTabsInfo = () => sendMessage("refreshGlobalDuplicateTabsInfo", { "windowId": chrome.windows.WINDOW_ID_CURRENT });
+const refreshGlobalDuplicateTabsInfo = () => sendMessage("refreshGlobalDuplicateTabsInfo", {
+  "windowId": chrome.windows.WINDOW_ID_CURRENT
+});
 
-const requestCloseDuplicateTabs = () => sendMessage("closeDuplicateTabs", { "windowId": chrome.windows.WINDOW_ID_CURRENT });
+const requestCloseDuplicateTabs = () => sendMessage("closeDuplicateTabs", {
+  "windowId": chrome.windows.WINDOW_ID_CURRENT
+});
 
-const requestCloseDuplicateTab = (tabId) => sendMessage("closeDuplicateTab", { "tabId": tabId });
+const requestCloseDuplicateTab = (tabId) => sendMessage("closeDuplicateTab", {
+  "tabId": tabId
+});
 
-const activateSelectedTab = (tabId, windowId) => sendMessage("activateTab", { "tabId": tabId, "windowId": windowId });
+const activateSelectedTab = (tabId, windowId) => sendMessage("activateTab", {
+  "tabId": tabId,
+  "windowId": windowId
+});
 
 const requestGetDuplicateTabs = async () => {
-  const response = await sendMessage("getDuplicateTabs", { "windowId": chrome.windows.WINDOW_ID_CURRENT });
+  const response = await sendMessage("getDuplicateTabs", {
+    "windowId": chrome.windows.WINDOW_ID_CURRENT
+  });
   return response.data;
 };
 
@@ -89,8 +152,7 @@ const setDuplicateTabsTable = (duplicateTabs) => {
       });
       $("#closeDuplicateTabsBtn").toggleClass("disabled", false);
     });
-  }
-  else {
+  } else {
     $("#duplicateTabsTable").empty();
     $("#duplicateTabsTable").append("<tr><td width='100% margin-left='5px'><font color='#9FACBD'><em>" + chrome.i18n.getMessage("noDuplicateTabs") + ".</em></font></td></tr>");
     $("#closeDuplicateTabsBtn").toggleClass("disabled", true);
@@ -99,20 +161,23 @@ const setDuplicateTabsTable = (duplicateTabs) => {
 
 };
 
-const saveOption = (name, value) => sendMessage("setStoredOption", { "name": name, "value": value });
+const saveOption = (name, value, refresh) => sendMessage("setStoredOption", {
+  "name": name,
+  "value": value,
+  "refresh": refresh
+});
 
 const setPanelOption = (option, value) => {
   if (option === "environment") {
     if (value === "chrome") $("#containerItem").toggleClass("hidden", true);
-  }
-  else {
+  } else if (option === "whiteList") {
+    $("#whiteList").val(value);
+  } else {
     if (typeof (value) === "boolean") {
       $("#" + option).prop("checked", value);
-    }
-    else if (value.startsWith("#")) {
+    } else if (value.startsWith("#")) {
       $("#" + option).prop("value", value);
-    }
-    else {
+    } else {
       $("#" + option + " option[value='" + value + "']").prop("selected", true);
       if (option === "onDuplicateTabDetected") changeAutoCloseOptionState(value, false);
     }
@@ -128,6 +193,7 @@ const setPanelOptions = async () => {
 };
 
 const handleMessage = (message) => {
+  console.log("handleMessage", message);
   if (message.action === "setStoredOption") setPanelOption(message.data.name, message.data.value);
   else if (message.action === "updateDuplicateTabsTable") setDuplicateTabsTable(message.data.duplicateTabs);
 };

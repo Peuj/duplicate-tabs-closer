@@ -102,11 +102,15 @@
   "closeAllDuplicateTabs": {
     "message": "Fermer tous les onglets en doublon",
     "description": "Close all duplicate tabs"
-  }  ,
+  },
+  "whiteList": {
+    "message": "WhiteList",
+    "description": "WhiteList"
+  },
   "customization": {
     "message": "Personnalisation",
     "description": "Customization"
-  }  ,
+  },
   "badgeColorDuplicateTabs": {
     "message": "Couleur du bouton pour les onglets en doublon",
     "description": "Badge color for duplicate tabs"

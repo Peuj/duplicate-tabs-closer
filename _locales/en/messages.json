@@ -103,6 +103,10 @@
     "message": "Close all duplicate tabs",
     "description": "Close all duplicate tabs"
   },
+  "whiteList": {
+    "message": "WhiteList",
+    "description": "WhiteList"
+  },
   "customization": {
     "message": "Customization",
     "description": "Customization"

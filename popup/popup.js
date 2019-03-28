@@ -15,15 +15,15 @@ const loadPopupEvents = () => {
 
   // Save checkbox settings
   $(".list-group input[type='checkbox'").on("change", function () {
-    saveOption(this.id, this.checked);
-    if (this.className === "checkbox-filter") refreshGlobalDuplicateTabsInfo(false);
+    const refresh = this.className === "checkbox-filter";
+    saveOption(this.id, this.checked, refresh);
   });
 
   // Save combobox settings
   $(".list-group select").on("change", function () {
-    saveOption(this.id, this.value);
+    const refresh = this.id === "scope";
+    saveOption(this.id, this.value, refresh);
     if (this.id === "onDuplicateTabDetected") changeAutoCloseOptionState(this.value, true);
-    else if (this.id === "scope") refreshGlobalDuplicateTabsInfo(true);
   });
 
   // Open Option tab tab
@@ -180,7 +180,7 @@ const requestCloseDuplicateTab = (tabId) => sendMessage("closeDuplicateTab", { "
 
 const activateSelectedTab = (tabId, windowId) => sendMessage("activateTab", { "tabId": tabId, "windowId": windowId });
 
-const saveOption = (name, value) => sendMessage("setStoredOption", { "name": name, "value": value });
+const saveOption = (name, value, refresh) => sendMessage("setStoredOption", { "name": name, "value": value, "refresh": refresh });
 
 const requestGetDuplicateTabs = async () => {
   const response = await sendMessage("getDuplicateTabs", { "windowId": chrome.windows.WINDOW_ID_CURRENT });
