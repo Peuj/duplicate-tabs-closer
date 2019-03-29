@@ -36,6 +36,10 @@
                   <option value="B" i18n-content="defaultTabBehavior"></option>
                 </select>
               </div>
+              <div id="whiteListGroup">
+                <label for="whiteList" id="whiteListLabel" i18n-content="whiteList"></label>
+                <textarea class="form-control rounded-0" rows="4" cols="100" id="whiteList"></textarea>
+              </div>
             </li>
           </div>
 
@@ -113,19 +117,10 @@
             </li>
           </div>
 
-          <li class="list-group-item subitem-title" href="#" id="whiteListGroup">
-            <span i18n-content="whiteList"></span>
-          </li>
-          <div class="list-group-collapsible" id="whiteListGroupBody">
-            <li class="list-group-item subitem">
-              <textarea rows="4" cols="100" id="whiteList"></textarea>
-            </li>
-          </div>
-
           <li class="list-group-item subitem-title" href="#" id="customizationGroup">
             <span i18n-content="customization"></span>
           </li>
-          <div class="list-group-collapsible" id="miscGroupBody">
+          <div class="list-group-collapsible" id="customizationGroupBody">
             <li class="list-group-item subitem">
               <table id="color-container">
                 <tr>
@@ -137,7 +132,7 @@
                   <td><input  class="color-badgeColor" id="badgeColorNoDuplicateTabs" type="color" value="#444444"></td>
                 </tr>
               </table>
-              <div id="checkbox-container-priority">
+              <div id="checkbox-container-customization">
                   <div class="checkbox">
                     <label class="checkbox-inline" for="showBadgeIfNoDuplicateTabs">
                       <input type="checkbox" id="showBadgeIfNoDuplicateTabs">

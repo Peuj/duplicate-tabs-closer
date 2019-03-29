@@ -3,13 +3,9 @@
 const duplicateTabsClosing = new Set();
 
 const isWhiteListed = (url) => {
-
-    //https://github.com/kevinzwhuang/wildcard-regex/blob/master/src/wildcardPattern.js
-    // console.log(options.whiteList);
-
     const matches = options.whiteList.filter(pattern => pattern.test(url));
     return matches.length === 0 ? false : true;
-}
+};
 
 const matchTitle = (openTab, signaledTab) => {
 
@@ -179,9 +175,7 @@ const manageUniqueTab = (tab, tabMatchingId, uniqueTabIds, focusedWindowId, clos
 };
 
 const searchForDuplicateTabs = async (windowId, closeTabs, removedTabId) => {
-    console.log("searchForDuplicateTabs");
-    console.log("ignorePathPart", options.ignorePathPart);
-    
+
     const duplicateGroupTabs = new Map();
 
     const queryInfo = {
@@ -225,7 +219,7 @@ const searchForDuplicateTabs = async (windowId, closeTabs, removedTabId) => {
 
 /* exported searchAndCloseNewDuplicateTabs */
 const searchAndCloseNewDuplicateTabs = async (searchInfo) => {
-    console.log("searchAndCloseNewDuplicateTabs");
+
     if (duplicateTabsClosing.has(searchInfo.tab.id)) {
         return;
     }
@@ -236,8 +230,7 @@ const searchAndCloseNewDuplicateTabs = async (searchInfo) => {
     const signaledTabUrl = searchInfo.loadingUrl ? searchInfo.loadingUrl : signaledTab.url;
 
     if (isWhiteListed(signaledTabUrl)) {
-        console.log("isWhiteListed: ", signaledTabUrl);
-        refreshDuplicateTabsStatus(signaledWindowsId)
+        if (signaledTab.url) refreshDuplicateTabsStatus(signaledWindowsId);
         return;
     }
 
@@ -296,15 +289,11 @@ const getDuplicateTabs = async (windowId) => {
 const addDuplicateTab = async (tab, group, duplicateTabs) => {
 
     let containerColor = "";
-    try {
-        if (tab.cookieStoreId !== "firefox-default") {
-            const getContext = await browser.contextualIdentities.get(tab.cookieStoreId);
-            if (getContext) containerColor = getContext.color;
-        }
-    } catch (error) {
-        // console.error(error);
+    if (environment.isFirefox && (tab.cookieStoreId !== "firefox-default")) {
+        const getContext = await browser.contextualIdentities.get(tab.cookieStoreId);
+        if (getContext) containerColor = getContext.color;
     }
-
+ 
     duplicateTabs.add({
         id: tab.id,
         url: tab.url,
@@ -347,7 +336,6 @@ const refreshDuplicateTabsStatus = async (windowId, removedTabId) => {
     const searchInfo = await searchForDuplicateTabs(windowId, false, removedTabId);
     if (isOptionOpen() && (!windowId || (windowId === searchInfo.focusedWindowId) || (windowId === chrome.windows.WINDOW_ID_CURRENT))) {
         const duplicateTabs = await setDuplicateTabs(searchInfo.duplicateGroupTabs);
-        console.log("refreshDuplicateTabsStatus sendMessage");
         chrome.runtime.sendMessage({
             action: "updateDuplicateTabsTable",
             data: {

@@ -172,8 +172,6 @@ const sendMessage = (action, data) => {
   });
 };
 
-const refreshGlobalDuplicateTabsInfo = () => sendMessage("refreshGlobalDuplicateTabsInfo", { "windowId": chrome.windows.WINDOW_ID_CURRENT });
-
 const requestCloseDuplicateTabs = () => sendMessage("closeDuplicateTabs", { "windowId": chrome.windows.WINDOW_ID_CURRENT });
 
 const requestCloseDuplicateTab = (tabId) => sendMessage("closeDuplicateTab", { "tabId": tabId });

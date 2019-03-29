@@ -104,8 +104,8 @@
     "description": "Close all duplicate tabs"
   },
   "whiteList": {
-    "message": "WhiteList",
-    "description": "WhiteList"
+    "message": "Whitelist",
+    "description": "Whitelist"
   },
   "customization": {
     "message": "Customization",

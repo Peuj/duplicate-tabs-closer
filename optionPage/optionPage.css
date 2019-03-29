@@ -65,7 +65,7 @@ body {
 }
 
 #onRemainingTabLabel {
-  margin-top: 8px;
+  margin-top: 12px;
   margin-left: 2px;
   font-weight: normal;
   font-size: 13px;
@@ -79,6 +79,21 @@ body {
   font-size: 13px;
   border-radius: 3px;
   width: 260px;
+}
+
+#whiteListLabel {
+  margin-top: 13px;
+  margin-left: 2px;
+  font-weight: normal;
+  font-size: 13px;
+}
+
+#whiteList {
+  width: 100%;
+  max-width: 700px;
+  margin-top: -3px;
+  margin-bottom: -4px;
+  font-size: 13px;
 }
 
 #checkbox-container-priority {
@@ -116,6 +131,11 @@ body {
   margin-right: 5px;
 }
 
+#checkbox-container-customization {
+  padding-left: 1px;
+  margin-top: 8px;
+  margin-bottom: -11px;
+}
 
 /* set DuplicateTabs Panel */
 

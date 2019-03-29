@@ -47,7 +47,7 @@ const defaultOptions = {
         value: true
     },
     whiteList: {
-        value: "aaaaaa"
+        value: ""
     },
     badgeColorDuplicateTabs: {
         value: "#f22121"
@@ -89,23 +89,9 @@ const initializeOptions = async () => {
         storedOptions = await saveStoredOptions(options);
     } else if (JSON.stringify(storedKeys) != JSON.stringify(defaultKeys)) {
         const obsoleteKeys = getNotInReferenceKeys(storedKeys, defaultKeys);
-        obsoleteKeys.forEach(key => {
-            // option typo change between 3.16 and 3.17 - to remove later
-            if (key === "badgeColorNoDuplicateTab") {
-                storedOptions["badgeColorNoDuplicateTabs"] = {
-                    value: storedOptions[key].value
-                };
-            }
-            delete storedOptions[key];
-        });
-
+        obsoleteKeys.forEach(key => delete storedOptions[key]);
         const missingKeys = getNotInReferenceKeys(defaultKeys, storedKeys);
-        missingKeys.forEach(key => {
-            storedOptions[key] = {
-                value: defaultOptions[key].value
-            };
-        });
-
+        missingKeys.forEach(key => storedOptions[key] = { value: defaultOptions[key].value });
         storedOptions = await saveStoredOptions(storedOptions, true);
     }
 

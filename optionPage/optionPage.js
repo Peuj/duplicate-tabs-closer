@@ -1,7 +1,6 @@
 "use strict";
 
 const initialize = async () => {
-  console.log("initialize");
   const requestGetDuplicateTabsPromise = requestGetDuplicateTabs();
   setPanelOptions();
   localizePopup(document.documentElement);
@@ -30,52 +29,12 @@ const loadPageEvents = () => {
   });
 
   // Save whiteList settings
-  let oldWhiteListValue = "";
   $("#whiteList").on("change", function () {
-    const currentValue = $(this).val();
-    console.log(currentValue);
-    if (currentValue == oldWhiteListValue) {
-      console.log("check to prevent multiple simultaneous triggers");
-      return; //check to prevent multiple simultaneous triggers
-    }
-
-    removeBlankLines(currentValue);
-
-    console.log(currentValue);
-
-    oldWhiteListValue = currentValue;
-    $("#whiteList").val() = currentValue;
-    saveOption(this.id, currentValue, false);
+    let whiteList = $(this).val();
+    whiteList = cleanUpWhiteList(whiteList);
+    setWhiteList(whiteList);    
+    saveOption(this.id, whiteList, false);
   });
-
-  function removeBlankLines(whiteList) {
-
-    const whiteListCleaned = new Set();
-    const whiteListLines = whiteList.split('\n');
-
-    for (let whiteListLine of whiteListLines) {
-      whiteListLine = whiteListLine.trim();
-      if (whiteListLine !== 0) whiteListCleaned.add(whiteListLine);
-    }
-
-    return Array.from(whiteListCleaned).join('\n');
-
-    // whiteList.split('\n').filter(line => line.trim() != "").map(line => line.trim());;
-
-    // for (let v of whiteListLines)
-    //   if (v.key == 'B') v.mark = 'marked';
-    // var temp = [""];
-    // var x = 0;
-
-    // for (var i = 0; i < stringArray.length; i++) {
-    //   if (stringArray[i].trim() != "") {
-    //     temp[x] = stringArray[i];
-    //     x++;
-    //   }
-    // }
-
-    // return temp.join('\n');
-  }
 
   // Active selected tab
   $("#duplicateTabsTable").on("click", ".td-tab-link", function () {
@@ -97,13 +56,30 @@ const loadPageEvents = () => {
 
 };
 
-// Show/Hide the AutoClose option
+const setWhiteList = (whiteList) => {
+  $("#whiteList").val(whiteList);
+};
+
+const cleanUpWhiteList = (whiteList) => {
+
+  const whiteListCleaned = new Set();
+  const whiteListLines = whiteList.split('\n');
+
+  for (let whiteListLine of whiteListLines) {
+    whiteListLine = whiteListLine.trim();
+    if (whiteListLine.length !== 0) whiteListCleaned.add(whiteListLine);
+  }
+
+  return Array.from(whiteListCleaned).join('\n');
+};
+
+// Show/Hide the AutoClose options
 const changeAutoCloseOptionState = (state) => {
   $("#onRemainingTabGroup").toggleClass("hidden", state !== "A");
+  $("#whiteListGroup").toggleClass("hidden", state !== "A");
 };
 
 const sendMessage = (action, data) => {
-  console.log(action);
   return new Promise((resolve) => {
     chrome.runtime.sendMessage({
       action: action,
@@ -114,10 +90,6 @@ const sendMessage = (action, data) => {
     });
   });
 };
-
-const refreshGlobalDuplicateTabsInfo = () => sendMessage("refreshGlobalDuplicateTabsInfo", {
-  "windowId": chrome.windows.WINDOW_ID_CURRENT
-});
 
 const requestCloseDuplicateTabs = () => sendMessage("closeDuplicateTabs", {
   "windowId": chrome.windows.WINDOW_ID_CURRENT
@@ -179,7 +151,7 @@ const setPanelOption = (option, value) => {
       $("#" + option).prop("value", value);
     } else {
       $("#" + option + " option[value='" + value + "']").prop("selected", true);
-      if (option === "onDuplicateTabDetected") changeAutoCloseOptionState(value, false);
+      if (option === "onDuplicateTabDetected") changeAutoCloseOptionState(value);
     }
   }
 };
@@ -193,7 +165,6 @@ const setPanelOptions = async () => {
 };
 
 const handleMessage = (message) => {
-  console.log("handleMessage", message);
   if (message.action === "setStoredOption") setPanelOption(message.data.name, message.data.value);
   else if (message.action === "updateDuplicateTabsTable") setDuplicateTabsTable(message.data.duplicateTabs);
 };
