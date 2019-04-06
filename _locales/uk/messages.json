@@ -68,7 +68,7 @@
     "description": "Ignore hash part in tab URL"
   },
   "ignoreSearchPart": {
-    "message": "Ігнорувати частина пошуку в URL вкладки",
+    "message": "Ігнорувати частину пошуку в URL вкладки",
     "description": "Ignore search part in tab URL"
   },
   "ignorePathPart": {
