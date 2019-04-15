@@ -22,7 +22,7 @@
         "searchAndCloseNewDuplicateTabs": true,
         "refreshGlobalDuplicateTabsInfo": true,
         "closeDuplicateTabs": true,
-        "refreshDuplicateTabsStatus": true,
+        "refreshDuplicateTabsInfo": true,
         "getDuplicateTabs": true,
         "initializeOptions": true,
         "setBadgeIcon": true,
@@ -30,7 +30,8 @@
         "updateBadges": true,
         "hasDuplicatedTabs": true,
         "isBlankUrl": true,
-        "matchingURL": true,
+        "getMatchingURL": true,
+        "getPatternUrl": true,
         "setStoredOption": true,
         "setPopupOptionState": true,
         "setTabOptionState": true,
@@ -47,8 +48,8 @@
         "getCurrentwindow": true,
         "updateWindow": true,
         "getActiveWindowId": true,
-        "tabComplete": true,
-        "tabLoading": true,
+        "isTabComplete": true,
+        "isTabLoading": true,
         "getTabBadgeText": true,
         "getWindowBadgeText": true,
         "setTabBadgeText": true,
@@ -62,6 +63,9 @@
         "saveStoredOptions": true,
         "options": true,
         "environment": true,
-        "getFirefoxMajorVersion": true
+        "getFirefoxMajorVersion": true,
+        "addToIgnoreTabs": true,
+        "removeFromIgnoreTabs": true,
+        "isIgnoreTab": true
     }
 }

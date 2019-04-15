@@ -40,7 +40,7 @@ const setBadge = async (badgeInfo) => {
 
 };
 
-const countDuplicatedTabs = duplicateGroupTabs => {
+const countNbDuplicatedTabs = duplicateGroupTabs => {
 	let nbDuplicateTabs = 0;
 	if (duplicateGroupTabs.size !== 0) {
 		for (const duplicateTabs of duplicateGroupTabs.values()) {
@@ -58,7 +58,7 @@ const updateBadge = async (windowId, nbDuplicateTabs) => {
 /* exported updateBadges */
 const updateBadges = async (duplicateGroupTabs, windowId) => {
 
-	const nbDuplicateTabs = countDuplicatedTabs(duplicateGroupTabs);
+	const nbDuplicateTabs = countNbDuplicatedTabs(duplicateGroupTabs);
 
 	if (options.searchInAllWindows) {
 		const windows = await getWindows();

@@ -1,10 +1,10 @@
 "use strict";
 
-/* exported tabComplete */
-const tabComplete = tab => tab.status === "complete";
+/* exported isTabComplete */
+const isTabComplete = tab => tab.status === "complete";
 
-/* exported tabLoading */
-const tabLoading = tab => tab.status === "loading";
+/* exported isTabLoading */
+const isTabLoading = tab => tab.status === "loading";
 
 /* exported getTab */
 const getTab = (tabId) => {

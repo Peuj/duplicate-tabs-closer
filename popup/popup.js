@@ -133,7 +133,7 @@ const setDuplicateTabsTable = (duplicateTabs) => {
       duplicateTabs.forEach(duplicateTab => {
         const containerStyle = duplicateTab.containerColor ? "style='text-decoration:underline; text-decoration-color: " + duplicateTab.containerColor + ";'" : "";
         const title = (duplicateTab.windowId === focusedWindow.id) ? duplicateTab.title : "<em>" + duplicateTab.title + "</em>";
-        $("#duplicateTabsTable > tbody").append("<tr tabId='" + duplicateTab.id + "' group='" + duplicateTab.group + "' windowId='" + duplicateTab.windowId + "'><td class='td-tab-link' " + containerStyle + "> <img src='" + duplicateTab.icon + "'>" + title + "</td><td class='td-close-button'><button type='button' class='close'>&times;</button></td></tr>");
+        $("#duplicateTabsTable > tbody").append("<tr tabId='" + duplicateTab.id + "'><td class='td-tab-link' " + containerStyle + "> <img src='" + duplicateTab.icon + "'>" + title + "</td><td class='td-close-button'><button type='button' class='close'>&times;</button></td></tr>");
       });
       $("#closeDuplicateTabsBtn").toggleClass("disabled", false);
       resizeDuplicateTabsPanel();
@@ -159,7 +159,7 @@ const resizeDuplicateTabsPanel = () => {
     $(".table-scrollable").css("height", "");
     $("#panelDuplicateTabs").css("max-height", duplicateTabsPanelMaxHeight);
     $(".table-scrollable").css("max-height", duplicateTabsPanelMaxHeight - 100);
-    $(".table-scrollable").height() + $(".list-group").height() >= 450 ? $(".td-tab-link").css("max-width", "260px") : $(".td-tab-link").css("max-width", "280px");
+    $(".table-scrollable").height() + $(".list-group").height() >= 449 ? $(".td-tab-link").css("max-width", "260px") : $(".td-tab-link").css("max-width", "280px");
   }
 };
 

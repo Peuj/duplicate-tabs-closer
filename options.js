@@ -63,7 +63,7 @@ const defaultOptions = {
     }
 };
 
-const getDefaultOptions = async () => {
+const setupDefaultOptions = async () => {
     const options = Object.assign({}, defaultOptions);
     const info = await getPlatformInfo();
     const environment = (info.os === "android") ? "android" : (typeof InstallTrigger !== "undefined") ? "firefox" : "chrome";
@@ -74,8 +74,7 @@ const getDefaultOptions = async () => {
 
 const getNotInReferenceKeys = (referenceKeys, keys) => {
     const setKeys = new Set(keys);
-    const differences = [...new Set([...referenceKeys].filter(x => !setKeys.has(x)))];
-    return differences;
+    return [...referenceKeys].filter(x => !setKeys.has(x));
 };
 
 /* exported initializeOptions */
@@ -85,7 +84,7 @@ const initializeOptions = async () => {
     const defaultKeys = Object.keys(defaultOptions).sort();
 
     if (storedKeys.length === 0) {
-        const options = await getDefaultOptions();
+        const options = await setupDefaultOptions();
         storedOptions = await saveStoredOptions(options);
     } else if (JSON.stringify(storedKeys) != JSON.stringify(defaultKeys)) {
         const obsoleteKeys = getNotInReferenceKeys(storedKeys, defaultKeys);
@@ -107,9 +106,7 @@ const setStoredOption = async (name, value, refresh) => {
     setOptions(storedOptions);
     if (refresh) refreshGlobalDuplicateTabsInfo(chrome.windows.WINDOW_ID_CURRENT);
     else if (name === "onDuplicateTabDetected") setBadgeIcon();
-    else if (name === "showBadgeIfNoDuplicateTabs") setBadge({
-        "windowId": chrome.windows.WINDOW_ID_CURRENT
-    });
+    else if (name === "showBadgeIfNoDuplicateTabs") setBadge({ "windowId": chrome.windows.WINDOW_ID_CURRENT });
 };
 
 const options = {
@@ -157,6 +154,7 @@ const setOptions = (storedOptions) => {
 const environment = {
     isAndroid: false,
     isFirefox: false,
+    isChrome: false,
     isFirefox62Compatible: false,
     isFirefox63Compatible: false
 };
@@ -164,13 +162,19 @@ const environment = {
 const setEnvironment = async (storedOptions) => {
     if (storedOptions.environment.value === "android") {
         environment.isAndroid = true;
-        environment.isFirefox = true;
+        environment.isFirefox = false;
     } else if (storedOptions.environment.value === "firefox") {
         environment.isAndroid = false;
         environment.isFirefox = true;
+        environment.isChrome = false;
         const majorVersion = await getFirefoxMajorVersion();
-        environment.isFirefox62Compatible = majorVersion >= 62 ? true : false;
-        environment.isFirefox63Compatible = majorVersion >= 63 ? true : false;
+        environment.isFirefox62Compatible = majorVersion >= 62;
+        environment.isFirefox63Compatible = majorVersion >= 63;
+    }
+    else if (storedOptions.environment.value === "chrome") {
+        environment.isAndroid = false;
+        environment.isFirefox = false;
+        environment.isChrome = true;
     }
 };
 
@@ -183,7 +187,7 @@ const isOptionOpen = () => {
     const tabs = chrome.extension.getViews({
         type: "tab"
     });
-    return tabs.length ? true : false;
+    return tabs.length > 0;
 };
 
 const whiteListToPattern = (whiteList) => {

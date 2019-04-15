@@ -6,7 +6,7 @@ const onCreatedTab = (tab) => {
 			searchAndCloseNewDuplicateTabs({ tab: tab, queryStatus: "complete", eventType: "onCreatedTab" });
 		}
 		else {
-			refreshDuplicateTabsStatus(tab.windowId);
+			refreshDuplicateTabsInfo(tab.windowId);
 		}
 	}
 };
@@ -15,27 +15,28 @@ const onBeforeNavigate = async (details) => {
 	if (options.autoCloseTab && (details.frameId == 0) && (details.tabId !== -1) && !isBlankUrl(details.url)) {
 		const tab = await getTab(details.tabId);
 		if (tab) {
-			searchAndCloseNewDuplicateTabs({ tab: tab, queryStatus: "complete", loadingUrl: details.url, eventType: "onBeforeNavigate" });
+			const loadingUrl = (environment.isChrome && (tab.url.startsWith("chrome:") || tab.url.startsWith("view-source:"))) ? tab.url : details.url;
+			searchAndCloseNewDuplicateTabs({ tab: tab, queryStatus: "complete", loadingUrl: loadingUrl, eventType: "onBeforeNavigate" });
 		}
 	}
 };
 
 const onUpdatedTab = (tabId, changeInfo, tab) => {
-
 	if ((changeInfo.url || changeInfo.status) && !isBlankUrl(tab.url)) {
 		if (tab.status === "complete") {
 			if (options.autoCloseTab) {
 				searchAndCloseNewDuplicateTabs({ tab: tab, eventType: "onUpdatedTab" });
 			}
 			else {
-				refreshDuplicateTabsStatus(tab.windowId);
+				refreshDuplicateTabsInfo(tab.windowId);
 			}
 		}
-		else if (tab.active) {
-			setBadge({ tabId: tab.id, windowId: tab.windowId });
+		else if (!environment.isFirefox62Compatible) {
+			if (tab.active) {
+				setBadge({ tabId: tab.id, windowId: tab.windowId });
+			}
 		}
 	}
-
 };
 
 const onAttached = async (tabId) => {
@@ -45,27 +46,25 @@ const onAttached = async (tabId) => {
 			searchAndCloseNewDuplicateTabs({ tab: tab, eventType: "onAttached" });
 		}
 		else {
-			refreshDuplicateTabsStatus(tab.windowId);
+			refreshDuplicateTabsInfo(tab.windowId);
 		}
 	}
 };
 
-let removingTab = false;
-
-const onRemovedTab = (removedTabId, removeInfo) => {
+const onRemovedTab = async (removedTabId, removeInfo) => {
 	if (!removeInfo.isWindowClosing && hasDuplicatedTabs(removeInfo.windowId)) {
-		removingTab = true;
-		refreshDuplicateTabsStatus(removeInfo.windowId, removedTabId);
-		setTimeout(() => removingTab = false, 50);
+		addToIgnoreTabs(removedTabId);
+		await refreshDuplicateTabsInfo(removeInfo.windowId);
+		removeFromIgnoreTabs(removedTabId);
 	}
 };
 
 const onDetachedTab = (detachedTabId, detachInfo) => {
-	if (hasDuplicatedTabs(detachInfo.oldWindowId)) refreshDuplicateTabsStatus(detachInfo.oldWindowId);
+	if (hasDuplicatedTabs(detachInfo.oldWindowId)) refreshDuplicateTabsInfo(detachInfo.oldWindowId);
 };
 
 const onActivatedTab = (activeInfo) => {
-	if (removingTab) return;
+	if (isIgnoreTab(activeInfo.tabId)) return;
 	setBadge({ tabId: activeInfo.tabId, windowId: activeInfo.windowId });
 };
 
@@ -89,7 +88,7 @@ const start = async () => {
 	chrome.tabs.onDetached.addListener(onDetachedTab);
 	chrome.tabs.onUpdated.addListener(onUpdatedTab);
 	chrome.tabs.onRemoved.addListener(onRemovedTab);
-	chrome.tabs.onActivated.addListener(onActivatedTab);
+	if (!environment.isFirefox62Compatible) chrome.tabs.onActivated.addListener(onActivatedTab);
 	chrome.commands.onCommand.addListener(onCommand);
 };
 
