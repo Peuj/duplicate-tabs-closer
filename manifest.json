@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Duplicate Tabs Closer",
-  "version": "3.3.0",
+  "version": "3.3.2",
   "author": "Peuj",
   "default_locale": "en",
   "description": "Duplicate Tabs Closer",
@@ -11,7 +11,7 @@
   "applications": {
     "gecko": {
       "id": "jid0-RvYT2rGWfM8q5yWxIxAHYAeo5Qg@jetpack",
-      "strict_min_version": "53.0"
+      "strict_min_version": "55.0"
     }
   },
   "background": {
