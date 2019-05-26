@@ -15,20 +15,19 @@ Duplicate Tabs Closer detects and closes duplicate tabs.
 * **Do nothing**: monitor tabs and update the badge icon to indicate the number of duplicate tabs detected.
 
 #### On remaining tab:
-Used with option *Close tab automatically*
+(Used with option *Close tab automatically*)  
 * **Do nothing** *(default)*: nothing is done after the duplicate tab is closed.
 * **Activate**: once the duplicate tab is closed, the remaining tab is activated.
 * **Apply opening tab behavior**: once the duplicate tab is closed, depending on the default tab behavior, the remaining tab will be moved to the position of the closed tab and activated if needed.
 
 #### Whiltelist":
-Used with option *Close tab automatically*
+(Used with option *Close tab automatically*)  
 List of urls to not close automatically. Duplicate tabs detected will be notified in badge.  
 Wildcards and RegExp are supported.
 
 
 ### Priority:
-(used with option *Close tab automatically* and *Close all duplicate tabs* button)  
-
+(Used with option *Close tab automatically* and *Close all duplicate tabs* button)  
 * **Keep older tab** *(default)*: Keep the already existing tab.
 * **Keep newer tab**: Keep the newer tab.
 * **Keep tab with https** *(default on)*: Ignore the scheme part during comparison and keep the tab with the https scheme.
