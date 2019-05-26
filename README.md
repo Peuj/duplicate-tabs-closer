@@ -22,7 +22,7 @@ Duplicate Tabs Closer detects and closes duplicate tabs.
 
 #### Whiltelist":
 (Used with option *Close tab automatically*)  
-List of urls to not close automatically. Duplicate tabs detected will be notified in badge.  
+List of urls to not close automatically. Duplicate tabs skipped will be notified in badge.  
 Wildcards and RegExp are supported.
 
 
