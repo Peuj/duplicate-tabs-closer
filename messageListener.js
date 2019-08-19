@@ -16,7 +16,7 @@ const handleMessage = (message, sender, response) => {
                 }),
                 // chrome.storage.managed is supported on Firefox 57 and later
                 !chrome.storage.managed ? null : new Promise((resolve) => {
-                    chrome.storage.managed.get(null, managedOptions => {resolve(managedOptions));
+                    chrome.storage.managed.get(null, managedOptions => resolve(managedOptions));
                 })
             ]).then(results => {
               const [storedOptions, managedOptions] = results;
