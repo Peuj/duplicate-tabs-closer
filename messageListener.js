@@ -10,7 +10,18 @@ const handleMessage = (message, sender, response) => {
             break;
         }
         case "getOptions": {
-            chrome.storage.local.get(null, storedOptions => sendResponse(storedOptions));
+            Promise.all([
+                new Promise((resolve) => {
+                    chrome.storage.local.get(null, storedOptions => resolve(storedOptions));
+                }),
+                // chrome.storage.managed is supported on Firefox 57 and later
+                !chrome.storage.managed ? null : new Promise((resolve) => {
+                    chrome.storage.managed.get(null, managedOptions => {resolve(managedOptions));
+                })
+            ]).then(results => {
+              const [storedOptions, managedOptions] = results;
+              sendResponse(Object.assign({}, storedOptions || {}, managedOptions || {}));
+            });
             return true;
         }
         case "getDuplicateTabs": {
