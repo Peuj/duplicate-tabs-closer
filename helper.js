@@ -179,11 +179,22 @@ const setWindowBadgeBackgroundColor = (windowId, color) => {
 
 /* exported getStoredOptions */
 const getStoredOptions = () => {
-    return new Promise((resolve) => {
+    return Promise.all([
+    new Promise((resolve) => {
         chrome.storage.local.get(null, options => {
-            if (chrome.runtime.lastError) console.error("getStoredOptions error:", chrome.runtime.lastError.message);
+            if (chrome.runtime.lastError) console.error("getStoredOptions error on getting local storage:", chrome.runtime.lastError.message);
             resolve(options);
         });
+    }),
+    new Promise((resolve) => {
+        chrome.storage.managed.get(null, managedOptions => {
+            if (chrome.runtime.lastError) console.error("getStoredOptions error on getting managed storage:", chrome.runtime.lastError.message);
+            resolve(managedOptions);
+        });
+    })
+    ]).then(results => {
+      const [options, managedOptions] = results;
+      return Object.assign({}, options || {}, managedOptions || {});
     });
 };
 
