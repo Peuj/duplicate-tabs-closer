@@ -186,7 +186,8 @@ const getStoredOptions = () => {
                 resolve(options);
             });
         }),
-        new Promise((resolve) => {
+        // chrome.storage.managed is supported on Firefox 57 and later
+        !chrome.storage.managed ? null : new Promise((resolve) => {
             chrome.storage.managed.get(null, managedOptions => {
                 if (chrome.runtime.lastError) console.error("getStoredOptions error on getting managed storage:", chrome.runtime.lastError.message);
                 resolve(managedOptions);
