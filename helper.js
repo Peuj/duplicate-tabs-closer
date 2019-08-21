@@ -194,8 +194,8 @@ const getStoredOptions = () => {
             });
         })
     ]).then(results => {
-      const [options, managedOptions] = results;
-      return Object.assign({}, options || {}, managedOptions || {});
+        const [options, managedOptions] = results;
+        return Object.assign({}, options || {}, managedOptions || {});
     });
 };
 
