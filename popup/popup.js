@@ -187,7 +187,8 @@ const requestGetDuplicateTabs = async () => {
 
 const setPanelOptions = async () => {
   const response = await sendMessage("getOptions");
-  const options = response.data;
+  const options = response.data.options;
+  const lockedKeys = new Set(response.data.lockedKeys);
   let isPinnedOptions = false;
 
   for (const option in options) {
@@ -204,6 +205,7 @@ const setPanelOptions = async () => {
         $("#" + option + " option[value='" + value + "']").prop("selected", true);
         if (option === "onDuplicateTabDetected") changeAutoCloseOptionState(value, false);
       }
+      if (lockedKeys.has(option)) $("#" + option).prop("disabled", true);
     }
   }
 

@@ -235,3 +235,7 @@ fieldset[disabled] .btn-close-tabs.active {
   color: #FFFFFF;
   border: 1px solid #18A9EB;
 }
+
+label > input:disabled ~ * {
+  opacity: 0.5;
+}

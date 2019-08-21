@@ -139,11 +139,12 @@ const saveOption = (name, value, refresh) => sendMessage("setStoredOption", {
   "refresh": refresh
 });
 
-const setPanelOption = (option, value) => {
+const setPanelOption = (option, value, locked = false) => {
   if (option === "environment") {
     if (value === "chrome") $("#containerItem").toggleClass("hidden", true);
   } else if (option === "whiteList") {
     $("#whiteList").val(value);
+    if (locked) $("#whiteList").prop("disabled", true);
   } else {
     if (typeof (value) === "boolean") {
       $("#" + option).prop("checked", value);
@@ -153,14 +154,16 @@ const setPanelOption = (option, value) => {
       $("#" + option + " option[value='" + value + "']").prop("selected", true);
       if (option === "onDuplicateTabDetected") changeAutoCloseOptionState(value);
     }
+    if (locked) $("#" + option).prop("disabled", true);
   }
 };
 
 const setPanelOptions = async () => {
   const response = await sendMessage("getOptions");
-  const options = response.data;
+  const options = response.data.options;
+  const lockedKeys = new Set(response.data.lockedKeys);
   for (const option in options) {
-    setPanelOption(option, options[option].value);
+    setPanelOption(option, options[option].value, lockedKeys.has(option));
   }
 };
 

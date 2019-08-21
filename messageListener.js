@@ -19,8 +19,11 @@ const handleMessage = (message, sender, response) => {
                     chrome.storage.managed.get(null, managedOptions => resolve(managedOptions));
                 })
             ]).then(results => {
-              const [storedOptions, managedOptions] = results;
-              sendResponse(Object.assign({}, storedOptions || {}, managedOptions || {}));
+                const [storedOptions, managedOptions] = results;
+                sendResponse({
+                    options:    Object.assign({}, storedOptions || {}, managedOptions || {}),
+                    lockedKeys: Object.keys(managedOptions || {})
+                });
             });
             return true;
         }
