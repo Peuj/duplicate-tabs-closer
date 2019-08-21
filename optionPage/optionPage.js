@@ -161,9 +161,9 @@ const setPanelOption = (option, value, locked = false) => {
 const setPanelOptions = async () => {
   const response = await sendMessage("getOptions");
   const options = response.data.options;
-  const lockedKeys = new Set(response.data.lockedKeys);
+  const lockedKeys = response.data.lockedKeys;
   for (const option in options) {
-    setPanelOption(option, options[option].value, lockedKeys.has(option));
+    setPanelOption(option, options[option].value, lockedKeys.includes(option));
   }
 };
 
