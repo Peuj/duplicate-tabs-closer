@@ -204,7 +204,7 @@ const getStoredOptions = () => {
     ]).then(results => {
         const [localOptions, managedOptions] = results;
         return {
-            storedOptions: Object.assign({}, localOptions || {}, managedOptions || {}),
+            storedOptions: Object.assign({}, managedOptions || {}, localOptions || {}),
             lockedKeys: Object.keys(managedOptions || {})
         };
     });
