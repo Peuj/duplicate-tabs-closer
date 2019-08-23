@@ -181,9 +181,9 @@ const setWindowBadgeBackgroundColor = (windowId, color) => {
 const getStoredOptions = () => {
     return Promise.all([
         new Promise((resolve) => {
-            chrome.storage.local.get(null, options => {
+            chrome.storage.local.get(null, localOptions => {
                 if (chrome.runtime.lastError) console.error("getStoredOptions error on getting local storage:", chrome.runtime.lastError.message);
-                resolve(options);
+                resolve(localOptions);
             });
         }),
         // chrome.storage.managed is supported on Firefox 57 and later
@@ -194,8 +194,11 @@ const getStoredOptions = () => {
             });
         })
     ]).then(results => {
-        const [options, managedOptions] = results;
-        return Object.assign({}, options || {}, managedOptions || {});
+        const [localOptions, managedOptions] = results;
+        return {
+            storedOptions: Object.assign({}, localOptions || {}, managedOptions || {}),
+            lockedKeys: Object.keys(managedOptions || {})
+        };
     });
 };
 

@@ -9,22 +9,8 @@ const handleMessage = (message, sender, response) => {
             setStoredOption(message.data.name, message.data.value, message.data.refresh);
             break;
         }
-        case "getOptions": {
-            Promise.all([
-                new Promise((resolve) => {
-                    chrome.storage.local.get(null, storedOptions => resolve(storedOptions));
-                }),
-                // chrome.storage.managed is supported on Firefox 57 and later
-                !chrome.storage.managed ? null : new Promise((resolve) => {
-                    chrome.storage.managed.get(null, managedOptions => resolve(managedOptions));
-                })
-            ]).then(results => {
-                const [storedOptions, managedOptions] = results;
-                sendResponse({
-                    options:    Object.assign({}, storedOptions || {}, managedOptions || {}),
-                    lockedKeys: Object.keys(managedOptions || {})
-                });
-            });
+        case "getStoredOptions": {
+            getStoredOptions().then(storedOptions => sendResponse(storedOptions));
             return true;
         }
         case "getDuplicateTabs": {

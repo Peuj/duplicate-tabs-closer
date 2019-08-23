@@ -186,26 +186,26 @@ const requestGetDuplicateTabs = async () => {
 };
 
 const setPanelOptions = async () => {
-  const response = await sendMessage("getOptions");
-  const options = response.data.options;
+  const response = await sendMessage("getStoredOptions");
+  const storedOptions = response.data.storedOptions;
   const lockedKeys = response.data.lockedKeys;
   let isPinnedOptions = false;
 
-  for (const option in options) {
-    const value = options[option].value;
-    if (option === "environment") {
+  for (const storedOption in storedOptions) {
+    const value = storedOptions[storedOption].value;
+    if (storedOption === "environment") {
       if (value === "chrome") $("#containerItem").toggleClass("hidden", true);
     }
     else {
       if (typeof (value) === "boolean") {
-        $("#" + option).prop("checked", value);
-        if (option.endsWith("PinChecked") && value) isPinnedOptions = true;
+        $("#" + storedOption).prop("checked", value);
+        if (storedOption.endsWith("PinChecked") && value) isPinnedOptions = true;
       }
       else {
-        $("#" + option + " option[value='" + value + "']").prop("selected", true);
-        if (option === "onDuplicateTabDetected") changeAutoCloseOptionState(value, false);
+        $("#" + storedOption + " option[value='" + value + "']").prop("selected", true);
+        if (storedOption === "onDuplicateTabDetected") changeAutoCloseOptionState(value, false);
       }
-      if (lockedKeys.includes(option)) $("#" + option).prop("disabled", true);
+      if (lockedKeys.includes(storedOption)) $("#" + storedOption).prop("disabled", true);
     }
   }
 

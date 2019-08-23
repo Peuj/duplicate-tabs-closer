@@ -32,7 +32,7 @@ const loadPageEvents = () => {
   $("#whiteList").on("change", function () {
     let whiteList = $(this).val();
     whiteList = cleanUpWhiteList(whiteList);
-    setWhiteList(whiteList);    
+    setWhiteList(whiteList);
     saveOption(this.id, whiteList, false);
   });
 
@@ -159,11 +159,11 @@ const setPanelOption = (option, value, locked = false) => {
 };
 
 const setPanelOptions = async () => {
-  const response = await sendMessage("getOptions");
-  const options = response.data.options;
+  const response = await sendMessage("getStoredOptions");
+  const storedOptions = response.data.storedOptions;
   const lockedKeys = response.data.lockedKeys;
-  for (const option in options) {
-    setPanelOption(option, options[option].value, lockedKeys.includes(option));
+  for (const storedOption in storedOptions) {
+    setPanelOption(storedOption, storedOptions[storedOption].value, lockedKeys.includes(storedOption));
   }
 };
 

@@ -100,7 +100,8 @@ const initializeOptions = async () => {
 
 /* exported setStoredOption */
 const setStoredOption = async (name, value, refresh) => {
-    let storedOptions = await getStoredOptions();
+    const options = await getStoredOptions();
+    let storedOptions = options.storedOptions;
     storedOptions[name].value = value;
     storedOptions = await saveStoredOptions(storedOptions);
     setOptions(storedOptions);
