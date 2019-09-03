@@ -79,10 +79,10 @@ const getNotInReferenceKeys = (referenceKeys, keys) => {
 
 /* exported initializeOptions */
 const initializeOptions = async () => {
-    let storedOptions = await getStoredOptions();
+    const options = await getStoredOptions();
+    let storedOptions = options.storedOptions;
     const storedKeys = Object.keys(storedOptions).sort();
     const defaultKeys = Object.keys(defaultOptions).sort();
-
     if (storedKeys.length === 0) {
         const options = await setupDefaultOptions();
         storedOptions = await saveStoredOptions(options);
@@ -93,7 +93,6 @@ const initializeOptions = async () => {
         missingKeys.forEach(key => storedOptions[key] = { value: defaultOptions[key].value });
         storedOptions = await saveStoredOptions(storedOptions, true);
     }
-
     setOptions(storedOptions);
     await setEnvironment(storedOptions);
 };
