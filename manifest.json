@@ -4,7 +4,7 @@
   "version": "3.4.1",
   "author": "Peuj",
   "default_locale": "en",
-  "description": "Duplicate Tabs Closer",
+  "description": "Manually or automatically close duplicate tabs",
   "icons": {
     "48": "images/auto_close_32.png"
   },
