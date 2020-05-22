@@ -26,7 +26,7 @@ const onUpdatedTab = (tabId, changeInfo, tab) => {
 	}
 	else if (tab.status === "complete") {
 		// if (Object.prototype.hasOwnProperty.call(changeInfo, "favIconUrl")) console.warn("_onUpdatedTab complete favIconUrl not observed", tab, changeInfo); //refreshDuplicateTabsInfo(tab.windowId);
-		if (Object.prototype.hasOwnProperty.call(changeInfo, "title")) console.warn("_onUpdatedTab complete title not observed", tab, changeInfo);
+		// if (Object.prototype.hasOwnProperty.call(changeInfo, "title")) console.warn("_onUpdatedTab complete title not observed", tab, changeInfo);
 		if (!environment.isFirefox && tab.active) setBadge(tab.windowId, tab.id);
 	}
 };
