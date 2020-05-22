@@ -36,15 +36,18 @@ Wildcards and RegExp are supported.
 
 ### Filters:
 
-* **Ignore hash part in URL** *(default off)*: for instance https://addons.mozilla.org/en-US/firefox/addon/duplicate-tabs-closer/#detail-relnotes and https://addons.mozilla.org/en-US/firefox/addon/duplicate-tabs-closer will be considered as the same URL.
-* **Ignore search part in URL** *(default off)*: for instance https://addons.mozilla.org/en-US/firefox/addon/duplicate-tabs-closer/?src=ss and https://addons.mozilla.org/en-US/firefox/addon/duplicate-tabs-closer will be considered as the same URL.
-* **Ignore path part in URL** *(default off)*: for instance https://addons.mozilla.org/en-US/developers and https://addons.mozilla.org/en-US/firefox/addon/duplicate-tabs-closer will be considered as the same URL.
-* **Compare with title** *(default off)*: If the URL doesn't match then compare using the tab title.
+* **Ignore case in URL** *(default off)*
+* **Ignore 'www' in URL domain name** *(default off)*
+* **Ignore hash part in URL** *(default off)*
+* **Ignore search part in URL** *(default off)*
+* **Ignore path part in URL** *(default off)*
+* **Compare with tab title** *(default off)*
 
 
 ### Scope:
 
-* **Container**: only closes/displays duplicate tabs that belong to a same container.
+* **Container in active window<**: only closes/displays duplicate tabs that belong to a same container in the active window.
+* **Container in all windows**: only closes/displays duplicate tabs that belong to a same container in all windows.
 * **Active window** *(default)*: only closes/displays duplicate tabs that belong to a same window.
 * **All window**: closes/displays duplicate tabs for all windows.
 
