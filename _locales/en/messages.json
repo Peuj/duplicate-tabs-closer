@@ -60,24 +60,32 @@
     "description": "Default tab behaviour"
   },
   "filters": {
-    "message": "Filters",
-    "description": "Filters"
+    "message": "Matching rules",
+    "description": "règle de correspondance"
   },
   "ignoreHashPart": {
-    "message": "Ignore hash part in tab URL",
-    "description": "Ignore hash part in tab URL"
+    "message": "Ignore hash part in URL",
+    "description": "Ignore hash part in URL"
   },
   "ignoreSearchPart": {
-    "message": "Ignore search part in tab URL",
-    "description": "Ignore search part in tab URL"
+    "message": "Ignore search part in URL",
+    "description": "Ignore search part in URL"
   },
   "ignorePathPart": {
-    "message": "Ignore path part in tab URL",
-    "description": "Ignore path part in tab URL"
+    "message": "Ignore path part in URL",
+    "description": "Ignore path part in URL"
+  },
+  "ignore3w": {
+    "message": "Ignore 'www' in URL domain name",
+    "description": "Ignore 'www' in URL domain name"
+  },
+  "caseInsensitive": {
+    "message": "Ignore case in URL",
+    "description": "Ignore case in URL"
   },
   "compareWithTitle": {
-    "message": "Compare with tab title",
-    "description": "Compare with tab title"
+    "message": "Compare with title",
+    "description": "Compare with title"
   },
   "duplicatetabs": {
     "message": "Duplicate tabs",
@@ -87,10 +95,6 @@
     "message": "Scope",
     "description": "Scope"
   },
-  "container": {
-    "message": "Container",
-    "description": "Container"
-  },
   "activewindow": {
     "message": "Active window",
     "description": "Active window"
@@ -99,13 +103,29 @@
     "message": "All windows",
     "description": "All windows"
   },
+  "containerActivewindow": {
+    "message": "Container in active window",
+    "description": "Container in active window"
+  },
+  "containerAllwindows": {
+    "message": "Container in all windows",
+    "description": "Container in all windows"
+  },
+  "hideWhiteListedDuplicateTabs": {
+    "message": "Hide whitelisted duplicate tabs",
+    "description": "Hide whitelisted duplicate tabs"
+  },
+  "groupDuplicateTabs": {
+    "message": "Group duplicate tabs",
+    "description": "Group duplicate tabs"
+  },
   "closeAllDuplicateTabs": {
-    "message": "Close all duplicate tabs",
-    "description": "Close all duplicate tabs"
+    "message": "Close all",
+    "description": "Close all"
   },
   "whiteList": {
-    "message": "Whitelist",
-    "description": "Whitelist"
+    "message": "Whitelisted URLs",
+    "description": "Whitelisted URLs"
   },
   "customization": {
     "message": "Customization",

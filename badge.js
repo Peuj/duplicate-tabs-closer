@@ -1,71 +1,56 @@
 "use strict";
 
-const storedNbDuplicatedTabs = new Map();
-const getNbDuplicatedTabs = windowId => storedNbDuplicatedTabs.get(windowId) || "0";
-const setNbDuplicatedTabs = (windowId, tabId) => storedNbDuplicatedTabs.set(windowId, tabId);
-/* exported hasDuplicatedTabs */
-const hasDuplicatedTabs = windowId => getNbDuplicatedTabs(windowId) !== "0";
-
-/* exported setBadgeIcon */
+// eslint-disable-next-line no-unused-vars
 const setBadgeIcon = () => {
 	chrome.browserAction.setIcon({ path: options.autoCloseTab ? "images/auto_close_16.png" : "images/manual_close_16.png" });
-	if (environment.isFirefox63Compatible) browser.browserAction.setBadgeTextColor({ color: "white" });
+	if (environment.isFirefox) browser.browserAction.setBadgeTextColor({ color: "white" });
 };
 
-/* exported setBadge */
-const setBadge = async (badgeInfo) => {
-
-	let nbDuplicateTabs = getNbDuplicatedTabs(badgeInfo.windowId);
-
+const setBadge = async (windowId, tabId) => {
+	let nbDuplicateTabs = tabsInfo.getNbDuplicateTabs(windowId);
+	if (nbDuplicateTabs === "0" && !options.showBadgeIfNoDuplicateTabs) nbDuplicateTabs = "";
 	const backgroundColor = (nbDuplicateTabs !== "0") ? options.badgeColorDuplicateTabs : options.badgeColorNoDuplicateTabs;
-
-	if (nbDuplicateTabs === "0" && !options.showBadgeIfNoDuplicateTabs) nbDuplicateTabs = "";	
-
-	if (environment.isFirefox62Compatible) {
-		const badgeText = await getWindowBadgeText(badgeInfo.windowId);
-		if (nbDuplicateTabs === badgeText) return;
-		setWindowBadgeText(badgeInfo.windowId, nbDuplicateTabs);
-		setWindowBadgeBackgroundColor(badgeInfo.windowId, backgroundColor);
+	if (environment.isFirefox) {
+		setWindowBadgeText(windowId, nbDuplicateTabs);
+		setWindowBadgeBackgroundColor(windowId, backgroundColor);
 	}
 	else {
-		if (!badgeInfo.tabId) {
-			const activeTab = await getActiveTab(badgeInfo.windowId);
-			badgeInfo.tabId = activeTab.id;
+		// eslint-disable-next-line no-param-reassign
+		tabId = tabId || await getActiveTabId(windowId);
+		if (tabId) {
+			setTabBadgeText(tabId, nbDuplicateTabs);
+			setTabBadgeBackgroundColor(tabId, backgroundColor);
 		}
-		const badgeText = await getTabBadgeText(badgeInfo.tabId);
-		if (nbDuplicateTabs === badgeText) return;
-		setTabBadgeText(badgeInfo.tabId, nbDuplicateTabs);
-		setTabBadgeBackgroundColor(badgeInfo.tabId, backgroundColor);
 	}
-
 };
 
-const countNbDuplicatedTabs = duplicateGroupTabs => {
+const getNbDuplicateTabs = (duplicateTabsGroups) => {
 	let nbDuplicateTabs = 0;
-	if (duplicateGroupTabs.size !== 0) {
-		for (const duplicateTabs of duplicateGroupTabs.values()) {
-			nbDuplicateTabs += duplicateTabs.size - 1;
-		}
+	if (duplicateTabsGroups.size !== 0) {
+		duplicateTabsGroups.forEach(duplicateTabs => (nbDuplicateTabs += duplicateTabs.size - 1));
 	}
-	return nbDuplicateTabs.toString();
+	return nbDuplicateTabs;
 };
 
-const updateBadge = async (windowId, nbDuplicateTabs) => {
-	setNbDuplicatedTabs(windowId, nbDuplicateTabs);
-	setBadge({ windowId: windowId });
+const updateBadgeValue = (nbDuplicateTabs, windowId) => {
+	tabsInfo.setNbDuplicateTabs(windowId, nbDuplicateTabs);
+	setBadge(windowId);
 };
 
-/* exported updateBadges */
-const updateBadges = async (duplicateGroupTabs, windowId) => {
-
-	const nbDuplicateTabs = countNbDuplicatedTabs(duplicateGroupTabs);
-
+// eslint-disable-next-line no-unused-vars
+const updateBadgesValue = async (duplicateTabsGroups, windowId) => {
+	const nbDuplicateTabs = getNbDuplicateTabs(duplicateTabsGroups);
 	if (options.searchInAllWindows) {
 		const windows = await getWindows();
-		windows.forEach(window => updateBadge(window.id, nbDuplicateTabs));
+		windows.forEach(window => updateBadgeValue(nbDuplicateTabs, window.id));
 	}
 	else {
-		updateBadge(windowId, nbDuplicateTabs);
+		updateBadgeValue(nbDuplicateTabs, windowId);
 	}
+};
 
+// eslint-disable-next-line no-unused-vars
+const updateBadgeStyle = async () => {
+	const windows = await getWindows();
+	windows.forEach(window => setBadge(window.id));
 };

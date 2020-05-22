@@ -65,19 +65,27 @@
   },
   "ignoreHashPart": {
     "message": "URLのハッシュ部分（#～）を無視する",
-    "description": "Ignore hash part in tab URL"
+    "description": "Ignore hash part in URL"
   },
   "ignoreSearchPart": {
     "message": "URLのクエリー部分（?～）を無視する",
-    "description": "Ignore search part in tab URL"
+    "description": "Ignore search part in URL"
   },
   "ignorePathPart": {
     "message": "URLのパス部分を無視する",
-    "description": "Ignore path part in tab URL"
+    "description": "Ignore path part in URL"
+  },
+  "ignore3w": {
+    "message": "Ignore 'www' in URL domain name",
+    "description": "Ignore 'www' in URL domain name"
+  },
+  "caseInsensitive": {
+    "message": "Ignore case in URL",
+    "description": "Ignore case in URL"
   },
   "compareWithTitle": {
     "message": "タブのタイトルを比較する",
-    "description": "Compare with tab title"
+    "description": "Compare with title"
   },
   "duplicatetabs": {
     "message": "重複したタブ",
@@ -87,10 +95,6 @@
     "message": "重複を検出する範囲",
     "description": "Scope"
   },
-  "container": {
-    "message": "同じコンテナー",
-    "description": "Container"
-  },
   "activewindow": {
     "message": "アクティブなウィンドウ",
     "description": "Active window"
@@ -99,13 +103,29 @@
     "message": "すべてのウィンドウ",
     "description": "All windows"
   },
+  "containerActivewindow": {
+    "message": "Container in active window",
+    "description": "Container in active window"
+  },
+  "containerAllwindows": {
+    "message": "Container in all windows",
+    "description": "Container in all windows"
+  },
+  "hideWhiteListedDuplicateTabs": {
+    "message": "Hide whitelisted duplicate tabs",
+    "description": "Hide whitelisted duplicate tabs"
+  },
+  "groupDuplicateTabs": {
+    "message": "Group duplicate tabs",
+    "description": "Group duplicate tabs"
+  },
   "closeAllDuplicateTabs": {
     "message": "重複したタブをすべて閉じる",
-    "description": "Close all duplicate tabs"
+    "description": "Close all"
   },
   "whiteList": {
     "message": "ホワイトリスト",
-    "description": "Whitelist"
+    "description": "Whitelisted URLs"
   },
   "customization": {
     "message": "カスタマイズ",

@@ -39,7 +39,7 @@ Wildcards and RegExp are supported.
 * **Ignore hash part in URL** *(default off)*: for instance https://addons.mozilla.org/en-US/firefox/addon/duplicate-tabs-closer/#detail-relnotes and https://addons.mozilla.org/en-US/firefox/addon/duplicate-tabs-closer will be considered as the same URL.
 * **Ignore search part in URL** *(default off)*: for instance https://addons.mozilla.org/en-US/firefox/addon/duplicate-tabs-closer/?src=ss and https://addons.mozilla.org/en-US/firefox/addon/duplicate-tabs-closer will be considered as the same URL.
 * **Ignore path part in URL** *(default off)*: for instance https://addons.mozilla.org/en-US/developers and https://addons.mozilla.org/en-US/firefox/addon/duplicate-tabs-closer will be considered as the same URL.
-* **Compare with tab title** *(default off)*: If the URL doesn't match then compare using the tab title.
+* **Compare with title** *(default off)*: If the URL doesn't match then compare using the tab title.
 
 
 ### Scope:

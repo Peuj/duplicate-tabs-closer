@@ -60,24 +60,32 @@
     "description": "Default tab behaviour"
   },
   "filters": {
-    "message": "Filtres",
-    "description": "Filters"
+    "message": "Règle de correspondance",
+    "description": "Règle de correspondance"
   },
   "ignoreHashPart": {
     "message": "Ignorer la partie « hachage » de l'URL",
-    "description": "Ignore hash part in tab URL"
+    "description": "Ignore hash part in URL"
   },
   "ignoreSearchPart": {
     "message": "Ignorer la partie « recherche » de l'URL",
-    "description": "Ignore search part in tab URL"
+    "description": "Ignore search part in URL"
   },
   "ignorePathPart": {
     "message": "Ignorer la partie « chemin » de l'URL",
-    "description": "Ignore path part in tab URL"
+    "description": "Ignore path part in URL"
+  },
+  "ignore3w": {
+    "message": "Ignorer 'www' dans le nom de domaine de l'URL",
+    "description": "Ignorer 'www' dans le nom de domaine de l'URL"
+  },
+  "caseInsensitive": {
+    "message": "Ignorer la casse de l'URL",
+    "description": "Ignorer la casse de l'URL"
   },
   "compareWithTitle": {
-    "message": "Comparer avec le titre de l'onglet",
-    "description": "Compare with tab title"
+    "message": "Comparer avec le titre",
+    "description": "Compare with title"
   },
   "duplicatetabs": {
     "message": "Onglets en doublon",
@@ -87,10 +95,6 @@
     "message": "Cadre",
     "description": "Scope"
   },
-  "container": {
-    "message": "Contextes",
-    "description": "Container"
-  },
   "activewindow": {
     "message": "Fenêtre active",
     "description": "Active window"
@@ -99,13 +103,29 @@
     "message": "Toutes les fenêtres",
     "description": "All windows"
   },
+  "containerActivewindow": {
+    "message": "Container dans la fenêtres active",
+    "description": "Container dans la fenêtres active"
+  },
+  "containerAllwindows": {
+    "message": "Container dans toutes les fenêtres",
+    "description": "Container dans toutes les fenêtres"
+  },
+  "hideWhiteListedDuplicateTabs": {
+    "message": "Hide whitelisted duplicate tabs",
+    "description": "Hide whitelisted duplicate tabs"
+  },
+  "groupDuplicateTabs": {
+    "message": "Group duplicate tabs",
+    "description": "Group duplicate tabs"
+  },
   "closeAllDuplicateTabs": {
-    "message": "Fermer tous les onglets en doublon",
-    "description": "Close all duplicate tabs"
+    "message": "Fermer tous",
+    "description": "Close all"
   },
   "whiteList": {
-    "message": "Liste blanche",
-    "description": "Liste blanche"
+    "message": "URLs de la Liste blanche",
+    "description": "URLs de la Liste blanche"
   },
   "customization": {
     "message": "Personnalisation",

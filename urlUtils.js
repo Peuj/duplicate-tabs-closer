@@ -1,68 +1,63 @@
 "use strict";
 
-/* exported isBlankUrl */
-const isBlankUrl = (url) => {
-	return url === "about:blank";
-};
+// eslint-disable-next-line no-unused-vars
+const isBlankURL = (url) => url === "about:blank";
 
-const isValidUrl = (url) => {
+const isValidURL = (url) => {
 	const regex = /^(f|ht)tps?:\/\//i;
 	return regex.test(url);
 };
 
-/* exported areMatchingURL */
-const areMatchingURL = (url1, url2) => {
-
-	if (isValidUrl(url1) && isValidUrl(url2)) {
-		url1 = getMatchingURL(url1);
-		url2 = getMatchingURL(url2);
-	}
-
-	return url1 === url2;
+// eslint-disable-next-line no-unused-vars
+const isHttps = (url) => {
+	const regex = /^https:\/\//i;
+	return regex.test(url);
 };
 
-/* exported getMatchingURL */
+// eslint-disable-next-line no-unused-vars
 const getMatchingURL = (url) => {
-
-	if (isValidUrl(url)) {
-
-		if (options.ignorePathPart) {
-			const uri = new URL(url);
-			url = uri.origin;
-		}
-		else if (options.ignoreSearchPart) {
-			url = url.split("?")[0];
-		}
-		else if (options.ignoreHashPart) {
-			url = url.split("#")[0];
-		}
-
-		if (options.keepTabWithHttps) {
-			url = url.replace(/^http:\/\//i, "https://");
-		}
-
-		url = url.replace(/\/$/, "");
+	if (!isValidURL(url)) return url;
+	let matchingURL = url;
+	if (options.ignorePathPart) {
+		const uri = new URL(matchingURL);
+		matchingURL = uri.origin;
 	}
-
-	return url;
+	else if (options.ignoreSearchPart) {
+		matchingURL = matchingURL.split("?")[0];
+	}
+	else if (options.ignoreHashPart) {
+		matchingURL = matchingURL.split("#")[0];
+	}
+	if (options.keepTabWithHttps) {
+		matchingURL = matchingURL.replace(/^http:\/\//i, "https://");
+	}
+	if (options.ignore3w) {
+		matchingURL = matchingURL.replace("://www.", "://");
+	}
+	if (options.caseInsensitive) {
+		matchingURL = matchingURL.toLowerCase();
+	}
+	matchingURL = matchingURL.replace(/\/$/, "");
+	return matchingURL;
 };
 
-/* exported getPatternUrl */
-const getPatternUrl = (url) => {
-
-	if (!isValidUrl(url))
-		return;
-
-	const uri = new URL(url);
-	let urlPattern = "*://" + uri.hostname;
-
-	if (options.ignorePathPart) {
-		urlPattern += "/*";
+// eslint-disable-next-line no-unused-vars
+const getMatchPatternURL = (url) => {
+	let urlPattern = null;
+	if (!isValidURL(url)) {
+		urlPattern = `${url}*`;
 	}
 	else {
-		urlPattern += uri.pathname;
-		if (uri.search || uri.hash) {
-			urlPattern += "*";
+		const uri = new URL(url);
+		urlPattern = `*://${uri.hostname}`;
+		if (options.ignorePathPart) {
+			urlPattern += "/*";
+		}
+		else {
+			urlPattern += uri.pathname;
+			if (uri.search || uri.hash) {
+				urlPattern += "*";
+			}
 		}
 	}
 	return urlPattern;

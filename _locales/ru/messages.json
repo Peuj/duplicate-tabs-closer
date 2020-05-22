@@ -65,19 +65,27 @@
   },
   "ignoreHashPart": {
     "message": "Игнорировать хэш-часть в URL вкладки",
-    "description": "Ignore hash part in tab URL"
+    "description": "Ignore hash part in URL"
   },
   "ignoreSearchPart": {
     "message": "Игнорировать часть поиска в URL вкладки",
-    "description": "Ignore search part in tab URL"
+    "description": "Ignore search part in URL"
   },
   "ignorePathPart": {
     "message": "Игнорировать часть пути в URL вкладки",
-    "description": "Ignore path part in tab URL"
+    "description": "Ignore path part in URL"
+  },
+  "ignore3w": {
+    "message": "Ignore 'www' in URL domain name",
+    "description": "Ignore 'www' in URL domain name"
+  },
+  "caseInsensitive": {
+    "message": "Ignore case in URL",
+    "description": "Ignore case in URL"
   },
   "compareWithTitle": {
     "message": "Сравнить заголовки вкладок",
-    "description": "Compare with tab title"
+    "description": "Compare with title"
   },
   "duplicatetabs": {
     "message": "Дубликаты вкладок",
@@ -87,10 +95,6 @@
     "message": "Границы поиска",
     "description": "Scope"
   },
-  "container": {
-    "message": "Контейнер",
-    "description": "Container"
-  },
   "activewindow": {
     "message": "Активное окно",
     "description": "Active window"
@@ -99,9 +103,29 @@
     "message": "Все окна",
     "description": "All windows"
   },
+  "containerActivewindow": {
+    "message": "Container in active window",
+    "description": "Container in active window"
+  },
+  "containerAllwindows": {
+    "message": "Container in all windows",
+    "description": "Container in all windows"
+  },
+  "hideWhiteListedDuplicateTabs": {
+    "message": "Hide whitelisted duplicate tabs",
+    "description": "Hide whitelisted duplicate tabs"
+  },
+  "groupDuplicateTabs": {
+    "message": "Group duplicate tabs",
+    "description": "Group duplicate tabs"
+  },
   "closeAllDuplicateTabs": {
     "message": "Закрыть все дубликаты вкладок",
-    "description": "Close all duplicate tabs"
+    "description": "Close all"
+  },
+  "whiteList": {
+    "message": "ホワイトリスト",
+    "description": "Whitelisted URLs"
   },
   "customization": {
     "message": "Настройка",

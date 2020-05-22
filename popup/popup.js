@@ -1,236 +1,183 @@
 "use strict";
 
+let activeWindowId = chrome.windows.WINDOW_ID_NONE;
+let lastDuplicateTabs = {};
+
 const initialize = async () => {
-  const requestGetDuplicateTabsPromise = requestGetDuplicateTabs();
-  const setPanelOptionsPromise = setPanelOptions();
-  localizePopup(document.documentElement);
-  const isPinnedOptions = await setPanelOptionsPromise;
-  await toggleOptionPanel(false, isPinnedOptions);
-  resizeDuplicateTabsPanel();
-  const duplicateTabs = await requestGetDuplicateTabsPromise;
-  setDuplicateTabsTable(duplicateTabs);
+    await Promise.all([setPanelOptions(), saveActiveWindowId()]);
+    requestGetDuplicateTabs();
+    localizePopup(document.documentElement);
 };
 
+// eslint-disable-next-line max-lines-per-function
 const loadPopupEvents = () => {
 
-  // Save checkbox settings
-  $(".list-group input[type='checkbox'").on("change", function () {
-    const refresh = this.className === "checkbox-filter";
-    saveOption(this.id, this.checked, refresh);
-  });
-
-  // Save combobox settings
-  $(".list-group select").on("change", function () {
-    const refresh = this.id === "scope";
-    saveOption(this.id, this.value, refresh);
-    if (this.id === "onDuplicateTabDetected") changeAutoCloseOptionState(this.value, true);
-  });
-
-  // Open Option tab tab
-  $(".glyphicon-cog").on("click", function (event) {
-    event.stopPropagation();
-    chrome.runtime.openOptionsPage();
-  });
-
-  // Active selected tab
-  $("#duplicateTabsTable").on("click", ".td-tab-link", function () {
-    const tabId = parseInt($(this).parent().attr("tabId"));
-    const windowId = parseInt($(this).parent().attr("windowId"));
-    activateSelectedTab(tabId, windowId);
-  });
-
-  // Close selected tab
-  $("#duplicateTabsTable").on("click", ".td-close-button", function () {
-    const tabId = parseInt($(this).parent().attr("tabId"));
-    requestCloseDuplicateTab(tabId);
-  });
-
-  // Close all duplicate tabs
-  $("#closeDuplicateTabsBtn").on("click", function () {
-    if (!$(this).hasClass("disabled")) requestCloseDuplicateTabs();
-  });
-
-  // Toggle Options panel
-  $("#panelHeadingOptions").on("click", function () {
-    toggleOptionPanel(true);
-  });
-
-  // Toggle subitem panels
-  $(".subitem-title").on("click", function () {
-    toggleOptionsGroup(this.id, true);
-  });
-
-};
-
-// Show/Hide the AutoClose option
-const changeAutoCloseOptionState = (state, resize) => {
-  $("#onRemainingTabGroup").toggleClass("hidden", state !== "A");
-  if (resize) resizeDuplicateTabsPanel();
-};
-
-const toggleOptionPanel = async (clicked, isPinnedOptions) => {
-
-  if (clicked) {
-    $("#panelHeadingOptions").toggleClass("group-collapsed group-expanded");
-
-    if ($("#panelHeadingOptions").hasClass("group-expanded")) {
-      const toggleOptionsGroupPromises = [
-        toggleOptionsGroup("onDuplicateTabDetectedGroup"),
-        toggleOptionsGroup("priorityTabGroup"),
-        toggleOptionsGroup("scopeGroup"),
-        toggleOptionsGroup("filtersGroup")
-      ];
-      await Promise.all(toggleOptionsGroupPromises);
-    }
-
-    $("#panelHeadingOptions").nextAll(".list-group-collapsible").first().slideToggle(0, "linear", () => {
-      resizeDuplicateTabsPanel();
+    /* Save checkbox settings */
+    $(".list-group input[type='checkbox'").on("change", function () {
+        if (this.id.endsWith("ThumbChecked")) toggleExpendGroup(this.id, true, true);
+        const refresh = this.className.includes("checkbox-filter");
+        saveOption(this.id, this.checked, refresh);
     });
-  }
-  else {
-    if (isPinnedOptions) {
-      const toggleOptionsGroupPromises = [
-        toggleOptionsGroup("onDuplicateTabDetectedGroup"),
-        toggleOptionsGroup("priorityTabGroup"),
-        toggleOptionsGroup("scopeGroup"),
-        toggleOptionsGroup("filtersGroup")
-      ];
-      await Promise.all(toggleOptionsGroupPromises);
-    }
-    else {
-      $("#panelHeadingOptions").toggleClass("group-collapsed group-expanded");
-      await $("#panelHeadingOptions").nextAll(".list-group-collapsible").first().slideToggle(0, "linear");
-    }
-  }
+
+    /* Save combobox settings */
+    $(".list-group select").on("change", function (event) {
+        event.stopPropagation();
+        const refresh = this.id === "scope";
+        saveOption(this.id, this.value, refresh);
+        if (this.id === "onDuplicateTabDetected") changeAutoCloseOptionState(this.value, true);
+    });
+
+    /* Open Option tab */
+    $(".fa-cog").on("click", (event) => {
+        event.stopPropagation();
+        chrome.runtime.openOptionsPage();
+    });
+
+    /* Active selected tab */
+    $("#duplicateTabsTable").on("click", ".td-tab-title", function () {
+        const tabId = parseInt($(this).parent().attr("tabId"), 10);
+        const windowId = parseInt($(this).parent().attr("windowId"), 10);
+        focusTab(tabId, windowId);
+    });
+
+    /* Close selected tab */
+    $("#duplicateTabsTable").on("click", ".td-close-button", function () {
+        const tabId = parseInt($(this).parent().attr("tabId"), 10);
+        removeTab(tabId);
+    });
+
+    /* Close all */
+    $("#closeDuplicateTabsBtn").on("click", function () {
+        if (!$(this).hasClass("disabled")) requestCloseDuplicateTabs();
+    });
+
+    /* Toggle subitem panels */
+    $(".list-group-item-title").on("click", function () {
+        toggleExpendGroup(this.id, false);
+    });
 
 };
 
-const isPinned = (pinId) => {
-  return $("#" + pinId + "PinChecked").prop("checked");
+/* Show/Hide the AutoClose option */
+const changeAutoCloseOptionState = (state, resize) => {
+    $("#onRemainingTabGroup").toggleClass("hidden", state !== "A");
+    if (resize) resizeDuplicateTabsPanel();
 };
 
-const toggleOptionsGroup = (groupId, clicked) => {
-  return new Promise((resolve) => {
-    if (clicked || (isPinned(groupId) && $("#" + groupId).hasClass("group-collapsed")) || (!isPinned(groupId) && $("#" + groupId).hasClass("group-expanded"))) {
-      $("#" + groupId).toggleClass("group-collapsed group-expanded");
-      $("#" + groupId + "Pin").toggleClass("hidden", $("#" + groupId).hasClass("group-collapsed"));
-      $("#" + groupId).nextAll(".list-group-collapsible").first().slideToggle(0, "linear", () => {
-        if (clicked) resizeDuplicateTabsPanel();
-        resolve();
-      });
+const toggleExpendGroup = (groupId, checkbox, resize) => {
+    if (checkbox) {
+        const thumbChecked = $(`#${groupId}`).prop("checked");
+        const listGroupId = groupId.replace("ThumbChecked", "");
+        $(`#${listGroupId}Body`).toggleClass("hidden", !thumbChecked);
+        if ((thumbChecked && $(`#${listGroupId}`).hasClass("list-group-collapsed")) || (!thumbChecked && $(`#${listGroupId}`).hasClass("list-group-expanded"))) {
+            $(`#${listGroupId}`).toggleClass("list-group-expanded list-group-collapsed");
+        }
+        if (resize) resizeDuplicateTabsPanel();
     }
     else {
-      resolve();
+        $(`#${groupId}Body`).toggleClass("hidden");
+        $(`#${groupId}`).toggleClass("list-group-expanded list-group-collapsed");
+        resizeDuplicateTabsPanel();
     }
-  });
+    $(".list-group-item").toggleClass("list-group-item-overflow", $(".card-body").css("height") >= $(".card-body").css("max-height"));
 };
 
 const setDuplicateTabsTable = (duplicateTabs) => {
-  if (duplicateTabs) {
-    chrome.windows.getCurrent(null, focusedWindow => {
-      $("#duplicateTabsTable").empty();
-      $("#duplicateTabsTable").append("<tbody></tbody>");
-      duplicateTabs.forEach(duplicateTab => {
-        const containerStyle = duplicateTab.containerColor ? "style='text-decoration:underline; text-decoration-color: " + duplicateTab.containerColor + ";'" : "";
-        const title = (duplicateTab.windowId === focusedWindow.id) ? duplicateTab.title : "<em>" + duplicateTab.title + "</em>";
-        $("#duplicateTabsTable > tbody").append("<tr tabId='" + duplicateTab.id + "'><td class='td-tab-link' " + containerStyle + "> <img src='" + duplicateTab.icon + "'>" + title + "</td><td class='td-close-button'><button type='button' class='close'>&times;</button></td></tr>");
-      });
-      $("#closeDuplicateTabsBtn").toggleClass("disabled", false);
-      resizeDuplicateTabsPanel();
-    });
-  }
-  else {
-    $("#duplicateTabsTable").empty();
-    $("#duplicateTabsTable").append("<tr><td width='100%'align='center' valign='center'><font color='#9FACBD'><em>" + chrome.i18n.getMessage("noDuplicateTabs") + ".</em></font></td></tr>");
-    $("#closeDuplicateTabsBtn").toggleClass("disabled", true);
-    resizeDuplicateTabsPanel();
-  }
+    if (areSameArrays(duplicateTabs, lastDuplicateTabs)) return;
+    lastDuplicateTabs = duplicateTabs ? Array.from(duplicateTabs) : null;
+    $("#duplicateTabsTableBody").empty();
+    if (duplicateTabs) {
+        let tableRows = "";
+        duplicateTabs.forEach(duplicateTab => {
+            const containerStyle = duplicateTab.containerColor ? `style='text-decoration:underline; text-decoration-color: ${duplicateTab.containerColor};'` : "";
+            const title = (duplicateTab.windowId === activeWindowId) ? duplicateTab.title : `<em>${duplicateTab.title}</em>`;
+            const tdTabIcon = `<td class='td-tab-icon'><img src='${duplicateTab.icon}' alt=''></td>`;
+            const tdTabTitle = `<td class='td-tab-title' ${containerStyle}>${title}</td>`;
+            const tdCloseButton = "<td class='td-close-button'><button type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span></button></td>";
+            tableRows += `<tr tabId='${duplicateTab.id}' windowId='${duplicateTab.windowId}'>${tdTabIcon}${tdTabTitle}${tdCloseButton}</tr>`;
+        });
+        $("#duplicateTabsTableBody").append(tableRows);
+        $("#closeDuplicateTabsBtn").toggleClass("disabled", false);
+    }
+    else {
+        $("#duplicateTabsTableBody").append(`<td class='td-tab-text'><em>${chrome.i18n.getMessage("noDuplicateTabs")}.</em></td>`);
+        $("#closeDuplicateTabsBtn").toggleClass("disabled", true);
+    }
+    resizeDuplicateTabsPanel(true);
 };
 
-const resizeDuplicateTabsPanel = () => {
-  const optionGroupHeight = $(".list-group").height();
-  const duplicateTabsPanelMaxHeight = 550 - optionGroupHeight;
-  if ($(".table-scrollable").height() === 0) {
-    $("#duplicateTabsPanelHeight").css("height", duplicateTabsPanelMaxHeight);
-    $(".table-scrollable").css("height", duplicateTabsPanelMaxHeight - 100);
-  }
-  else {
-    $("#duplicateTabsPanelHeight").css("height", "");
-    $(".table-scrollable").css("height", "");
-    $("#panelDuplicateTabs").css("max-height", duplicateTabsPanelMaxHeight);
-    $(".table-scrollable").css("max-height", duplicateTabsPanelMaxHeight - 100);
-    $(".table-scrollable").height() + $(".list-group").height() >= 449 ? $(".td-tab-link").css("max-width", "260px") : $(".td-tab-link").css("max-width", "280px");
-  }
+const resizeDuplicateTabsPanel = (refresh) => {
+    const maxOptionsCardHeight = 432;
+    const rowHeight = 26;
+    const minRow = 2;
+    const nbRows = lastDuplicateTabs ? lastDuplicateTabs.length : 1;
+    const maxRows = Math.min(nbRows, Math.floor((maxOptionsCardHeight - $("#optionsCard").height() + (minRow * rowHeight)) / rowHeight));
+    $("#duplicateTabsTableContainer").toggleClass("table-scrollable-overflow", nbRows > maxRows);
+    if (refresh && (nbRows > maxRows)) highlightBottomScrollShadow();
+    $("#duplicateTabsTableContainer").css("height", maxRows * rowHeight);
 };
 
-const sendMessage = (action, data) => {
-  return new Promise((resolve) => {
-    chrome.runtime.sendMessage({ action: action, data: data }, response => {
-      if (chrome.runtime.lastError) console.error("sendMessage error:", chrome.runtime.lastError.message);
-      resolve(response);
-    });
-  });
+const saveActiveWindowId = async () => {
+    activeWindowId = await getActiveWindowId();
 };
 
-const requestCloseDuplicateTabs = () => sendMessage("closeDuplicateTabs", { "windowId": chrome.windows.WINDOW_ID_CURRENT });
-
-const requestCloseDuplicateTab = (tabId) => sendMessage("closeDuplicateTab", { "tabId": tabId });
-
-const activateSelectedTab = (tabId, windowId) => sendMessage("activateTab", { "tabId": tabId, "windowId": windowId });
+const requestCloseDuplicateTabs = () => sendMessage("closeDuplicateTabs", { "windowId": activeWindowId });
 
 const saveOption = (name, value, refresh) => sendMessage("setStoredOption", { "name": name, "value": value, "refresh": refresh });
 
-const requestGetDuplicateTabs = async () => {
-  const response = await sendMessage("getDuplicateTabs", { "windowId": chrome.windows.WINDOW_ID_CURRENT });
-  return response.data;
+const requestGetDuplicateTabs = () => sendMessage("getDuplicateTabs", { "windowId": activeWindowId });
+
+const setPanelOption = (storedOption, value, isLockedKey) => {
+    if (storedOption === "environment" && value === "chrome") {
+        $(".containerItem").toggleClass("hidden", true);
+    }
+    else {
+        if (typeof (value) === "boolean") {
+            $(`#${storedOption}`).prop("checked", value);
+            if (storedOption.endsWith("ThumbChecked")) toggleExpendGroup(storedOption, true);
+        }
+        else {
+            $(`#${storedOption} option[value='${value}']`).prop("selected", true);
+            if (storedOption === "onDuplicateTabDetected") changeAutoCloseOptionState(value, false);
+        }
+        if (isLockedKey) $(`#${storedOption}`).prop("disabled", true);
+    }
 };
 
 const setPanelOptions = async () => {
-  const response = await sendMessage("getStoredOptions");
-  const storedOptions = response.data.storedOptions;
-  const lockedKeys = response.data.lockedKeys;
-  let isPinnedOptions = false;
-
-  for (const storedOption in storedOptions) {
-    const value = storedOptions[storedOption].value;
-    if (storedOption === "environment") {
-      if (value === "chrome") $("#containerItem").toggleClass("hidden", true);
+    const response = await sendMessage("getStoredOptions");
+    const storedOptions = response.data.storedOptions;
+    const lockedKeys = response.data.lockedKeys;
+    for (const storedOption in storedOptions) {
+        setPanelOption(storedOption, storedOptions[storedOption].value, lockedKeys.includes(storedOption));
     }
-    else {
-      if (typeof (value) === "boolean") {
-        $("#" + storedOption).prop("checked", value);
-        if (storedOption.endsWith("PinChecked") && value) isPinnedOptions = true;
-      }
-      else {
-        $("#" + storedOption + " option[value='" + value + "']").prop("selected", true);
-        if (storedOption === "onDuplicateTabDetected") changeAutoCloseOptionState(value, false);
-      }
-      if (lockedKeys.includes(storedOption)) $("#" + storedOption).prop("disabled", true);
-    }
-  }
-
-  return isPinnedOptions;
 };
 
 const handleMessage = (message) => {
-  if (message.action === "updateDuplicateTabsTable") setDuplicateTabsTable(message.data.duplicateTabs);
+    if (message.action === "updateDuplicateTabsTable") setDuplicateTabsTable(message.data.duplicateTabs);
 };
 
 chrome.runtime.onMessage.addListener(handleMessage);
 
 const handleDOMContentLoaded = () => {
-  initialize();
-  loadPopupEvents();
+    initialize();
+    loadPopupEvents();
 };
 
 document.addEventListener("DOMContentLoaded", handleDOMContentLoaded);
 
-// Localize the popup
 const localizePopup = (node) => {
-  const attribute = "i18n-content";
-  const elements = node.querySelectorAll("[" + attribute + "]");
-  elements.forEach(element => {
-    const value = element.getAttribute(attribute);
-    element.textContent = chrome.i18n.getMessage(value);
-  });
+    const attribute = "i18n-content";
+    const elements = node.querySelectorAll(`[${attribute}]`);
+    elements.forEach(element => {
+        const value = element.getAttribute(attribute);
+        element.textContent = chrome.i18n.getMessage(value);
+    });
+};
+
+let highlightBottomScrollShadowTimer = null;
+const highlightBottomScrollShadow = () => {
+    clearTimeout(highlightBottomScrollShadowTimer);
+    $("#duplicateTabsTableContainer").toggleClass("table-scrollable-shadow", true);
+    highlightBottomScrollShadowTimer = setTimeout(() => $("#duplicateTabsTableContainer").toggleClass("table-scrollable-shadow", false), 400);
 };

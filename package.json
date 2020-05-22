@@ -1,0 +1,19 @@
+{
+  "name": "duplicate-tabs-closer",
+  "version": "1.0.0",
+  "description": "Duplicate Tabs Closer detects and closes duplicate tabs.",
+  "main": "background.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Peuj/duplicate-tabs-closer.git"
+  },
+  "author": "Peuj",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Peuj/duplicate-tabs-closer/issues"
+  },
+  "homepage": "https://github.com/Peuj/duplicate-tabs-closer#readme"
+}

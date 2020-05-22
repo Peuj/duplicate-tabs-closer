@@ -76,22 +76,30 @@
     },
     "ignoreHashPart": {
         "message": "忽略标签页 URL 中的井字部分",
-        "description": "Ignore hash part in tab URL",
+        "description": "Ignore hash part in URL",
         "hash": "bbeeddb75b5f0c1d72685cf06108c3e3"
     },
     "ignoreSearchPart": {
         "message": "忽略标签页 URL 中的问号部分",
-        "description": "Ignore search part in tab URL",
+        "description": "Ignore search part in URL",
         "hash": "719a708f82ce50153de4e90a4b697a84"
     },
     "ignorePathPart": {
         "message": "忽略标签页 URL 中的路径部分",
-        "description": "Ignore path part in tab URL",
+        "description": "Ignore path part in URL",
         "hash": "c05dc772b761f094ec2b99f692c26148"
     },
+    "ignore3w": {
+        "message": "Ignore 'www' in URL domain name",
+        "description": "Ignore 'www' in URL domain name"
+      },
+      "caseInsensitive": {
+        "message": "Ignore case in URL",
+        "description": "Ignore case in URL"
+      },
     "compareWithTitle": {
         "message": "比较依据标签页标题",
-        "description": "Compare with tab title",
+        "description": "Compare with title",
         "hash": "940d9019e344f4935592346ddcb339ec"
     },
     "duplicatetabs": {
@@ -104,11 +112,6 @@
         "description": "Scope",
         "hash": "b06ab27384841fc6f17aa35b29084cc9"
     },
-    "container": {
-        "message": "当前容器",
-        "description": "Container",
-        "hash": "2c649fcd504e8375c5960d17bb059666"
-    },
     "activewindow": {
         "message": "活动窗口",
         "description": "Active window",
@@ -119,11 +122,31 @@
         "description": "All windows",
         "hash": "bc70cbd34d1cf4df02198f3b02ee0dd2"
     },
+    "containerActivewindow": {
+        "message": "Container in active window",
+        "description": "Container in active window"
+      },
+      "containerAllwindows": {
+        "message": "Container in all windows",
+        "description": "Container in all windows"
+      },
+      "hideWhiteListedDuplicateTabs": {
+        "message": "Hide whitelisted duplicate tabs",
+        "description": "Hide whitelisted duplicate tabs"
+      },
+      "groupDuplicateTabs": {
+        "message": "Group duplicate tabs",
+        "description": "Group duplicate tabs"
+      },
     "closeAllDuplicateTabs": {
         "message": "关闭所有重复的标签页",
-        "description": "Close all duplicate tabs",
+        "description": "Close all",
         "hash": "2cee8df732a18dcd794ecdd8059591b7"
     },
+    "whiteList": {
+        "message": "ホワイトリスト",
+        "description": "Whitelisted URLs"
+      },
     "customization": {
         "message": "定制",
         "description": "Customization",

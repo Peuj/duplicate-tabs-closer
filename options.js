@@ -31,19 +31,28 @@ const defaultOptions = {
     ignorePathPart: {
         value: false
     },
+    ignore3w: {
+        value: false
+    },
+    caseInsensitive: {
+        value: false
+    },
     compareWithTitle: {
         value: false
     },
-    onDuplicateTabDetectedGroupPinChecked: {
+    onDuplicateTabDetectedThumbChecked: {
         value: true
     },
-    priorityTabGroupPinChecked: {
+    tabPriorityThumbChecked: {
         value: true
     },
-    filtersGroupPinChecked: {
+    filtersThumbChecked: {
         value: true
     },
-    scopeGroupPinChecked: {
+    scopeThumbChecked: {
+        value: true
+    },
+    customizationThumbChecked: {
         value: true
     },
     whiteList: {
@@ -64,9 +73,9 @@ const defaultOptions = {
 };
 
 const setupDefaultOptions = async () => {
-    const options = Object.assign({}, defaultOptions);
     const info = await getPlatformInfo();
     const environment = (info.os === "android") ? "android" : (typeof InstallTrigger !== "undefined") ? "firefox" : "chrome";
+    const options = Object.assign({}, defaultOptions);
     options.environment.value = environment;
     if (environment === "android") options.scope.value = "A";
     return options;
@@ -74,92 +83,74 @@ const setupDefaultOptions = async () => {
 
 const getNotInReferenceKeys = (referenceKeys, keys) => {
     const setKeys = new Set(keys);
-    return [...referenceKeys].filter(x => !setKeys.has(x));
+    return Array.from(referenceKeys).filter(key => !setKeys.has(key));
 };
 
-/* exported initializeOptions */
+// eslint-disable-next-line no-unused-vars
 const initializeOptions = async () => {
     const options = await getStoredOptions();
-    let storedOptions = options.storedOptions;
+    const storedOptions = options.storedOptions;
+    console.log("storedOptions", storedOptions);
     const storedKeys = Object.keys(storedOptions).sort();
     const defaultKeys = Object.keys(defaultOptions).sort();
     if (storedKeys.length === 0) {
-        const options = await setupDefaultOptions();
-        storedOptions = await saveStoredOptions(options);
+        const intialOptions = await setupDefaultOptions();
+        saveStoredOptions(intialOptions);
     } else if (JSON.stringify(storedKeys) != JSON.stringify(defaultKeys)) {
         const obsoleteKeys = getNotInReferenceKeys(storedKeys, defaultKeys);
         obsoleteKeys.forEach(key => delete storedOptions[key]);
         const missingKeys = getNotInReferenceKeys(defaultKeys, storedKeys);
+        // eslint-disable-next-line no-return-assign
         missingKeys.forEach(key => storedOptions[key] = { value: defaultOptions[key].value });
-        storedOptions = await saveStoredOptions(storedOptions, true);
+        saveStoredOptions(storedOptions, true);
     }
     setOptions(storedOptions);
-    await setEnvironment(storedOptions);
+    setEnvironment(storedOptions);
 };
 
-/* exported setStoredOption */
+// eslint-disable-next-line no-unused-vars
 const setStoredOption = async (name, value, refresh) => {
     const options = await getStoredOptions();
-    let storedOptions = options.storedOptions;
+    const storedOptions = options.storedOptions;
     storedOptions[name].value = value;
-    storedOptions = await saveStoredOptions(storedOptions);
+    saveStoredOptions(storedOptions);
     setOptions(storedOptions);
-    if (refresh) refreshGlobalDuplicateTabsInfo(chrome.windows.WINDOW_ID_CURRENT);
+    if (refresh) refreshGlobalDuplicateTabsInfo();
     else if (name === "onDuplicateTabDetected") setBadgeIcon();
-    else if (name === "showBadgeIfNoDuplicateTabs") setBadge({ "windowId": chrome.windows.WINDOW_ID_CURRENT });
+    else if (name === "showBadgeIfNoDuplicateTabs" || name === "badgeColorNoDuplicateTabs" || name === "badgeColorDuplicateTabs") updateBadgeStyle();
 };
 
-const options = {
-    autoCloseTab: false,
-    defaultTabBehavior: false,
-    activateKeptTab: false,
-    keepNewerTab: false,
-    keepReloadOlderTab: false,
-    keepTabWithHttps: false,
-    keepPinnedTab: false,
-    ignoreHashPart: false,
-    ignoreSearchPart: false,
-    ignorePathPart: false,
-    compareWithTitle: false,
-    searchInSameContainer: false,
-    searchInCurrentWindow: false,
-    searchInAllWindows: false,
-    whiteList: [],
-    badgeColorDuplicateTabs: "",
-    badgeColorNoDuplicateTabs: "",
-    showBadgeIfNoDuplicateTabs: false
-};
+const options = {};
 
 const setOptions = (storedOptions) => {
-    options.autoCloseTab = storedOptions["onDuplicateTabDetected"].value === "A";
-    options.defaultTabBehavior = storedOptions["onRemainingTab"].value === "B";
-    options.activateKeptTab = storedOptions["onRemainingTab"].value === "A";
-    options.keepNewerTab = storedOptions["keepTabBasedOnAge"].value === "N";
-    options.keepReloadOlderTab = storedOptions["keepTabBasedOnAge"].value === "R";
-    options.keepTabWithHttps = storedOptions["keepTabWithHttps"].value;
-    options.keepPinnedTab = storedOptions["keepPinnedTab"].value;
-    options.ignoreHashPart = storedOptions["ignoreHashPart"].value;
-    options.ignoreSearchPart = storedOptions["ignoreSearchPart"].value;
-    options.ignorePathPart = storedOptions["ignorePathPart"].value;
-    options.compareWithTitle = storedOptions["compareWithTitle"].value;
-    options.searchInSameContainer = storedOptions["scope"].value === "O";
-    options.searchInCurrentWindow = storedOptions["scope"].value === "C";
-    options.searchInAllWindows = storedOptions["scope"].value === "A";
-    options.whiteList = whiteListToPattern(storedOptions["whiteList"].value);
-    options.badgeColorDuplicateTabs = storedOptions["badgeColorDuplicateTabs"].value;
-    options.badgeColorNoDuplicateTabs = storedOptions["badgeColorNoDuplicateTabs"].value;
-    options.showBadgeIfNoDuplicateTabs = storedOptions["showBadgeIfNoDuplicateTabs"].value;
+    options.autoCloseTab = storedOptions.onDuplicateTabDetected.value === "A";
+    options.defaultTabBehavior = storedOptions.onRemainingTab.value === "B";
+    options.activateKeptTab = storedOptions.onRemainingTab.value === "A";
+    options.keepNewerTab = storedOptions.keepTabBasedOnAge.value === "N";
+    options.keepReloadOlderTab = storedOptions.keepTabBasedOnAge.value === "R";
+    options.keepTabWithHttps = storedOptions.keepTabWithHttps.value;
+    options.keepPinnedTab = storedOptions.keepPinnedTab.value;
+    options.ignoreHashPart = storedOptions.ignoreHashPart.value;
+    options.ignoreSearchPart = storedOptions.ignoreSearchPart.value;
+    options.ignorePathPart = storedOptions.ignorePathPart.value;
+    options.compareWithTitle = storedOptions.compareWithTitle.value;
+    options.ignore3w = storedOptions.ignore3w.value;
+    options.caseInsensitive = storedOptions.caseInsensitive.value;
+    options.searchInAllWindows = storedOptions.scope.value === "A" || storedOptions.scope.value === "CA";
+    options.searchPerContainer = storedOptions.scope.value === "CC" || storedOptions.scope.value === "CA";
+    options.whiteList = whiteListToPattern(storedOptions.whiteList.value);
+    options.badgeColorDuplicateTabs = storedOptions.badgeColorDuplicateTabs.value;
+    options.badgeColorNoDuplicateTabs = storedOptions.badgeColorNoDuplicateTabs.value;
+    options.showBadgeIfNoDuplicateTabs = storedOptions.showBadgeIfNoDuplicateTabs.value;
 };
 
 const environment = {
     isAndroid: false,
     isFirefox: false,
-    isChrome: false,
-    isFirefox62Compatible: false,
-    isFirefox63Compatible: false
+    isChrome: false
 };
 
-const setEnvironment = async (storedOptions) => {
+const setEnvironment = (storedOptions) => {
     if (storedOptions.environment.value === "android") {
         environment.isAndroid = true;
         environment.isFirefox = false;
@@ -167,9 +158,6 @@ const setEnvironment = async (storedOptions) => {
         environment.isAndroid = false;
         environment.isFirefox = true;
         environment.isChrome = false;
-        const majorVersion = await getFirefoxMajorVersion();
-        environment.isFirefox62Compatible = majorVersion >= 62;
-        environment.isFirefox63Compatible = majorVersion >= 63;
     }
     else if (storedOptions.environment.value === "chrome") {
         environment.isAndroid = false;
@@ -178,32 +166,25 @@ const setEnvironment = async (storedOptions) => {
     }
 };
 
-/* exported isOptionOpen */
-const isOptionOpen = () => {
-    const popups = chrome.extension.getViews({
-        type: "popup"
-    });
+// eslint-disable-next-line no-unused-vars
+const isPanelOptionOpen = () => {
+    const popups = chrome.extension.getViews({ type: "popup" });
     if (popups.length) return true;
-    const tabs = chrome.extension.getViews({
-        type: "tab"
-    });
+    const tabs = chrome.extension.getViews({ type: "tab" });
     return tabs.length > 0;
 };
 
 const whiteListToPattern = (whiteList) => {
-
     const whiteListPatterns = new Set();
-    const whiteListLines = whiteList.split('\n').map(line => line.trim());
-
+    const whiteListLines = whiteList.split("\n").map(line => line.trim());
     whiteListLines.forEach(whiteListLine => {
         const length = whiteListLine.length;
-        let pattern = '^';
-        for (let index = 0; index < length; index++) {
+        let pattern = "^";
+        for (let index = 0; index < length; index += 1) {
             const character = whiteListLine.charAt(index);
-            pattern = (character === '*') ? pattern + '.*' : pattern + character;
+            pattern = (character === "*") ? `${pattern}.*` : pattern + character;
         }
-        whiteListPatterns.add(new RegExp(pattern + '$'));
+        whiteListPatterns.add(new RegExp(`${pattern}$`));
     });
-
     return Array.from(whiteListPatterns);
 };
