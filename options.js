@@ -58,6 +58,9 @@ const defaultOptions = {
     whiteList: {
         value: ""
     },
+    blackList: {
+        value: ""
+    },
     badgeColorDuplicateTabs: {
         value: "#f22121"
     },
@@ -73,12 +76,16 @@ const defaultOptions = {
 };
 
 const setupDefaultOptions = async () => {
-    const info = await getPlatformInfo();
-    const environment = (info.os === "android") ? "android" : (typeof InstallTrigger !== "undefined") ? "firefox" : "chrome";
+    const environment = await getEnvironment();
     const options = Object.assign({}, defaultOptions);
     options.environment.value = environment;
-    if (environment === "android") options.scope.value = "A";
     return options;
+};
+
+const getEnvironment = async () => {
+    const info = await getPlatformInfo();
+    const environment = (info.os === "android") ? "android" : (typeof InstallTrigger !== "undefined") ? "firefox" : "chrome";
+    return environment;
 };
 
 const getNotInReferenceKeys = (referenceKeys, keys) => {
@@ -89,20 +96,23 @@ const getNotInReferenceKeys = (referenceKeys, keys) => {
 // eslint-disable-next-line no-unused-vars
 const initializeOptions = async () => {
     const options = await getStoredOptions();
-    const storedOptions = options.storedOptions;
-    console.log("storedOptions", storedOptions);
-    const storedKeys = Object.keys(storedOptions).sort();
-    const defaultKeys = Object.keys(defaultOptions).sort();
-    if (storedKeys.length === 0) {
+    let storedOptions = options.storedOptions;
+    if (storedOptions.length === 0) {
         const intialOptions = await setupDefaultOptions();
-        saveStoredOptions(intialOptions);
-    } else if (JSON.stringify(storedKeys) != JSON.stringify(defaultKeys)) {
-        const obsoleteKeys = getNotInReferenceKeys(storedKeys, defaultKeys);
-        obsoleteKeys.forEach(key => delete storedOptions[key]);
-        const missingKeys = getNotInReferenceKeys(defaultKeys, storedKeys);
-        // eslint-disable-next-line no-return-assign
-        missingKeys.forEach(key => storedOptions[key] = { value: defaultOptions[key].value });
-        saveStoredOptions(storedOptions, true);
+        storedOptions = await saveStoredOptions(intialOptions);
+    } else {
+        const storedKeys = Object.keys(storedOptions).sort();
+        const defaultKeys = Object.keys(defaultOptions).sort();
+        if (JSON.stringify(storedKeys) != JSON.stringify(defaultKeys)) {
+            const obsoleteKeys = getNotInReferenceKeys(storedKeys, defaultKeys);
+            obsoleteKeys.forEach(key => delete storedOptions[key]);
+            const missingKeys = getNotInReferenceKeys(defaultKeys, storedKeys);
+            // eslint-disable-next-line no-return-assign
+            missingKeys.forEach(key => storedOptions[key] = { value: defaultOptions[key].value });
+            const environment = await getEnvironment();
+            storedOptions.environment.value = environment;
+            storedOptions = await saveStoredOptions(storedOptions, true);
+        }
     }
     setOptions(storedOptions);
     setEnvironment(storedOptions);
