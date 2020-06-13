@@ -6,7 +6,7 @@ const setBadgeIcon = () => {
 	if (environment.isFirefox) browser.browserAction.setBadgeTextColor({ color: "white" });
 };
 
-const setBadge = async (windowId, tabId) => {
+const setBadge = async (windowId, activeTabId) => {
 	let nbDuplicateTabs = tabsInfo.getNbDuplicateTabs(windowId);
 	if (nbDuplicateTabs === "0" && !options.showBadgeIfNoDuplicateTabs) nbDuplicateTabs = "";
 	const backgroundColor = (nbDuplicateTabs !== "0") ? options.badgeColorDuplicateTabs : options.badgeColorNoDuplicateTabs;
@@ -16,10 +16,10 @@ const setBadge = async (windowId, tabId) => {
 	}
 	else {
 		// eslint-disable-next-line no-param-reassign
-		tabId = tabId || await getActiveTabId(windowId);
-		if (tabId) {
-			setTabBadgeText(tabId, nbDuplicateTabs);
-			setTabBadgeBackgroundColor(tabId, backgroundColor);
+		activeTabId = activeTabId || await getActiveTabId(windowId);
+		if (activeTabId) {
+			setTabBadgeText(activeTabId, nbDuplicateTabs);
+			setTabBadgeBackgroundColor(activeTabId, backgroundColor);
 		}
 	}
 };

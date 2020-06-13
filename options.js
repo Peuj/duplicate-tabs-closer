@@ -1,6 +1,9 @@
 "use strict";
 
 const defaultOptions = {
+    shrunkMode: {
+        value: false
+    },
     onDuplicateTabDetected: {
         value: "N"
     },
@@ -40,19 +43,19 @@ const defaultOptions = {
     compareWithTitle: {
         value: false
     },
-    onDuplicateTabDetectedThumbChecked: {
+    onDuplicateTabDetectedPinned: {
         value: true
     },
-    tabPriorityThumbChecked: {
+    tabPriorityPinned: {
         value: true
     },
-    filtersThumbChecked: {
+    matchingRulesPinned: {
         value: true
     },
-    scopeThumbChecked: {
+    scopePinned: {
         value: true
     },
-    customizationThumbChecked: {
+    customizationPinned: {
         value: true
     },
     whiteList: {
@@ -69,6 +72,9 @@ const defaultOptions = {
     },
     showBadgeIfNoDuplicateTabs: {
         value: true
+    },
+    closePopup: {
+        value: false
     },
     environment: {
         value: "firefox"

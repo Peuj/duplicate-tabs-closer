@@ -3,6 +3,11 @@
 // eslint-disable-next-line no-unused-vars
 const isBlankURL = (url) => url === "about:blank";
 
+// eslint-disable-next-line no-unused-vars
+const isChromeURL = (url) => url.startsWith("chrome://") || url.startsWith("view-source:chrome-search");
+
+const isBrowserURL = (url) => url.startsWith("about:") || url.startsWith("chrome://");
+
 const isValidURL = (url) => {
 	const regex = /^(f|ht)tps?:\/\//i;
 	return regex.test(url);
@@ -15,7 +20,7 @@ const isHttps = (url) => {
 };
 
 // eslint-disable-next-line no-unused-vars
-const getMatchingURL = (url) => {
+const getMatchingURL = (url) => {	
 	if (!isValidURL(url)) return url;
 	let matchingURL = url;
 	if (options.ignorePathPart) {
@@ -44,10 +49,7 @@ const getMatchingURL = (url) => {
 // eslint-disable-next-line no-unused-vars
 const getMatchPatternURL = (url) => {
 	let urlPattern = null;
-	if (!isValidURL(url)) {
-		urlPattern = `${url}*`;
-	}
-	else {
+	if (isValidURL(url)) {
 		const uri = new URL(url);
 		urlPattern = `*://${uri.hostname}`;
 		if (options.ignorePathPart) {
@@ -60,5 +62,9 @@ const getMatchPatternURL = (url) => {
 			}
 		}
 	}
+	else if (isBrowserURL(url)) {
+		urlPattern = `${url}*`;
+	}
+
 	return urlPattern;
 };

@@ -19,11 +19,26 @@ body {
 .card-header {
     height: 32px;
     padding: 10px 15px;
+    margin: -1px;
     font-size: 15px;
     background-image: none;
-    background-color: #0FACF3;
-    border: 1px solid #07A3E9;
+    background-color: #0facf3;
+    border: 1px solid #2EADE7;
     color: #FFFFFF;
+}
+
+#optionHeader>span:hover {
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#optionHeader.collapsed {
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+
+#optionHeader.collapsed+#optionsBody {
+    display: none;
 }
 
 .fa-cog:hover {
@@ -38,21 +53,33 @@ body {
     scrollbar-width: thin;
 }
 
-.list-group-item {
-    padding: 2px 15px 1px 15px;
-}
-
-.list-group-item-overflow {
-    padding-right: 7px;
-}
-
 .form-group {
     margin-bottom: 4px;
 }
 
+.list-group-item {
+    padding: 3px 15px 2px 15px;
+    border-left-style: none;
+    border-right-style: none;
+    border-top-style: none;
+}
+
+.shrunk:not(.pinned) {
+    display: none;
+}
+
+#optionsBody.list-group-item-overflow-chrome .list-group-item {
+    padding-right: 9px;
+}
+
+
+#optionsBody.list-group-item-overflow-firefox .list-group-item {
+    padding-right: 7px;
+}
+
 .list-group-item-header {
     height: 30px;
-    border-bottom: 0px;
+    border-style: none;
 }
 
 .list-group-item-title {
@@ -60,21 +87,49 @@ body {
     width: 100%;
 }
 
+.list-group-item-title {
+    color: #0FACF3;
+}
+
+.collapsed .list-group-item-title {
+    color: #9FACBD;
+}
+
+.collapsed .form-group {
+    display: none;
+}
+
+.last-list-group.shrunk .list-group-item {
+    border-bottom-style: none;
+}
+
 .list-group-item-title:hover {
     cursor: pointer;
     color: #0a95d3;
 }
 
-.list-group-expanded {
-    color: #0FACF3;
-}
-
-.list-group-collapsed {
-    color: #9FACBD;
+.fa-compress, .fa-expand {
+    transform: scale(1.1);
 }
 
 .checkbox-fa {
     display: none;
+}
+
+.checkbox-fa-compress-label {
+    padding: 0px 6px;
+    margin: 2px 8px 2px 0px;
+    border-radius: 3px;
+}
+
+.checkbox-fa-compress-label:hover, .checkbox-fa:checked+.checkbox-fa-compress-label:hover {
+    background-color: #3BBCF4;
+    cursor: pointer;
+}
+
+.checkbox-fa:checked+.checkbox-fa-compress-label, .checkbox-fa:checked+.checkbox-fa-compress-label:active, .checkbox-fa-compress-label:active {
+    background-color: #76D6FF;
+    box-shadow: inset 0px 0px 2px #45BEF3;
 }
 
 .checkbox-fa-label {
@@ -109,18 +164,22 @@ body {
 
 .titleLabel {
     margin: 4px 2px;
-  }
+}
 
-#filtersBody {
-    margin-top: -3px;
+#onDuplicateTabDetectedBody {
+    margin-bottom: 6px;
+}
+
+#matchingRulesBody {
+    margin-top: -4px;
 }
 
 #scopeBody {
     margin-bottom: 5px;
 }
 
-#onDuplicateTabDetectedBody {
-    margin-bottom: 8px;
+#scopeGroup .list-group-item {
+    border-bottom-style: none;
 }
 
 .checkboxes label {
@@ -151,12 +210,11 @@ body {
 }
 
 #duplicateTabsTableContainer {
-    transition : box-shadow 0.3s linear;
+    transition: box-shadow 0.3s linear;
 }
 
 .table-scrollable-shadow {
-    -webkit-box-shadow: inset 0px -11px 8px -10px #0d68be; 
-    box-shadow: inset 0px -11px 8px -10px #0d68be; 
+    box-shadow: inset 0px -11px 8px -10px #0d68be;
 }
 
 .table {
@@ -318,7 +376,6 @@ label>input:disabled~* {
 /* Works on Chrome/Edge/Safari */
 
 ::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 1px #0000004d;
     box-shadow: inset 0 0 1px #0000004d;
     background-color: #F5F5F5;
 }

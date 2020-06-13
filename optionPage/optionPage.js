@@ -14,7 +14,7 @@ const loadPopupEvents = () => {
 
   /* Save checkbox settings */
   $(".list-group input[type='checkbox'").on("change", function () {
-    if (this.id.endsWith("ThumbChecked")) toggleExpendGroup(this.id, true, true);
+    if (this.id.endsWith("Pinned")) toggleExpendGroup(this.id, true, true);
     const refresh = this.className.includes("checkbox-filter");
     saveOption(this.id, this.checked, refresh);
   });
@@ -89,7 +89,7 @@ const changeAutoCloseOptionState = (state, resize) => {
 const toggleExpendGroup = (groupId, checkbox, resize) => {
   if (checkbox) {
     const thumbChecked = $(`#${groupId}`).prop("checked");
-    const listGroupId = groupId.replace("ThumbChecked", "");
+    const listGroupId = groupId.replace("Pinned", "");
     $(`#${listGroupId}Body`).toggleClass("hidden", !thumbChecked);
     if ((thumbChecked && $(`#${listGroupId}`).hasClass("list-group-collapsed")) || (!thumbChecked && $(`#${listGroupId}`).hasClass("list-group-expanded"))) {
       $(`#${listGroupId}`).toggleClass("list-group-expanded list-group-collapsed");
@@ -129,7 +129,6 @@ const setDuplicateTabsTable = (duplicateTabs) => {
 };
 
 const resizeDuplicateTabsPanel = (refresh) => {
-  console.log("optionsCard height", $("#optionsCard").height());
   const maxOptionsCardHeight = 720.5;
   const minRow = 3;
   const rowHeight = 26;
@@ -165,7 +164,7 @@ const setPanelOption = (details) => {
   else {
     if (typeof (value) === "boolean") {
       $(`#${storedOption}`).prop("checked", value);
-      if (storedOption.endsWith("ThumbChecked")) toggleExpendGroup(storedOption, true);
+      if (storedOption.endsWith("Pinned")) toggleExpendGroup(storedOption, true);
     }
     else if (value.startsWith("#")) {
       // badge color value

@@ -59,9 +59,9 @@
     "message": "Поведінка вкладки за замовчуванням",
     "description": "Default tab behaviour"
   },
-  "filters": {
-    "message": "Фільтри",
-    "description": "Filters"
+  "matchingRules": {
+    "message": "Matching rules",
+    "description": "Matching rules"
   },
   "ignoreHashPart": {
     "message": "Ігнорувати хеш-частину в URL вкладки",
@@ -146,5 +146,17 @@
   "noDuplicateTabs": {
     "message": "Вкладок-дублікатів наразі нема",
     "description": "No duplicate tabs"    
-  }
+  },
+  "closePopup": {
+    "message": "Close popup panel after closing duplicate tabs",
+    "description": "Close popup panel after closing duplicate tabs"    
+  },
+  "moreOptions": {
+    "message":  "More options...",
+    "description":  "More options..."
+  },
+  "shrunkMode": {
+    "message":  "Shrunk mode:\nWhen activated, hide unpinned options.",
+    "description":  "Shrunk mode\nWhen activated, hide unpinned options."
+  }  
 }

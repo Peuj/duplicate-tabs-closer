@@ -24,6 +24,7 @@ module.exports = {
         "getWindows": "readonly",
         "initializeOptions": "readonly",
         "isBlankURL": "readonly",
+        "isChromeURL": "readonly",
         "isPanelOptionOpen": "readonly",
         "isTabComplete": "readonly",
         "moveTab": "readonly",
@@ -88,7 +89,7 @@ module.exports = {
             "error",
             "last"
         ],
-        "complexity": "error",
+        // "complexity": "error",
         "computed-property-spacing": [
             "error",
             "never"

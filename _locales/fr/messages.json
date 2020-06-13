@@ -59,7 +59,7 @@
     "message": "Comportement par défaut de l'onglet",
     "description": "Default tab behaviour"
   },
-  "filters": {
+  "matchingRules": {
     "message": "Règle de correspondance",
     "description": "Règle de correspondance"
   },
@@ -146,5 +146,17 @@
   "noDuplicateTabs": {
     "message": "Aucun onglet en doublon",
     "description": "No duplicate tabs"    
-  }
+  },
+  "closePopup": {
+    "message": "Fermer le panneau de popup après la fermeture des onglets en doublon",
+    "description": "Fermer le panneau de popup après la fermeture des onglets en doublon"    
+  },
+  "moreOptions": {
+    "message":  "Plus d'options...",
+    "description":  "Plus d'options..."
+  },
+  "shrunkMode": {
+    "message":  "Shrunk mode:\nQuand il est activé, cache les options qui ne sont pas épinglées.",
+    "description":  "Shrunk mode\nQuand il est activé, cache les options qui ne sont pas épinglées."
+  }  
 }

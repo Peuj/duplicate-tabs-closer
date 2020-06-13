@@ -8,6 +8,12 @@
   "icons": {
     "48": "images/auto_close_32.png"
   },
+  "applications": {
+    "gecko": {
+      "id": "jid0-RvYT2rGWfM8q5yWxIxAHYAeo5Qg@jetpack",
+      "strict_min_version": "68.0"
+    }
+  },
   "background": {
     "scripts": [
       "helper.js",
@@ -30,9 +36,11 @@
     "default_popup": "popup/popup.html"
   },
   "permissions": [
+    "cookies",
     "tabs",
     "webNavigation",
-    "storage"
+    "storage",
+    "contextualIdentities"
   ],
   "commands": {
     "close-duplicate-tabs": {
@@ -44,6 +52,7 @@
   },
   "options_ui": {
     "page": "optionPage/optionPage.html",
+    "browser_style": false,
     "open_in_tab": true
   }
 }

@@ -59,9 +59,9 @@
     "message": "Default tab behaviour",
     "description": "Default tab behaviour"
   },
-  "filters": {
+  "matchingRules": {
     "message": "Matching rules",
-    "description": "règle de correspondance"
+    "description": "Matching rules"
   },
   "ignoreHashPart": {
     "message": "Ignore hash part in URL",
@@ -146,5 +146,17 @@
   "noDuplicateTabs": {
     "message": "No duplicate tabs",
     "description": "No duplicate tabs"    
-  }
+  },
+  "closePopup": {
+    "message": "Close popup panel after closing duplicate tabs",
+    "description": "Close popup panel after closing duplicate tabs"    
+  },
+  "moreOptions": {
+    "message":  "More options...",
+    "description":  "More options..."
+  },
+  "shrunkMode": {
+    "message":  "Shrunk mode:\nWhen activated, hide unpinned options.",
+    "description":  "Shrunk mode\nWhen activated, hide unpinned options."
+  }  
 }

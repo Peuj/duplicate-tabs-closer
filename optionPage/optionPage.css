@@ -62,11 +62,11 @@ body {
   color: #0a95d3;
 }
 
-.list-group-expanded {
+.list-group-item-title .list-group-expanded {
   color: #0FACF3;
 }
 
-.list-group-collapsed {
+.list-group-item-title .list-group-collapsed {
   color: #9FACBD;
 }
 
@@ -108,7 +108,7 @@ body {
   margin: 4px 2px;
 }
 
-#filtersBody {
+#matchingRulesBody {
   margin-top: -3px;
 }
 

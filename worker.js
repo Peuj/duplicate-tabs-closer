@@ -114,13 +114,11 @@ const searchForDuplicateTabsToClose = async (observedTab, queryComplete, loading
     queryInfo.url = getMatchPatternURL(observedTabUrl);
     queryInfo.windowId = options.searchInAllWindows ? null : observedWindowsId;
     if (environment.isFirefox) queryInfo.cookieStoreId = options.searchPerContainer ? observedTab.cookieStoreId : null;
-    let match = false;
     const openTabs = await getTabs(queryInfo);
     const matchingObservedTabUrl = getMatchingURL(observedTabUrl);
+    let match = false;
     for (const openTab of openTabs) {
-        if ((openTab.id === observedTab.id) || tabsInfo.isIgnored(openTab.id) || isBlankURL(openTab.url)) {
-            continue;
-        }
+        if ((openTab.id === observedTab.id) || tabsInfo.isIgnoredTab(openTab.id) || (isBlankURL(openTab.url) && !isTabComplete(openTab))) continue;
         if ((getMatchingURL(openTab.url) === matchingObservedTabUrl) || matchTitle(openTab, observedTab)) {
             match = true;
             const [tabToCloseId, remainingTabInfo] = getCloseInfo({ observedTab: observedTab, observedTabUrl: observedTabUrl, openTab: openTab });
@@ -130,24 +128,23 @@ const searchForDuplicateTabsToClose = async (observedTab, queryComplete, loading
     }
     if (!match) {
         if (tabsInfo.hasDuplicateTabs(observedWindowsId)) refreshDuplicateTabsInfo(observedWindowsId);
+        else if (environment.isChrome && observedTab.active) setBadge(observedTab.windowId, observedTab.id);
     }
 };
 
 const closeDuplicateTab = async (tabToCloseId, remainingTabInfo) => {
     try {
-        tabsInfo.ignore(tabToCloseId, true);
+        tabsInfo.ignoreTab(tabToCloseId, true);
         await removeTab(tabToCloseId);
     }
     catch (ex) {
-        tabsInfo.ignore(tabToCloseId, false);
+        tabsInfo.ignoreTab(tabToCloseId, false);
         return;
     }
-    if (tabsInfo.has(tabToCloseId)) {
-        // console.warn("onTabClosing duplicate wait tab to be closed:", tabToCloseId);
+    if (tabsInfo.hasTab(tabToCloseId)) {
         await wait(10);
-        if (tabsInfo.has(tabToCloseId)) {
-            // console.warn("onTabClosing tab has not been closed:", tabToCloseId);
-            tabsInfo.ignore(tabToCloseId, false);
+        if (tabsInfo.hasTab(tabToCloseId)) {
+            tabsInfo.ignoreTab(tabToCloseId, false);
             refreshDuplicateTabsInfo(remainingTabInfo.windowId);
             return;
         }
@@ -156,10 +153,7 @@ const closeDuplicateTab = async (tabToCloseId, remainingTabInfo) => {
 };
 
 const _handleRemainingTab = async (details) => {
-    if (!tabsInfo.has(details.tabId)) {
-        // console.warn("handleRemainingTab tab has been closed", details.tabId);
-        return;
-    }
+    if (!tabsInfo.hasTab(details.tabId)) return;
     if (options.defaultTabBehavior && details.observedTabClosed) {
         if (details.tabIndex > 0) moveTab(details.tabId, { index: details.tabIndex });
         if (details.active) activateTab(details.tabId);
@@ -167,9 +161,9 @@ const _handleRemainingTab = async (details) => {
         focusTab(details.tabId, details.windowId);
     }
     if (details.reloadTab) {
-        tabsInfo.ignore(details.tabId, true);
+        tabsInfo.ignoreTab(details.tabId, true);
         await reloadTab(details.tabId);
-        tabsInfo.ignore(details.tabId, false);
+        tabsInfo.ignoreTab(details.tabId, false);
     }
 };
 
@@ -180,7 +174,7 @@ const handleObservedTab = (details) => {
     const retainedTabs = details.retainedTabs;
     const duplicateTabsGroups = details.duplicateTabsGroups;
     let matchingTabURL = getMatchingURL(observedTab.url);
-    let matchingTabTitle = options.compareWithTitle && isTabComplete(observedTab) ? observedTab.title : null;
+    let matchingTabTitle = options.compareWithTitle && isTabComplete(observedTab) ? `title=${observedTab.title}` : null;
     if (options.searchPerContainer) {
         matchingTabURL += observedTab.cookieStoreId;
         if (matchingTabTitle) matchingTabTitle += observedTab.cookieStoreId;
@@ -222,7 +216,7 @@ const searchForDuplicateTabs = async (windowId, closeTabs) => {
     const duplicateTabsGroups = new Map();
     const retainedTabs = new Map();
     for (const openTab of openTabs) {
-        if (isBlankURL(openTab.url) || tabsInfo.isIgnored(openTab.id)) continue;
+        if ((isBlankURL(openTab.url) && !isTabComplete(openTab)) || tabsInfo.isIgnoredTab(openTab.id)) continue;
         const details = {
             tab: openTab,
             retainedTabs: retainedTabs,

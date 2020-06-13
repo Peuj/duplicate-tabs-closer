@@ -23,9 +23,9 @@
       <div class="card-body shadow-sm">
         <ul class="list-group list-group-flush">
           <li class="list-group-item list-group-item-header d-flex justify-content-between align-items-center">
-            <span class="list-group-item-title list-group-expanded" i18n-content="onDuplicateTabDetected" id="onDuplicateTabDetected"></span>
-            <input type="checkbox" class="checkbox-fa" id="onDuplicateTabDetectedThumbChecked" />
-            <label for="onDuplicateTabDetectedThumbChecked" class="checkbox-fa-label">
+            <span class="list-group-item-title list-group-expanded" i18n-content="onDuplicateTabDetected" id="onDuplicateTabDetectedTitle"></span>
+            <input type="checkbox" class="checkbox-fa" id="onDuplicateTabDetectedPinned" />
+            <label for="onDuplicateTabDetectedPinned" class="checkbox-fa-label">
               <span class="fa fa-thumb-tack"></span>
             </label>
           </li>
@@ -50,9 +50,9 @@
             </div>
           </li>
           <li class="list-group-item list-group-item-header d-flex justify-content-between align-items-center">
-            <span class="list-group-item-title list-group-expanded" i18n-content="tabPriority" id="tabPriority"></span>
-            <input type="checkbox" class="checkbox-fa" id="tabPriorityThumbChecked" />
-            <label for="tabPriorityThumbChecked" class="checkbox-fa-label">
+            <span class="list-group-item-title list-group-expanded" i18n-content="tabPriority" id="tabPriorityTitle"></span>
+            <input type="checkbox" class="checkbox-fa" id="tabPriorityPinned" />
+            <label for="tabPriorityPinned" class="checkbox-fa-label">
               <span class="fa fa-thumb-tack"></span>
             </label>
           </li>
@@ -79,14 +79,14 @@
             </div>
           </li>
           <li class="list-group-item list-group-item-header d-flex justify-content-between align-items-center">
-            <span class="list-group-item-title list-group-expanded" i18n-content="filters" id="filters"></span>
-            <input type="checkbox" class="checkbox-fa" id="filtersThumbChecked" />
-            <label for="filtersThumbChecked" class="checkbox-fa-label">
+            <span class="list-group-item-title list-group-expanded" i18n-content="matchingRules" id="matchingRulesTitle"></span>
+            <input type="checkbox" class="checkbox-fa" id="matchingRulesPinned" />
+            <label for="matchingRulesPinned" class="checkbox-fa-label">
               <span class="fa fa-thumb-tack"></span>
             </label>
           </li>
           <li class="list-group-item">
-            <div class="form-group" id="filtersBody">
+            <div class="form-group" id="matchingRulesBody">
               <div class="checkboxes">
                 <label for="caseInsensitive">
                   <input type="checkbox" class="checkbox-filter" id="caseInsensitive" />
@@ -126,9 +126,9 @@
             </div>
           </li>
           <li class="list-group-item list-group-item-header d-flex justify-content-between align-items-center">
-            <span class="list-group-item-title list-group-expanded" i18n-content="scope" id="scope"></span>
-            <input type="checkbox" class="checkbox-fa" id="scopeThumbChecked" />
-            <label for="scopeThumbChecked" class="checkbox-fa-label">
+            <span class="list-group-item-title list-group-expanded" i18n-content="scope" id="scopeTitle"></span>
+            <input type="checkbox" class="checkbox-fa" id="scopePinned" />
+            <label for="scopePinned" class="checkbox-fa-label">
               <span class="fa fa-thumb-tack"></span>
             </label>
           </li>
@@ -143,8 +143,8 @@
           </li>
           <li class="list-group-item list-group-item-header d-flex justify-content-between align-items-center">
             <span class="list-group-item-title list-group-expanded" i18n-content="customization" id="customization"></span>
-            <input type="checkbox" class="checkbox-fa" id="customizationThumbChecked" />
-            <label for="customizationThumbChecked" class="checkbox-fa-label">
+            <input type="checkbox" class="checkbox-fa" id="customizationPinned" />
+            <label for="customizationPinned" class="checkbox-fa-label">
               <span class="fa fa-thumb-tack"></span>
             </label>
           </li>
@@ -165,6 +165,12 @@
                 <label for="showBadgeIfNoDuplicateTabs">
                   <input type="checkbox" class="checkbox-filter" id="showBadgeIfNoDuplicateTabs" />
                   <span i18n-content="showBadgeIfNoDuplicateTabs"></span>
+                </label>
+              </div>
+              <div class="checkboxes">
+                <label for="closePopup">
+                  <input type="checkbox" class="checkbox-filter" id="closePopup" />
+                  <span i18n-content="closePopup"></span>
                 </label>
               </div>
             </div>

@@ -34,7 +34,7 @@ Wildcards and RegExp are supported.
 * **Keep pinned tab** *(default on)*: Keep the pinned tab.
 
 
-### Filters:
+### matchingRules:
 
 * **Ignore case in URL** *(default off)*
 * **Ignore 'www' in URL domain name** *(default off)*
