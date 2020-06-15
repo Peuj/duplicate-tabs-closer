@@ -9,20 +9,20 @@ class TabsInfo {
     }
 
     async initialize() {
-        const openTabs = await getTabs({ windowType: "normal" });
-        for (const openTab of openTabs) {
-            this.setNewTab(openTab, true);
+        const openedTabs = await getTabs({ windowType: "normal" });
+        for (const openedTab of openedTabs) {
+            this.setOpenedTab(openedTab);
         }
     }
 
-    setNewTab(openTab, init) {
-        const tab = init ? { url: openTab.url, lastComplete: Date.now(), ignored: false } : { url: null, lastComplete: null, ignored: false };
-        this.tabs.set(openTab.id, tab);
+    setNewTab(tabId) {
+        const tab = { url: null, lastComplete: null, ignored: false };
+        this.tabs.set(tabId, tab);
     }
 
-    isIgnoredTab(tabId) {
-        const tab = this.tabs.get(tabId);
-        return (!tab || tab.ignored) ? true : false;
+    setOpenedTab(openedTab) {
+        const tab = { url: openedTab.url, lastComplete: Date.now(), ignored: false };
+        this.tabs.set(openedTab.id, tab);
     }
 
     ignoreTab(tabId, state) {
@@ -31,29 +31,30 @@ class TabsInfo {
         this.tabs.set(tabId, tab);
     }
 
+    isIgnoredTab(tabId) {
+        const tab = this.tabs.get(tabId);
+        return (!tab || tab.ignored) ? true : false;
+    }
+
     getLastComplete(tabId) {
         const tab = this.tabs.get(tabId);
         return tab.lastComplete;
     }
 
-    updateTab(openTab) {
-        const tab = this.tabs.get(openTab.id);
-        tab.url = openTab.url;
+    updateTab(openedTab) {
+        const tab = this.tabs.get(openedTab.id);
+        tab.url = openedTab.url;
         tab.lastComplete = Date.now();
-        this.tabs.set(openTab.id, tab);
+        this.tabs.set(openedTab.id, tab);
     }
 
     resetTab(tabId) {
-        const tab = this.tabs.get(tabId);
-        tab.url = null;
-        tab.lastComplete = null;
-        if (tab.ignored) console.warn("resetTab tab ignored", tab);
-        this.tabs.set(tabId, tab);
+        this.setNewTab(tabId);
     }
 
-    hasUrlChanged(openTab) {
-        const tab = this.tabs.get(openTab.id);
-        return tab.url !== openTab.url;
+    hasUrlChanged(openedTab) {
+        const tab = this.tabs.get(openedTab.id);
+        return tab.url !== openedTab.url;
     }
 
     removeTab(tabId) {
