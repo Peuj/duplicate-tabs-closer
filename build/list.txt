@@ -1,0 +1,16 @@
+background.js
+badge.js
+helper.js
+LICENSE
+manifest.json
+messageListener.js
+options.js
+README.md
+tabsInfo.js
+urlUtils.js
+worker.js
+_locales
+ext_lib
+images
+optionPage
+popup

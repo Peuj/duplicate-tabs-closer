@@ -11,9 +11,21 @@ const onBeforeNavigate = async (details) => {
 	if (options.autoCloseTab && (details.frameId == 0) && (details.tabId !== -1) && !isBlankURL(details.url)) {
 		if (tabsInfo.isIgnoredTab(details.tabId)) return;
 		const tab = await getTab(details.tabId);
-		if (!tab) return;
-		tabsInfo.resetTab(tab.id);
-		searchForDuplicateTabsToClose(tab, true, details.url);
+		if (tab) {
+			tabsInfo.resetTab(tab.id);
+			searchForDuplicateTabsToClose(tab, true, details.url);
+		}
+	}
+};
+
+const onCompletedTab = async (details) => {
+	if ((details.frameId == 0) && (details.tabId !== -1)) {
+		if (tabsInfo.isIgnoredTab(details.tabId)) return;
+		const tab = await getTab(details.tabId);
+		if (tab) {
+			tabsInfo.updateTab(tab);
+			options.autoCloseTab ? searchForDuplicateTabsToClose(tab) : refreshDuplicateTabsInfo(tab.windowId);
+		}
 	}
 };
 
@@ -26,18 +38,9 @@ const onUpdatedTab = (tabId, changeInfo, tab) => {
 			options.autoCloseTab ? searchForDuplicateTabsToClose(tab) : refreshDuplicateTabsInfo(tab.windowId);
 		}
 		else if (isChromeURL(tab.url)) {
+			tabsInfo.updateTab(tab);
 			options.autoCloseTab ? searchForDuplicateTabsToClose(tab) : refreshDuplicateTabsInfo(tab.windowId);
 		}
-	}
-};
-
-const onCompletedTab = async (details) => {
-	if ((details.frameId == 0) && (details.tabId !== -1)) {
-		if (tabsInfo.isIgnoredTab(details.tabId)) return;
-		const tab = await getTab(details.tabId);
-		if (!tab) return;
-		tabsInfo.updateTab(tab);
-		options.autoCloseTab ? searchForDuplicateTabsToClose(tab) : refreshDuplicateTabsInfo(tab.windowId);
 	}
 };
 

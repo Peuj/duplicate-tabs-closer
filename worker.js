@@ -204,8 +204,9 @@ const handleObservedTab = (details) => {
                 retainedTabs.set(matchingKey, observedTab);
             }
         } else {
-            const tabs = duplicateTabsGroups.get(matchingKey);
-            duplicateTabsGroups.set(matchingKey, tabs ? tabs.add(observedTab) : new Set([retainedTab, observedTab]));
+            const tabs = duplicateTabsGroups.get(matchingKey) || new Set([retainedTab]);
+            tabs.add(observedTab);
+            duplicateTabsGroups.set(matchingKey, tabs);
         }
     }
 };
