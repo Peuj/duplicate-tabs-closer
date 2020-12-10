@@ -1,7 +1,8 @@
 "use strict";
 
 const isUrlWhiteListed = (url) => {
-    const matches = options.whiteList.filter(pattern => pattern.test(url));
+    # mod - reversed this to only check dupe tabs with urls listed (instead of default to everyone)
+    const matches = options.whiteList.filter(pattern => !pattern.test(url));
     return matches.length !== 0;
 };
 
