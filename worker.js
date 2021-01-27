@@ -6,11 +6,13 @@ const isUrlWhiteListed = (url) => {
 };
 
 const matchTitle = (tab1, tab2) => {
-    if (options.compareWithTitle) {
-        if ((isTabComplete(tab1) && isTabComplete(tab2)) && (tab1.title === tab2.title)) {
-            return true;
-        }
+    if (!options.compareWithTitle)
+        return true;
+
+    if ((isTabComplete(tab1) && isTabComplete(tab2)) && (tab1.title === tab2.title)) {
+        return true;
     }
+
     return false;
 };
 
@@ -120,7 +122,7 @@ const searchForDuplicateTabsToClose = async (observedTab, queryComplete, loading
         let match = false;
         for (const openedTab of openedTabs) {
             if ((openedTab.id === observedTab.id) || tabsInfo.isIgnoredTab(openedTab.id) || (isBlankURL(openedTab.url) && !isTabComplete(openedTab))) continue;
-            if ((getMatchingURL(openedTab.url) === matchingObservedTabUrl) || matchTitle(openedTab, observedTab)) {
+            if ((getMatchingURL(openedTab.url) === matchingObservedTabUrl) && matchTitle(openedTab, observedTab)) {
                 match = true;
                 const [tabToCloseId, remainingTabInfo] = getCloseInfo({ observedTab: observedTab, observedTabUrl: observedTabUrl, openedTab: openedTab });
                 closeDuplicateTab(tabToCloseId, remainingTabInfo);

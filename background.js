@@ -13,6 +13,7 @@ const onBeforeNavigate = async (details) => {
 		const tab = await getTab(details.tabId);
 		if (tab) {
 			tabsInfo.resetTab(tab.id);
+			if (tab.status === "loading" || isBlank(tab.url)) return;
 			searchForDuplicateTabsToClose(tab, true, details.url);
 		}
 	}
