@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Duplicate Tabs Closer",
-  "version": "3.5.3",
+  "version": "3.6.0",
   "author": "Peuj",
   "default_locale": "en",
   "description": "Duplicate Tabs Closer",
@@ -10,7 +10,7 @@
   },
   "applications": {
     "gecko": {
-      "id": "jid0-RvYT2rGWfM8q5yWxIxAHYAeo5Qg@jetpack",
+      "id": "8eb46bae-a28b-4271-b139-53f788c41625@jetpack",
       "strict_min_version": "68.0"
     }
   },
@@ -48,6 +48,12 @@
         "default": "Alt+Shift+W"
       },
       "description": "Close all duplicate tabs"
+    },
+    "toggle-close-automatically": {
+      "suggested_key": {
+        "default": "Alt+Shift+D"
+      },
+      "description": "Toggle close automatically"
     }
   },
   "options_ui": {
