@@ -2,7 +2,7 @@
 
 const onCreatedTab = (tab) => {
 	tabsInfo.setNewTab(tab.id);
-	if (tab.status === "complete" && !isBlankURL(tab.url)) {
+	if (tab.active && tab.status === "complete" && !isBlankURL(tab.url)) {
 		options.autoCloseTab ? searchForDuplicateTabsToClose(tab, true) : refreshDuplicateTabsInfo(tab.windowId);
 	}
 };
