@@ -33,7 +33,8 @@ class TabsInfo {
 
     isIgnoredTab(tabId) {
         const tab = this.tabs.get(tabId);
-        return (!tab || tab.ignored) ? true : false;
+        if (!tab) return false;
+        return tab.ignored;
     }
 
     getLastComplete(tabId) {
