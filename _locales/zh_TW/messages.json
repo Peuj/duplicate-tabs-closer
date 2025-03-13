@@ -1,0 +1,162 @@
+{
+  "options": {
+    "message": "選項設定",
+    "description": "Options"
+  },
+  "onDuplicateTabDetected": {
+    "message": "偵測到重複分頁時",
+    "description": "On duplicate tab detected"
+  },
+  "doNothing": {
+    "message": "不執行任何動作",
+    "description": "Do nothing"
+  },
+  "autoCloseTab": {
+    "message": "自動關閉分頁",
+    "description": "Close tab automatically"
+  },
+  "showPanel": {
+    "message": "顯示面板",
+    "description": "Show panel"
+  },
+  "tabPriority": {
+    "message": "分頁優先順序",
+    "description": "Priority"
+  },
+  "keepNewerTab": {
+    "message": "保留較新的分頁",
+    "description": "Keep newer tab"
+  },
+  "keepOlderTab": {
+    "message": "保留較舊的分頁",
+    "description": "Keep older tab"
+  },
+  "keepReloadOlderTab": {
+    "message": "保留並重新載入較舊的分頁",
+    "description": "Keep and reload older tab"
+  },
+  "keepTabWithHistory": {
+    "message": "保留有瀏覽紀錄的分頁",
+    "description": "Keep tab with history"
+  },
+  "keeptabwithHttps": {
+    "message": "保留使用 https 的分頁",
+    "description": "Keep tab with https"
+  },
+  "keepPinnedTab": {
+    "message": "保留已釘選的分頁",
+    "description": "Keep pinned tab"
+  },
+  "onRemainingTab": {
+    "message": "剩餘分頁的處理方式",
+    "description": "On remaining tab"
+  },
+  "activateKeptTab": {
+    "message": "切換至該分頁",
+    "description": "Activate"
+  },
+  "defaultTabBehavior": {
+    "message": "預設分頁行為",
+    "description": "Default tab behaviour"
+  },
+  "matchingRules": {
+    "message": "比對規則",
+    "description": "Matching rules"
+  },
+  "ignoreHashPart": {
+    "message": "忽略網址中的 # 識別符號",
+    "description": "Ignore hash part in URL"
+  },
+  "ignoreSearchPart": {
+    "message": "忽略網址中的搜尋參數",
+    "description": "Ignore search part in URL"
+  },
+  "ignorePathPart": {
+    "message": "忽略網址中的路徑",
+    "description": "Ignore path part in URL"
+  },
+  "ignore3w": {
+    "message": "忽略網域名稱中的 'www'",
+    "description": "Ignore 'www' in URL domain name"
+  },
+  "caseInsensitive": {
+    "message": "忽略網址大小寫",
+    "description": "Ignore case in URL"
+  },
+  "compareWithTitle": {
+    "message": "比對分頁標題",
+    "description": "Compare with title"
+  },
+  "duplicatetabs": {
+    "message": "重複的分頁",
+    "description": "Duplicate tabs"
+  },
+  "scope": {
+    "message": "搜尋範圍",
+    "description": "Scope"
+  },
+  "activewindow": {
+    "message": "目前視窗",
+    "description": "Active window"
+  },
+  "allwindows": {
+    "message": "所有視窗",
+    "description": "All windows"
+  },
+  "containerActivewindow": {
+    "message": "目前視窗中的容器",
+    "description": "Container in active window"
+  },
+  "containerAllwindows": {
+    "message": "所有視窗中的容器",
+    "description": "Container in all windows"
+  },
+  "hideWhiteListedDuplicateTabs": {
+    "message": "隱藏白名單中的重複分頁",
+    "description": "Hide whitelisted duplicate tabs"
+  },
+  "groupDuplicateTabs": {
+    "message": "群組重複的分頁",
+    "description": "Group duplicate tabs"
+  },
+  "closeAllDuplicateTabs": {
+    "message": "全部關閉",
+    "description": "Close all"
+  },
+  "whiteList": {
+    "message": "白名單網址",
+    "description": "Whitelisted URLs"
+  },
+  "customization": {
+    "message": "個人化設定",
+    "description": "Customization"
+  },
+  "badgeColorDuplicateTabs": {
+    "message": "重複分頁標記顏色",
+    "description": "Badge color for duplicate tabs"
+  },
+  "badgeColorNoDuplicateTabs": {
+    "message": "無重複分頁標記顏色",
+    "description": "Badge color for no duplicate tab"
+  },
+  "showBadgeIfNoDuplicateTabs": {
+    "message": "無重複分頁時顯示標記",
+    "description": "Show badge if no duplicate tab"
+  },
+  "noDuplicateTabs": {
+    "message": "無重複分頁",
+    "description": "No duplicate tabs"    
+  },
+  "closePopup": {
+    "message": "關閉重複分頁後自動關閉彈出視窗",
+    "description": "Close popup panel after closing duplicate tabs"    
+  },
+  "moreOptions": {
+    "message": "更多選項...",
+    "description": "More options..."
+  },
+  "shrunkMode": {
+    "message": "精簡模式：\n啟用時，隱藏未釘選的選項。",
+    "description": "Shrunk mode\nWhen activated, hide unpinned options."
+  }
+}
