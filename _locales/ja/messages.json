@@ -158,5 +158,21 @@
   "shrunkMode": {
     "message":  "Shrunk mode:\nWhen activated, hide unpinned options.",
     "description":  "Shrunk mode\nWhen activated, hide unpinned options."
-  }  
+  },
+  "ignore_utm_source_label": {
+    "message": "Ignore utm_source parameter",
+    "description": "Label for ignoring utm_source parameter"
+  },
+  "ignore_utm_campaign_label": {
+    "message": "Ignore utm_campaign parameter",
+    "description": "Label for ignoring utm_campaign parameter"
+  },
+  "ignore_utm_medium_label": {
+    "message": "Ignore utm_medium parameter",
+    "description": "Label for ignoring utm_medium parameter"
+  },
+  "ignore_bhlid_label": {
+    "message": "Ignore _bhlid parameter",
+    "description": "Label for ignoring _bhlid parameter"
+  }
 }

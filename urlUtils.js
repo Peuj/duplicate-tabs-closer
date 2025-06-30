@@ -23,16 +23,36 @@ const isHttps = (url) => {
 const getMatchingURL = (url) => {	
 	if (!isValidURL(url)) return url;
 	let matchingURL = url;
+	const uri = new URL(matchingURL); // Define uri here to use it multiple times
 	if (options.ignorePathPart) {
-		const uri = new URL(matchingURL);
 		matchingURL = uri.origin;
 	}
 	else if (options.ignoreSearchPart) {
-		matchingURL = matchingURL.split("?")[0];
+		matchingURL = `${uri.origin}${uri.pathname}${uri.hash}`; // Keep hash if not explicitly ignored
 	}
-	else if (options.ignoreHashPart) {
+	else { // Process search parameters if not ignoring search part
+		const searchParams = new URLSearchParams(uri.search);
+		if (options.ignore_utm_source) {
+			searchParams.delete('utm_source');
+		}
+		if (options.ignore_utm_campaign) {
+			searchParams.delete('utm_campaign');
+		}
+		if (options.ignore_utm_medium) {
+			searchParams.delete('utm_medium');
+		}
+		if (options.ignore_bhlid) {
+			searchParams.delete('_bhlid');
+		}
+		const newSearch = searchParams.toString();
+		matchingURL = `${uri.origin}${uri.pathname}${newSearch ? '?' + newSearch : ''}${uri.hash}`;
+	}
+
+	// Handle ignoreHashPart separately
+	if (options.ignoreHashPart) {
 		matchingURL = matchingURL.split("#")[0];
 	}
+
 	if (options.keepTabWithHttps) {
 		matchingURL = matchingURL.replace(/^http:\/\//i, "https://");
 	}

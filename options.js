@@ -78,6 +78,18 @@ const defaultOptions = {
     },
     environment: {
         value: "firefox"
+    },
+    ignore_utm_source: {
+        value: true
+    },
+    ignore_utm_campaign: {
+        value: true
+    },
+    ignore_utm_medium: {
+        value: true
+    },
+    ignore_bhlid: {
+        value: true
     }
 };
 
@@ -158,6 +170,10 @@ const setOptions = (storedOptions) => {
     options.badgeColorDuplicateTabs = storedOptions.badgeColorDuplicateTabs.value;
     options.badgeColorNoDuplicateTabs = storedOptions.badgeColorNoDuplicateTabs.value;
     options.showBadgeIfNoDuplicateTabs = storedOptions.showBadgeIfNoDuplicateTabs.value;
+    options.ignore_utm_source = storedOptions.ignore_utm_source.value;
+    options.ignore_utm_campaign = storedOptions.ignore_utm_campaign.value;
+    options.ignore_utm_medium = storedOptions.ignore_utm_medium.value;
+    options.ignore_bhlid = storedOptions.ignore_bhlid.value;
 };
 
 const environment = {
