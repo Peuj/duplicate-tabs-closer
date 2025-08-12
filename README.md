@@ -42,6 +42,11 @@ Wildcards and RegExp are supported.
 * **Ignore search part in URL** *(default off)*
 * **Ignore path part in URL** *(default off)*
 * **Compare with tab title** *(default off)*
+* * **Added 6/30/2025**
+* **Ignore utm_source query paramter** *(default on)*
+* **Ignore utm_campaign query paramter** *(default on)*
+* **Ignore utm_medium query paramter** *(default on)*
+* **Ignore _bhlid query paramter** *(default on)*
 
 
 ### Scope:
@@ -63,35 +68,3 @@ Wildcards and RegExp are supported.
 ### Hotkey:
 
 * **Alt+Shift+W** to close all duplicate tabs (this could be configured in the options in future version)
-
-## Installing from Source in Firefox
-
-To install this add-on from source in Firefox, follow these steps:
-
-1.  **Download the Source Code:**
-    *   Clone the repository or download the source code ZIP file from the repository page and extract it to a local directory.
-
-2.  **Copy appropriate manifest:**
-    *   Copy either manifest to manifest.json using the cp command.
-    *   For **Firefox**:
-        ```sh
-        cp manifest-f.json manifest.json
-        ```
-    *   For **Chrome**:
-        ```sh
-        cp manifest-c.json manifest.json
-        ```
-
-2.  **Open Firefox and Navigate to `about:debugging`:**
-    *   Type `about:debugging` into the Firefox address bar and press Enter.
-
-3.  **Enable Add-on Debugging:**
-    *   Click on "This Firefox" (or "This Nightly", "This Developer Edition" depending on your Firefox version).
-
-4.  **Load Temporary Add-on:**
-    *   Click the "Load Temporary Add-on…" button.
-    *   Navigate to the directory where you extracted the add-on's source code.
-    *   Select the `manifest.json` file.
-    *   Click "Open".
-
-5.  **The add-on is now installed temporarily.** It will remain installed until you remove it or restart Firefox. If you make changes to the add-on's code, you'll need to click the "Reload" button for the add-on in `about:debugging` to apply the changes.
