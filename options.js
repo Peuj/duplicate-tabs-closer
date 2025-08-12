@@ -90,6 +90,9 @@ const defaultOptions = {
     },
     ignore_bhlid: {
         value: true
+    },
+    ignore_asuniq: {
+        value: true
     }
 };
 
@@ -174,6 +177,7 @@ const setOptions = (storedOptions) => {
     options.ignore_utm_campaign = storedOptions.ignore_utm_campaign.value;
     options.ignore_utm_medium = storedOptions.ignore_utm_medium.value;
     options.ignore_bhlid = storedOptions.ignore_bhlid.value;
+    options.ignore_asuniq = storedOptions.ignore_asuniq.value;
 };
 
 const environment = {

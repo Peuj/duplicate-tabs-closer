@@ -44,6 +44,9 @@ const getMatchingURL = (url) => {
 		if (options.ignore_bhlid) {
 			searchParams.delete('_bhlid');
 		}
+		if (options.ignore_asuniq) {
+			searchParams.delete('asuniq');
+		}
 		const newSearch = searchParams.toString();
 		matchingURL = `${uri.origin}${uri.pathname}${newSearch ? '?' + newSearch : ''}${uri.hash}`;
 	}

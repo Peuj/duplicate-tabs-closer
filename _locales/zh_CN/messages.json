@@ -190,5 +190,9 @@
       "message": "Ignore _bhlid parameter",
       "description": "Label for ignoring _bhlid parameter"
     },
+    "ignore_asuniq_label": {
+      "message": "Ignore asuniq parameter",
+      "description": "Label for ignoring asuniq parameter"
+    },
     "__WET_LOCALE__": { "message": "zh-CN" }
 }
