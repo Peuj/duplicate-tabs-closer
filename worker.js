@@ -406,8 +406,10 @@ const sendDuplicateTabs = async (duplicateTabsGroups, retainedTabs) => {
 
 const _refreshDuplicateTabsInfo = async (windowId) => {
     if (monitoringPaused) return;
+    const triggerTabId = _pendingTriggerTabId.get(windowId) ?? null;
+    _pendingTriggerTabId.delete(windowId);
     const searchResult = await searchForDuplicateTabs(windowId, false);
-    updateBadgesValue(searchResult.duplicateTabsGroups, windowId);
+    updateBadgesValue(searchResult.duplicateTabsGroups, windowId, triggerTabId);
     if ((await isPanelOptionOpen()) && (options.searchInAllWindows || (windowId === searchResult.activeWindowId))) {
         sendDuplicateTabs(searchResult.duplicateTabsGroups, searchResult.retainedTabs);
     }
@@ -419,6 +421,8 @@ const refreshDuplicateTabsInfo = debounce(_refreshDuplicateTabsInfo, 300, false)
 const startupBurst = { active: false, timerId: null, startedAt: 0 };
 const POST_STARTUP_BURST_EXTEND_MS = 3000;
 const POST_STARTUP_BURST_MAX_MS = 30000;
+
+let _pendingTriggerTabId = new Map();
 
 // eslint-disable-next-line no-unused-vars
 const debouncedBatchClose = debounce(closeDuplicateTabs, 300, false);
@@ -439,6 +443,7 @@ const dispatchTabCompletion = (tab, activeTabId, { queryComplete = false, alread
         }
         if (environment.isChrome) setBadge(tab.windowId, activeTabId || null);
     } else {
+        _pendingTriggerTabId.set(tab.windowId, tab.id);
         refreshDuplicateTabsInfo(tab.windowId);
         if (environment.isChrome) setBadge(tab.windowId, activeTabId || null);
     }

@@ -9,6 +9,7 @@ let groupedView = false;
 let lastNbRows = 0;
 let _renderGen = 0;
 let monitoringPaused = false;
+let _highlightOnOpen = false;
 
 /* Show/Hide the AutoClose option */
 const changeAutoCloseOptionState = (state, resize) => {
@@ -76,6 +77,16 @@ const setDuplicateTabsTable = async (duplicateTabs) => {
             && t.isRetained === lastDuplicateTabs[i].isRetained
             && t.whitelisted === lastDuplicateTabs[i].whitelisted);
     if (sameList) return;
+    const isFirstRender = lastDuplicateTabs == null;
+    const highlightTabId = isFirstRender ? _highlightOnOpen : false;
+    if (isFirstRender) _highlightOnOpen = false;
+    const newTabIds = new Set(
+        highlightTabId != null && highlightTabId !== false && duplicateTabs
+            ? duplicateTabs.filter(t => t.id === highlightTabId).map(t => t.id)
+            : !isFirstRender && duplicateTabs
+                ? duplicateTabs.filter(t => !lastDuplicateTabs.some(p => p.id === t.id) && !t.isRetained).map(t => t.id)
+                : []
+    );
     const expandedGroups = new Set();
     if (groupedView) {
         document.querySelectorAll(".tr-group-header:not(.collapsed)").forEach(header => {
@@ -94,6 +105,12 @@ const setDuplicateTabsTable = async (duplicateTabs) => {
         const rows = groupedView
             ? buildGroupedDuplicateTabRows(duplicateTabs, activeWindowId)
             : buildDuplicateTabRows(duplicateTabs, activeWindowId);
+        if (newTabIds.size > 0) {
+            rows.forEach(r => {
+                const id = parseInt(r.getAttribute("tabId"), 10);
+                if (!isNaN(id) && newTabIds.has(id)) r.classList.add("tab-row-new");
+            });
+        }
         const CHUNK = 40;
         for (let i = 0; i < rows.length; i += CHUNK) {
             if (_renderGen !== gen) return;
@@ -115,7 +132,26 @@ const setDuplicateTabsTable = async (duplicateTabs) => {
                     }
                 }
             });
+        }
+        if (newTabIds.size > 0 && groupedView) {
+            tbody.querySelectorAll(".tr-group-header").forEach(header => {
+                const ids = header.dataset.groupTabIds.split(",").map(Number);
+                if (ids.some(id => newTabIds.has(id))) {
+                    header.classList.remove("collapsed");
+                    let row = header.nextElementSibling;
+                    while (row && row.classList.contains("group-row")) {
+                        row.classList.remove("group-collapsed");
+                        row = row.nextElementSibling;
+                    }
+                }
+            });
+        }
+        if ((groupedView && expandedGroups.size > 0) || (newTabIds.size > 0 && groupedView)) {
             resizeDuplicateTabsPanel();
+        }
+        if (newTabIds.size > 0) {
+            const firstNewRow = tbody.querySelector(".tab-row-new");
+            if (firstNewRow) firstNewRow.scrollIntoView({ block: "nearest" });
         }
         closeBtn.classList.remove("disabled");
         closeBtn.setAttribute("aria-disabled", "false");
@@ -234,9 +270,10 @@ const setPanelOptions = async () => {
     if (collapseOptions) toggleExpendOptions(false);
     applyPopupRuleVisibility(storedOptions);
     updateIgnorePathPartDependents(storedOptions.ignorePathPart ? storedOptions.ignorePathPart.value : false);
-    const sessionData = await chrome.storage.session.get('autoOpenedPopup');
+    const sessionData = await chrome.storage.session.get(['autoOpenedPopup', 'autoOpenedTabId']);
     if (sessionData.autoOpenedPopup) {
-        chrome.storage.session.remove('autoOpenedPopup');
+        chrome.storage.session.remove(['autoOpenedPopup', 'autoOpenedTabId']);
+        _highlightOnOpen = sessionData.autoOpenedTabId ?? null;
         document.getElementById("optionHeader").classList.add("collapsed");
         resizeDuplicateTabsPanel();
     }

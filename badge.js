@@ -46,34 +46,38 @@ const getNbDuplicateTabs = (duplicateTabsGroups) => {
 	return nbDuplicateTabs;
 };
 
-const updateBadgeValue = async (nbDuplicateTabs, windowId) => {
+const updateBadgeValue = async (nbDuplicateTabs, windowId, triggerTabId) => {
 	if (tabsInfo.hasNbDuplicateTabs(windowId) && tabsInfo.getNbDuplicateTabs(windowId) === nbDuplicateTabs) return;
-	const prevCount = tabsInfo.hasNbDuplicateTabs(windowId) ? tabsInfo.getNbDuplicateTabs(windowId) : 0;
+	const hadPriorCount = tabsInfo.hasNbDuplicateTabs(windowId);
+	const prevCount = hadPriorCount ? tabsInfo.getNbDuplicateTabs(windowId) : 0;
 	tabsInfo.setNbDuplicateTabs(windowId, nbDuplicateTabs);
 	setBadge(windowId);
-	if (options.openPopupOnDuplicateDetected && nbDuplicateTabs > prevCount && !(await isPopupOpen())) {
-		// Settle delay: transient duplicates (e.g. from redirect intermediate URLs) can cause
-		// the count to spike and drop within ~300ms. Wait before opening so we don't open
-		// an empty popup for a phantom duplicate.
-		await wait(400);
-		if (tabsInfo.getNbDuplicateTabs(windowId) > prevCount && !(await isPopupOpen())) {
-			chrome.storage.session.set({ autoOpenedPopup: true }).then(() => {
-				chrome.action.openPopup().catch(() => {});
-			});
-		}
+	// hadPriorCount guards against startup hydration (count going from unset→N on addon load).
+	// For a new browser window (count goes 0→N where 0 was explicitly set by onCreatedTab),
+	// hadPriorCount is true so the popup fires correctly.
+	if (options.openPopupOnDuplicateDetected && hadPriorCount && nbDuplicateTabs > prevCount && !(await isPopupOpen())) {
+		chrome.storage.session.set({ autoOpenedPopup: true, autoOpenedTabId: triggerTabId ?? null }).then(() => {
+			chrome.action.openPopup().catch(() => {});
+		});
+		// Cancel the highlight flag if the duplicate was transient (count dropped within 400ms).
+		wait(400).then(async () => {
+			if (tabsInfo.getNbDuplicateTabs(windowId) <= prevCount) {
+				chrome.storage.session.remove(['autoOpenedPopup', 'autoOpenedTabId']).catch(() => {});
+			}
+		});
 	}
 };
 
 // eslint-disable-next-line no-unused-vars
-const updateBadgesValue = async (duplicateTabsGroups, windowId) => {
+const updateBadgesValue = async (duplicateTabsGroups, windowId, triggerTabId) => {
 	const nbDuplicateTabs = getNbDuplicateTabs(duplicateTabsGroups);
 	if (options.searchInAllWindows) {
 		const windows = await getWindows();
 		if (!windows) return;
-		windows.forEach(window => updateBadgeValue(nbDuplicateTabs, window.id));
+		windows.forEach(window => updateBadgeValue(nbDuplicateTabs, window.id, window.id === windowId ? triggerTabId : null));
 	}
 	else {
-		updateBadgeValue(nbDuplicateTabs, windowId);
+		updateBadgeValue(nbDuplicateTabs, windowId, triggerTabId);
 	}
 };
 
