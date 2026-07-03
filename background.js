@@ -120,6 +120,9 @@ const onBeforeNavigate = async (details) => {
 	if (options.autoCloseTab && !startupBurst.active && !isBlankURL(details.url)) {
 		if (!tabsInfo.hasTab(details.tabId)) return;
 		if (tabsInfo.isClosingTab(details.tabId)) return;
+		if (details.transitionQualifiers &&
+				(details.transitionQualifiers.includes("server_redirect") ||
+				details.transitionQualifiers.includes("client_redirect"))) return;
 		const tab = await getTab(details.tabId);
 		if (tab) {
 			tabsInfo.setTab(tab.id, { complete: false });
@@ -264,9 +267,45 @@ const onCommittedTab = async (details) => {
 	if (tab && tab.id > 0) setBadge(tab.windowId, tab.id);
 };
 
+const onHistoryStateUpdated = async (details) => {
+	await ensureInitialized();
+	if (monitoringPaused) return;
+	if (details.frameId !== 0 || details.tabId === -1) return;
+	if (isBlankURL(details.url)) return;
+	if (!tabsInfo.hasTab(details.tabId)) return;
+	if (tabsInfo.isClosingTab(details.tabId)) return;
+	const prev = _lastNavigate.get(details.tabId);
+	if (prev && prev.url === details.url && (Date.now() - prev.ts) < 1000) return;
+	_lastNavigate.set(details.tabId, { url: details.url, ts: Date.now() });
+	const tab = await getTab(details.tabId);
+	if (!tab) return;
+	if (!tabsInfo.hasUrlChanged(tab)) return;
+	tabsInfo.setTab(tab.id, { url: details.url, complete: true });
+	dispatchTabCompletion(tab, tab.id);
+};
+
+const onReferenceFragmentUpdated = async (details) => {
+	await ensureInitialized();
+	if (monitoringPaused) return;
+	if (details.frameId !== 0 || details.tabId === -1) return;
+	if (isBlankURL(details.url)) return;
+	if (!tabsInfo.hasTab(details.tabId)) return;
+	if (tabsInfo.isClosingTab(details.tabId)) return;
+	const prev = _lastNavigate.get(details.tabId);
+	if (prev && prev.url === details.url && (Date.now() - prev.ts) < 1000) return;
+	_lastNavigate.set(details.tabId, { url: details.url, ts: Date.now() });
+	const tab = await getTab(details.tabId);
+	if (!tab) return;
+	if (!tabsInfo.hasUrlChanged(tab)) return;
+	tabsInfo.setTab(tab.id, { url: details.url, complete: true });
+	dispatchTabCompletion(tab, tab.id);
+};
+
 chrome.tabs.onCreated.addListener(onCreatedTab);
 chrome.webNavigation.onBeforeNavigate.addListener(onBeforeNavigate);
 chrome.webNavigation.onCommitted.addListener(onCommittedTab);
+chrome.webNavigation.onHistoryStateUpdated.addListener(onHistoryStateUpdated);
+chrome.webNavigation.onReferenceFragmentUpdated.addListener(onReferenceFragmentUpdated);
 chrome.tabs.onAttached.addListener(onAttached);
 chrome.tabs.onDetached.addListener(onDetachedTab);
 chrome.tabs.onUpdated.addListener(onUpdatedTab);

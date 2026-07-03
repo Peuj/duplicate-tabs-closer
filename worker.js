@@ -428,8 +428,7 @@ let _pendingTriggerTabId = new Map();
 const debouncedBatchClose = debounce(closeDuplicateTabs, 300, false);
 
 // Dispatch the appropriate action after a tab completes or navigates.
-// alreadyComplete: onUpdatedTab already stamped this completion — skip search in autoClose mode
-//                 but still refresh in manual mode (reload detected via onCompletedTab).
+// alreadyComplete: onUpdatedTab already stamped this completion — skip search/refresh in both modes.
 // queryComplete:  require matched tabs to be complete before matching (pre-navigation scan).
 // eslint-disable-next-line no-unused-vars
 const dispatchTabCompletion = (tab, activeTabId, { queryComplete = false, alreadyComplete = false } = {}) => {
@@ -443,8 +442,10 @@ const dispatchTabCompletion = (tab, activeTabId, { queryComplete = false, alread
         }
         if (environment.isChrome) setBadge(tab.windowId, activeTabId || null);
     } else {
-        _pendingTriggerTabId.set(tab.windowId, tab.id);
-        refreshDuplicateTabsInfo(tab.windowId);
+        if (!alreadyComplete) {
+            _pendingTriggerTabId.set(tab.windowId, tab.id);
+            refreshDuplicateTabsInfo(tab.windowId);
+        }
         if (environment.isChrome) setBadge(tab.windowId, activeTabId || null);
     }
 };
