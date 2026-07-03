@@ -252,6 +252,10 @@ body.two-columns #duplicateTabsCard {
     flex-direction: column;
 }
 
+body.two-columns #optionsCard {
+    overflow: hidden;
+}
+
 body.two-columns #shrunkMode,
 body.two-columns .checkbox-fa-compress-label {
     display: none;
@@ -288,6 +292,11 @@ body.two-columns #scopeGroup.collapsed .list-group-item:last-child {
 
 body.two-columns #duplicateTabsCard .card-header #pauseMonitorBtn {
     margin-right: 0;
+}
+
+#duplicateTabsCard .card-header {
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
 }
 
 body:not(.two-columns) #toggleOptionsPanelBtn {
