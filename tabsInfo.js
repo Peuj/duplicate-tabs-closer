@@ -78,8 +78,10 @@ class TabsInfo {
         return this.storedTabs.has(tabId);
     }
 
-    hasDuplicateTabs(windowId) {
-        // Even nothing set, return true so it will force the refresh and set the badge.
+    needsRefresh(windowId) {
+        // Returns true when undefined (never initialized, forces badge init for new windows)
+        // or > 0 (duplicates exist). Do NOT simplify to a boolean — the undefined case is
+        // load-bearing for badge initialization on newly created windows.
         return this.nbDuplicateTabs.get(windowId) !== 0;
     }
 

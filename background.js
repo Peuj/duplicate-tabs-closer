@@ -185,14 +185,14 @@ const onRemovedTab = async (removedTabId, removeInfo) => {
 	_lastNavigate.delete(removedTabId);
 	if (monitoringPaused) return;
 	if (removeInfo.isWindowClosing) {
-		if (options.searchInAllWindows && tabsInfo.hasDuplicateTabs(removeInfo.windowId)) refreshDuplicateTabsInfo();
+		if (options.searchInAllWindows && tabsInfo.needsRefresh(removeInfo.windowId)) refreshDuplicateTabsInfo();
 		tabsInfo.clearDuplicateTabsInfo(removeInfo.windowId);
 		refreshDuplicateTabsInfo.cleanup(removeInfo.windowId);
 		handleRemainingTab.cleanup(removeInfo.windowId);
 		debouncedBatchClose.cleanup(removeInfo.windowId);
 		updateBadgeStyle();
 	}
-	else if (tabsInfo.hasDuplicateTabs(removeInfo.windowId)) {
+	else if (tabsInfo.needsRefresh(removeInfo.windowId)) {
 		refreshDuplicateTabsInfo(removeInfo.windowId);
 	}
 };
@@ -200,7 +200,7 @@ const onRemovedTab = async (removedTabId, removeInfo) => {
 const onDetachedTab = async (detachedTabId, detachInfo) => {
 	await ensureInitialized();
 	if (monitoringPaused) return;
-	if (tabsInfo.hasDuplicateTabs(detachInfo.oldWindowId)) {
+	if (tabsInfo.needsRefresh(detachInfo.oldWindowId)) {
 		refreshDuplicateTabsInfo(detachInfo.oldWindowId);
 	} else {
 		setBadge(detachInfo.oldWindowId);
