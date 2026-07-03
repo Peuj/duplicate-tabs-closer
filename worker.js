@@ -171,7 +171,7 @@ const searchForDuplicateTabsToClose = async (observedTab, queryComplete, loading
     }
     if (!match) {
         if (loadingUrl) {
-            if (tabsInfo.hasDuplicateTabs(observedWindowsId)) refreshDuplicateTabsInfo(observedWindowsId);
+            if (tabsInfo.needsRefresh(observedWindowsId)) refreshDuplicateTabsInfo(observedWindowsId);
             else if (environment.isChrome && observedTab.active) setBadge(observedTab.windowId, observedTab.id);
         } else {
             refreshDuplicateTabsInfo(observedWindowsId);
