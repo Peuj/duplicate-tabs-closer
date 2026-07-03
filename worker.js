@@ -27,6 +27,7 @@ const findPatternSource = (value, rules) => {
 const shouldSkipTab = (tab, { queryComplete = false, skipWhitelisted = true } = {}) => {
     if (tabsInfo.isClosingTab(tab.id)) return "closing";
     if (tabsInfo.isIntentionalDuplicate(tab.id)) return "intentional-duplicate";
+    if (tab.url === "about:blank") return "blank";
     if (isBlankURL(tab.url) && (!isTabComplete(tab) || options.skipBlankTabs)) return options.skipBlankTabs ? "skip-blank-option" : "blank-loading";
     if (skipWhitelisted && isUrlWhiteListed(tab.url)) return "whitelisted";
     if (queryComplete && !isTabComplete(tab)) return "loading";
