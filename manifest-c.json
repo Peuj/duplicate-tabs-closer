@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Duplicate Tabs Closer",
-  "version": "4.2.7",
+  "version": "4.2.8",
   "author": "Peuj",
   "default_locale": "en",
   "description": "Duplicate Tabs Closer",
