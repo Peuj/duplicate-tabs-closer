@@ -250,6 +250,7 @@ body.two-columns #duplicateTabsCard {
     min-width: 0;
     display: flex;
     flex-direction: column;
+    margin-bottom: 0;
 }
 
 body.two-columns #optionsCard {
@@ -274,8 +275,7 @@ body.two-columns #duplicateTabsCard .card-body {
 }
 
 body.two-columns #duplicateTabsTableContainer {
-    flex: 1;
-    min-height: 0;
+    flex: 0 0 auto;
     overflow-y: auto;
 }
 

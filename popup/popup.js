@@ -189,9 +189,6 @@ const setDuplicateTabsTable = async (duplicateTabs) => {
 };
 
 const resizeDuplicateTabsPanel = (refresh) => {
-    const maxOptionsCardHeight = 432;
-    const rowHeight = 26;
-    const minRow = 2;
     const tbody = document.getElementById("duplicateTabsTableBody");
     const nbRows = lastDuplicateTabs
         ? (groupedView
@@ -200,17 +197,36 @@ const resizeDuplicateTabsPanel = (refresh) => {
                 : new Set(lastDuplicateTabs.map(t => t.groupIndex)).size)
             : lastDuplicateTabs.length)
         : 1;
-    const maxRows = Math.min(nbRows, Math.floor((maxOptionsCardHeight - document.getElementById("optionsCard").offsetHeight + (minRow * rowHeight)) / rowHeight));
     const container = document.getElementById("duplicateTabsTableContainer");
-    container.classList.toggle("table-scrollable-overflow", nbRows > maxRows);
-    if (nbRows <= maxRows) {
-        clearTimeout(highlightBottomScrollShadowTimer);
-        container.classList.remove("highlight-scroll-bottom");
+    if (document.body.classList.contains("two-columns")) {
+        const dtcBody = document.getElementById("duplicateTabsCard").querySelector(".card-body");
+        container.style.height = "";
+        container.style.maxHeight = `${dtcBody.offsetHeight}px`;
+        requestAnimationFrame(() => {
+            const overflows = container.scrollHeight > container.clientHeight;
+            container.classList.toggle("table-scrollable-overflow", overflows);
+            if (!overflows) {
+                clearTimeout(highlightBottomScrollShadowTimer);
+                container.classList.remove("highlight-scroll-bottom");
+            }
+            if (refresh && overflows && nbRows > lastNbRows) highlightBottomScrollShadow();
+        });
+    } else {
+        const maxOptionsCardHeight = 432;
+        const rowHeight = 26;
+        const minRow = 2;
+        const maxRows = Math.min(nbRows, Math.floor((maxOptionsCardHeight - document.getElementById("optionsCard").offsetHeight + (minRow * rowHeight)) / rowHeight));
+        container.style.maxHeight = "";
+        container.classList.toggle("table-scrollable-overflow", nbRows > maxRows);
+        if (nbRows <= maxRows) {
+            clearTimeout(highlightBottomScrollShadowTimer);
+            container.classList.remove("highlight-scroll-bottom");
+        }
+        if (refresh && nbRows > maxRows && nbRows > lastNbRows) highlightBottomScrollShadow();
+        if (maxRows > 0) container.style.height = `${maxRows * rowHeight}px`;
+        else container.style.height = "";
     }
-    if (refresh && nbRows > maxRows && nbRows > lastNbRows) highlightBottomScrollShadow();
     lastNbRows = nbRows;
-    if (maxRows > 0) container.style.height = `${maxRows * rowHeight}px`;
-    else container.style.height = "";
 };
 
 const setPanelOptions = async () => {
