@@ -69,7 +69,7 @@
   },
   "ignoreSearchPart": {
     "message": "Игнорировать часть поиска в URL вкладки",
-    "description": "Ignore search part in URL"
+    "description": "Ignore query parameters (search/query string, everything after ?) in URL"
   },
   "ignorePathPart": {
     "message": "Игнорировать часть пути в URL вкладки (только домен)",
@@ -168,6 +168,10 @@
   "resumeMonitoring": {
     "message": "Возобновить мониторинг",
     "description": "Resume duplicate tab monitoring"
+  },
+  "popupPinTooltip": {
+    "message": "Показать/скрыть этот параметр на панели всплывающего окна",
+    "description": "Tooltip on the eye icon next to each option in the Options page"
   },
   "monitoringPaused": {
     "message": "Мониторинг приостановлен",

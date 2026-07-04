@@ -69,7 +69,7 @@
   },
   "ignoreSearchPart": {
     "message": "Ignorer la partie « recherche » de l'URL",
-    "description": "Ignore search part in URL"
+    "description": "Ignore query parameters (search/query string, everything after ?) in URL"
   },
   "ignorePathPart": {
     "message": "Ignorer la partie « chemin » de l'URL (domaine uniquement)",
@@ -168,6 +168,10 @@
   "resumeMonitoring": {
     "message": "Reprendre la surveillance",
     "description": "Resume duplicate tab monitoring"
+  },
+  "popupPinTooltip": {
+    "message": "Afficher/masquer cette option dans le panneau popup",
+    "description": "Tooltip on the eye icon next to each option in the Options page"
   },
   "monitoringPaused": {
     "message": "La surveillance est en pause",

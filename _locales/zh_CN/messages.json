@@ -69,7 +69,7 @@
   },
   "ignoreSearchPart": {
     "message": "忽略标签页 URL 中的问号部分",
-    "description": "Ignore search part in URL"
+    "description": "Ignore query parameters (search/query string, everything after ?) in URL"
   },
   "ignorePathPart": {
     "message": "忽略标签页 URL 中的路径部分（仅域名）",
@@ -168,6 +168,10 @@
   "resumeMonitoring": {
     "message": "恢复监控",
     "description": "Resume duplicate tab monitoring"
+  },
+  "popupPinTooltip": {
+    "message": "在弹出面板中显示/隐藏此选项",
+    "description": "Tooltip on the eye icon next to each option in the Options page"
   },
   "monitoringPaused": {
     "message": "监控已暂停",

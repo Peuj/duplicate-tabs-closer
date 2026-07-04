@@ -68,8 +68,8 @@
     "description": "Ignore hash part in URL"
   },
   "ignoreSearchPart": {
-    "message": "Ignore search part in URL",
-    "description": "Ignore search part in URL"
+    "message": "Ignore query parameters in URL (search part)",
+    "description": "Ignore query parameters (search/query string, everything after ?) in URL"
   },
   "ignorePathPart": {
     "message": "Ignore path part in URL (domain only)",
@@ -168,6 +168,10 @@
   "resumeMonitoring": {
     "message": "Resume monitoring",
     "description": "Resume duplicate tab monitoring"
+  },
+  "popupPinTooltip": {
+    "message": "Show/hide this option in the popup panel",
+    "description": "Tooltip on the eye icon next to each option in the Options page"
   },
   "monitoringPaused": {
     "message": "Monitoring is paused",

@@ -69,7 +69,7 @@
   },
   "ignoreSearchPart": {
     "message": "URLのクエリー部分（?～）を無視する",
-    "description": "Ignore search part in URL"
+    "description": "Ignore query parameters (search/query string, everything after ?) in URL"
   },
   "ignorePathPart": {
     "message": "URLのパス部分を無視する（ドメインのみ）",
@@ -168,6 +168,10 @@
   "resumeMonitoring": {
     "message": "監視を再開する",
     "description": "Resume duplicate tab monitoring"
+  },
+  "popupPinTooltip": {
+    "message": "ポップアップパネルでこのオプションを表示/非表示にする",
+    "description": "Tooltip on the eye icon next to each option in the Options page"
   },
   "monitoringPaused": {
     "message": "監視は一時停止中です",
