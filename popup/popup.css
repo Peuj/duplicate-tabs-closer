@@ -256,11 +256,6 @@ body.two-columns #optionsCard {
     overflow: hidden;
 }
 
-body.two-columns #shrunkMode,
-body.two-columns .checkbox-fa-compress-label {
-    display: none;
-}
-
 body.two-columns #optionsTitle {
     cursor: default;
     pointer-events: none;
