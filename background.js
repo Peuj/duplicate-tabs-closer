@@ -117,7 +117,7 @@ const onBeforeNavigate = async (details) => {
 	const prev = _lastNavigate.get(details.tabId);
 	if (prev && prev.url === details.url && (Date.now() - prev.ts) < 1000) return;
 	_lastNavigate.set(details.tabId, { url: details.url, ts: Date.now() });
-	if (options.autoCloseTab && !startupBurst.active && !isBlankURL(details.url)) {
+	if (options.autoCloseTab && !startupBurst.active && !isBlankURL(details.url) && !details.url.startsWith("view-source:")) {
 		if (!tabsInfo.hasTab(details.tabId)) return;
 		if (tabsInfo.isClosingTab(details.tabId)) return;
 		if (details.transitionQualifiers &&
