@@ -242,7 +242,7 @@ const handleObservedTab = (details) => {
     }
     let matchingKey = matchingTabURL;
     let retainedTab = retainedTabs.get(matchingKey);
-    if (!retainedTab && !details.closeTab && !options.ignoreHashPart && isValidURL(observedTab.url)) {
+    if (!retainedTab && !options.ignoreHashPart && isValidURL(observedTab.url)) {
         const observedHasHash = observedTab.url.includes("#");
         const baseKey = getMatchingURL(observedTab.url.split("#")[0]) + (options.searchPerContainer ? observedTab.cookieStoreId : "");
         for (const [key, tab] of retainedTabs) {
