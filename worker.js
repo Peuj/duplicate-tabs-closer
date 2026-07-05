@@ -242,6 +242,18 @@ const handleObservedTab = (details) => {
     }
     let matchingKey = matchingTabURL;
     let retainedTab = retainedTabs.get(matchingKey);
+    if (!retainedTab && !details.closeTab && !options.ignoreHashPart && isValidURL(observedTab.url)) {
+        const observedHasHash = observedTab.url.includes("#");
+        const baseKey = getMatchingURL(observedTab.url.split("#")[0]) + (options.searchPerContainer ? observedTab.cookieStoreId : "");
+        for (const [key, tab] of retainedTabs) {
+            if (tab.url.includes("#") !== observedHasHash &&
+                getMatchingURL(tab.url.split("#")[0]) + (options.searchPerContainer ? tab.cookieStoreId : "") === baseKey) {
+                retainedTab = tab;
+                matchingKey = key;
+                break;
+            }
+        }
+    }
     if (!retainedTab) {
         if (isTabComplete(observedTab) || tabsInfo.getLastComplete(observedTab.id) !== null) retainedTabs.set(matchingKey, observedTab);
         if (matchingTabTitle) {
