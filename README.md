@@ -55,9 +55,9 @@ Determines what happens to the kept tab after its duplicate is closed.
 
 > Only active when **On duplicate tab detected** is set to *Close tab automatically*.
 
-Tabs opened on purpose using the browser's built-in **Duplicate Tab** command are never auto-closed.
+Tabs opened on purpose using the browser's built-in **Duplicate Tab** command are never auto-closed. They are still detected and shown in the duplicate tabs list (marked with a shield icon), so you can review and close them manually if needed. Navigating the duplicated tab to a different URL removes the protection.
 
-> **Note:** This protection is only available on Firefox. On Chrome, Edge, Opera, Vivaldi, and Brave, tabs opened via "Duplicate Tab" will still be auto-closed because the required browser API is not available on those browsers.
+> **Note:** On Firefox, this uses the sessions API to reliably detect cloned tabs. On Chrome and other Chromium-based browsers (Edge, Vivaldi, Brave), detection is based on the order in which browser events fire — the navigation event arrives before the tab creation event only for the built-in Duplicate Tab command, distinguishing it from links or address bar navigation. Other browsers are not currently supported.
 
 ### Priority & Exclusions
 

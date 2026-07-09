@@ -23,16 +23,26 @@ const findPatternSource = (value, rules) => {
     return null;
 };
 
-// eslint-disable-next-line no-unused-vars
 const shouldSkipTab = (tab, { queryComplete = false, skipWhitelisted = true } = {}) => {
     if (tabsInfo.isClosingTab(tab.id)) return "closing";
-    if (tabsInfo.isIntentionalDuplicate(tab.id)) return "intentional-duplicate";
-    if (tab.url === "about:blank") return "blank";
+    if (skipWhitelisted && tabsInfo.isIntentionalDuplicate(tab.id)) return "intentional-duplicate";
+    const storedUrl = tabsInfo.getStoredUrl(tab.id);
+    if (tab.url === "about:blank" && (!storedUrl || storedUrl === "about:blank")) return "blank";
     if (tab.url.startsWith("view-source:")) return "view-source";
     if (isBlankURL(tab.url) && (!isTabComplete(tab) || options.skipBlankTabs)) return options.skipBlankTabs ? "skip-blank-option" : "blank-loading";
     if (skipWhitelisted && isUrlWhiteListed(tab.url)) return "whitelisted";
     if (queryComplete && !isTabComplete(tab)) return "loading";
     return null;
+};
+
+const restoreDiscardedUrls = (tabs) => {
+    if (!tabs) return;
+    for (const tab of tabs) {
+        if (tab.discarded && tab.url === "about:blank") {
+            const stored = tabsInfo.getStoredUrl(tab.id);
+            if (stored && stored !== "about:blank") tab.url = stored;
+        }
+    }
 };
 
 const matchTitle = (tab1, tab2) => {
@@ -104,8 +114,11 @@ const getCloseInfo = (details) => {
         retainedTabId = getHttpsTabId(observedTab, observedTabUrl, openedTab);
         if (!retainedTabId) {
             retainedTabId = getLastUpdatedTabId(observedTab, openedTab);
+            const retainedByAge = retainedTabId;
             if (options.prioritizeActiveWindow && activeWindowId && observedTab.windowId !== openedTab.windowId) {
-                retainedTabId = getActiveWindowTabId(observedTab, openedTab, activeWindowId, retainedTabId);
+                retainedTabId = getActiveWindowTabId(observedTab, openedTab, activeWindowId, retainedByAge);
+                if (retainedTabId !== retainedByAge) {
+                }
             }
         }
     }
@@ -137,9 +150,14 @@ const searchForDuplicateTabsToClose = async (observedTab, queryComplete, loading
     const observedTabUrl = loadingUrl || observedTab.url;
     const observedWindowsId = observedTab.windowId;
     await tabsInfo.awaitPendingCheck(observedTab.id);
-    if (tabsInfo.isIntentionalDuplicate(observedTab.id)) return;
+    if (tabsInfo.isIntentionalDuplicate(observedTab.id)) {
+        refreshDuplicateTabsInfo(observedWindowsId);
+        return;
+    }
     if (isUrlWhiteListed(observedTabUrl)) {
-        if (isTabComplete(observedTab)) refreshDuplicateTabsInfo(observedWindowsId);
+        if (isTabComplete(observedTab)) {
+            refreshDuplicateTabsInfo(observedWindowsId);
+        }
         return;
     }
     if (options.skipBlankTabs && isBlankURL(observedTabUrl)) return;
@@ -152,7 +170,10 @@ const searchForDuplicateTabsToClose = async (observedTab, queryComplete, loading
     queryInfo.windowId = options.searchInAllWindows ? null : observedWindowsId;
     if (environment.isFirefox) queryInfo.cookieStoreId = options.searchPerContainer ? observedTab.cookieStoreId : null;
     const openedTabs = await getTabs(queryInfo);
-    if (!openedTabs || openedTabs.length <= 1) return;
+    restoreDiscardedUrls(openedTabs);
+    if (!openedTabs || openedTabs.length <= 1) {
+        return;
+    }
     const matchingObservedTabUrl = getMatchingURL(observedTabUrl);
     const activeWindowId = (options.prioritizeActiveWindow && options.searchInAllWindows)
         ? await getActiveWindowId()
@@ -174,8 +195,9 @@ const searchForDuplicateTabsToClose = async (observedTab, queryComplete, loading
     }
     if (!match) {
         if (loadingUrl) {
-            if (tabsInfo.needsRefresh(observedWindowsId)) refreshDuplicateTabsInfo(observedWindowsId);
-            else if (environment.isChrome && observedTab.active) setBadge(observedTab.windowId, observedTab.id);
+            if (tabsInfo.needsRefresh(observedWindowsId)) {
+                refreshDuplicateTabsInfo(observedWindowsId);
+            } else if (environment.isChrome && observedTab.active) setBadge(observedTab.windowId, observedTab.id);
         } else {
             refreshDuplicateTabsInfo(observedWindowsId);
         }
@@ -325,13 +347,16 @@ const searchForDuplicateTabs = async (windowId, closeTabs, skipWhitelisted = tru
     const queryInfo = { windowType: "normal" };
     if (!options.searchInAllWindows) queryInfo.windowId = windowId;
     const [activeWindowId, openedTabs] = await Promise.all([getActiveWindowId(), getTabs(queryInfo)]);
+    restoreDiscardedUrls(openedTabs);
     if (!openedTabs) return;
     const duplicateTabsGroups = new Map();
     const retainedTabs = new Map();
     const tabsToClose = new Set();
     for (const openedTab of openedTabs) {
         const skipReason = shouldSkipTab(openedTab, { skipWhitelisted: closeTabs && skipWhitelisted });
-        if (skipReason) continue;
+        if (skipReason) {
+            continue;
+        }
         const details = {
             tab: openedTab,
             retainedTabs: retainedTabs,
@@ -424,9 +449,12 @@ const _refreshDuplicateTabsInfo = async (windowId) => {
     const triggerTabId = _pendingTriggerTabId.get(windowId) ?? null;
     _pendingTriggerTabId.delete(windowId);
     const searchResult = await searchForDuplicateTabs(windowId, false);
+    const count = getNbDuplicateTabs(searchResult.duplicateTabsGroups);
     updateBadgesValue(searchResult.duplicateTabsGroups, windowId, triggerTabId);
-    if ((await isPanelOptionOpen()) && (options.searchInAllWindows || (windowId === searchResult.activeWindowId))) {
+    const panelOpen = await isPanelOptionOpen();
+    if (panelOpen && (options.searchInAllWindows || (windowId === searchResult.activeWindowId))) {
         sendDuplicateTabs(searchResult.duplicateTabsGroups, searchResult.retainedTabs);
+    } else {
     }
 };
 
@@ -434,8 +462,8 @@ const refreshDuplicateTabsInfo = debounce(_refreshDuplicateTabsInfo, 300, false)
 
 // eslint-disable-next-line no-unused-vars
 const startupBurst = { active: false, timerId: null, startedAt: 0 };
-const POST_STARTUP_BURST_EXTEND_MS = 3000;
-const POST_STARTUP_BURST_MAX_MS = 30000;
+const POST_STARTUP_BURST_EXTEND_MS = 3000;  // reset window on each tab completion during burst
+const POST_STARTUP_BURST_MAX_MS = 30000;    // absolute ceiling so a stalled tab can't hold burst forever
 
 let _pendingTriggerTabId = new Map();
 
@@ -471,6 +499,8 @@ const refreshGlobalDuplicateTabsInfo = async () => {
         refreshDuplicateTabsInfo(null);
     } else {
         const windows = await getWindows();
-        if (windows) windows.forEach(window => refreshDuplicateTabsInfo(window.id));
+        if (windows) windows.forEach(window => {
+            refreshDuplicateTabsInfo(window.id);
+        });
     }
 };

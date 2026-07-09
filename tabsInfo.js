@@ -120,6 +120,13 @@ class TabsInfo {
         this._persistIntentionalDuplicates();
     }
 
+    clearIntentionalDuplicate(tabId) {
+        if (!this.intentionalDuplicates.has(tabId)) return;
+        this.intentionalDuplicates.delete(tabId);
+        this._persistIntentionalDuplicates();
+        dtcLog("tabsInfo", "intentional-dup-clear", { tabId });
+    }
+
     _persistIntentionalDuplicates() {
         chrome.storage.session.set({ intentionalDuplicates: Array.from(this.intentionalDuplicates) });
     }
