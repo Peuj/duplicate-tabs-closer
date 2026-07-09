@@ -226,7 +226,7 @@ const closeDuplicateTab = async (tabToCloseId, remainingTabInfo) => {
     handleRemainingTab(remainingTabInfo.windowId, remainingTabInfo);
 };
 
-const _handleRemainingTab = async (details) => {
+const _handleRemainingTab = async (windowId, details) => {
     if (!tabsInfo.hasTab(details.tabId)) return;
     if (options.defaultTabBehavior && details.observedTabClosed) {
         if (details.tabIndex > 0) moveTab(details.tabId, { index: details.tabIndex });
@@ -245,87 +245,117 @@ const _handleRemainingTab = async (details) => {
 
 const handleRemainingTab = debounce(_handleRemainingTab, 500);
 
-const invalidateRetainedURLKey = (retainedTab, currentMatchingKey, retainedTabs) => {
-    const urlKey = getMatchingURL(retainedTab.url) + (options.searchPerContainer ? retainedTab.cookieStoreId : "");
-    if (urlKey !== currentMatchingKey && retainedTabs.get(urlKey) === retainedTab) {
-        retainedTabs.delete(urlKey);
+const invalidateAllRetainedKeys = (retainedTab, currentMatchingKey, retainedTabs) => {
+    for (const [key, tab] of retainedTabs) {
+        if (key !== currentMatchingKey && tab === retainedTab) retainedTabs.delete(key);
+    }
+};
+
+const findRetainedTab = (observedTab, retainedTabs, matchingTabURL, matchingTabTitle) => {
+    // 1. Direct URL key
+    let tab = retainedTabs.get(matchingTabURL);
+    if (tab) return { tab, key: matchingTabURL };
+    // 2. Hash-asymmetric match (one tab has hash, the other doesn't, same base URL)
+    if (!options.ignoreHashPart && isValidURL(observedTab.url)) {
+        const observedHasHash = observedTab.url.includes("#");
+        const baseKey = getMatchingURL(observedTab.url.split("#")[0]) + (options.searchPerContainer ? observedTab.cookieStoreId : "");
+        for (const [key, candidate] of retainedTabs) {
+            if (candidate.url.includes("#") !== observedHasHash &&
+                getMatchingURL(candidate.url.split("#")[0]) + (options.searchPerContainer ? candidate.cookieStoreId : "") === baseKey) {
+                return { tab: candidate, key };
+            }
+        }
+    }
+    // 3. Fuzzy title key
+    if (matchingTabTitle) {
+        const titleKey = findFuzzyTitleKey(observedTab.title, retainedTabs) || matchingTabTitle;
+        tab = retainedTabs.get(titleKey);
+        if (tab) return { tab, key: titleKey };
+    }
+    // 4. URL pattern key
+    if (options.urlRegexRules.length > 0) {
+        const urlPatSource = findPatternSource(observedTab.url, options.urlRegexRules);
+        if (urlPatSource) {
+            const patKey = `urlpattern=${urlPatSource}`;
+            tab = retainedTabs.get(patKey);
+            if (tab) return { tab, key: patKey };
+        }
+    }
+    // 5. Title pattern key
+    if (isTabComplete(observedTab) && options.titleRegexRules.length > 0) {
+        const titlePatSource = findPatternSource(observedTab.title, options.titleRegexRules);
+        if (titlePatSource) {
+            const patKey = `titlepattern=${titlePatSource}`;
+            tab = retainedTabs.get(patKey);
+            if (tab) return { tab, key: patKey };
+        }
+    }
+    return null;
+};
+
+const registerTab = (observedTab, retainedTabs, matchingTabURL, matchingTabTitle) => {
+    if (isTabComplete(observedTab) || tabsInfo.getLastComplete(observedTab.id) !== null)
+        retainedTabs.set(matchingTabURL, observedTab);
+    if (matchingTabTitle && !retainedTabs.has(matchingTabTitle))
+        retainedTabs.set(matchingTabTitle, observedTab);
+    if (options.urlRegexRules.length > 0) {
+        const urlPatSource = findPatternSource(observedTab.url, options.urlRegexRules);
+        if (urlPatSource) {
+            const patKey = `urlpattern=${urlPatSource}`;
+            if (!retainedTabs.has(patKey)) retainedTabs.set(patKey, observedTab);
+        }
+    }
+    if (isTabComplete(observedTab) && options.titleRegexRules.length > 0) {
+        const titlePatSource = findPatternSource(observedTab.title, options.titleRegexRules);
+        if (titlePatSource) {
+            const patKey = `titlepattern=${titlePatSource}`;
+            if (!retainedTabs.has(patKey)) retainedTabs.set(patKey, observedTab);
+        }
+    }
+};
+
+const applyDuplicateAction = (details, observedTab, match) => {
+    const retainedTab = match.tab;
+    const matchingKey = match.key;
+    const retainedTabs = details.retainedTabs;
+    const duplicateTabsGroups = details.duplicateTabsGroups;
+    if (details.closeTab) {
+        const [tabToCloseId] = getCloseInfo({ observedTab: observedTab, openedTab: retainedTab, activeWindowId: details.activeWindowId });
+        if (tabToCloseId === observedTab.id) {
+            if (!details.skipWhitelisted || !isUrlWhiteListed(observedTab.url)) details.tabsToClose.add(observedTab.id);
+        } else {
+            if (!details.skipWhitelisted || !isUrlWhiteListed(retainedTab.url)) {
+                details.tabsToClose.add(retainedTab.id);
+                invalidateAllRetainedKeys(retainedTab, matchingKey, retainedTabs);
+                retainedTabs.set(matchingKey, observedTab);
+            }
+        }
+    } else {
+        const [tabToCloseId] = getCloseInfo({ observedTab: observedTab, openedTab: retainedTab, activeWindowId: details.activeWindowId });
+        if (tabToCloseId === retainedTab.id) {
+            invalidateAllRetainedKeys(retainedTab, matchingKey, retainedTabs);
+            retainedTabs.set(matchingKey, observedTab);
+        }
+        const tabs = duplicateTabsGroups.get(matchingKey) || new Set([retainedTab]);
+        tabs.add(observedTab);
+        duplicateTabsGroups.set(matchingKey, tabs);
     }
 };
 
 const handleObservedTab = (details) => {
     const observedTab = details.tab;
-    const retainedTabs = details.retainedTabs;
-    const duplicateTabsGroups = details.duplicateTabsGroups;
     let matchingTabURL = getMatchingURL(observedTab.url);
     let matchingTabTitle = options.compareWithTitle && isTabComplete(observedTab) ? `title=${observedTab.title}` : null;
     if (options.searchPerContainer) {
         matchingTabURL += observedTab.cookieStoreId;
         if (matchingTabTitle) matchingTabTitle += observedTab.cookieStoreId;
     }
-    let matchingKey = matchingTabURL;
-    let retainedTab = retainedTabs.get(matchingKey);
-    if (!retainedTab && !options.ignoreHashPart && isValidURL(observedTab.url)) {
-        const observedHasHash = observedTab.url.includes("#");
-        const baseKey = getMatchingURL(observedTab.url.split("#")[0]) + (options.searchPerContainer ? observedTab.cookieStoreId : "");
-        for (const [key, tab] of retainedTabs) {
-            if (tab.url.includes("#") !== observedHasHash &&
-                getMatchingURL(tab.url.split("#")[0]) + (options.searchPerContainer ? tab.cookieStoreId : "") === baseKey) {
-                retainedTab = tab;
-                matchingKey = key;
-                break;
-            }
-        }
+    const match = findRetainedTab(observedTab, details.retainedTabs, matchingTabURL, matchingTabTitle);
+    if (!match) {
+        registerTab(observedTab, details.retainedTabs, matchingTabURL, matchingTabTitle);
+        return;
     }
-    if (!retainedTab) {
-        if (isTabComplete(observedTab) || tabsInfo.getLastComplete(observedTab.id) !== null) retainedTabs.set(matchingKey, observedTab);
-        if (matchingTabTitle) {
-            matchingKey = findFuzzyTitleKey(observedTab.title, retainedTabs) || matchingTabTitle;
-            retainedTab = retainedTabs.get(matchingKey);
-            if (!retainedTab) {
-                retainedTabs.set(matchingTabTitle, observedTab);
-            }
-        }
-        if (!retainedTab && options.urlRegexRules.length > 0) {
-            const urlPatSource = findPatternSource(observedTab.url, options.urlRegexRules);
-            if (urlPatSource) {
-                matchingKey = `urlpattern=${urlPatSource}`;
-                retainedTab = retainedTabs.get(matchingKey);
-                if (!retainedTab) retainedTabs.set(matchingKey, observedTab);
-            }
-        }
-        if (!retainedTab && isTabComplete(observedTab) && options.titleRegexRules.length > 0) {
-            const titlePatSource = findPatternSource(observedTab.title, options.titleRegexRules);
-            if (titlePatSource) {
-                matchingKey = `titlepattern=${titlePatSource}`;
-                retainedTab = retainedTabs.get(matchingKey);
-                if (!retainedTab) retainedTabs.set(matchingKey, observedTab);
-            }
-        }
-    }
-    if (retainedTab) {
-        if (details.closeTab) {
-            const [tabToCloseId] = getCloseInfo({ observedTab: observedTab, openedTab: retainedTab, activeWindowId: details.activeWindowId });
-            if (tabToCloseId === observedTab.id) {
-                if (!details.skipWhitelisted || !isUrlWhiteListed(observedTab.url)) details.tabsToClose.add(observedTab.id);
-            }
-            else {
-                if (!details.skipWhitelisted || !isUrlWhiteListed(retainedTab.url)) {
-                    details.tabsToClose.add(retainedTab.id);
-                    invalidateRetainedURLKey(retainedTab, matchingKey, retainedTabs);
-                    retainedTabs.set(matchingKey, observedTab);
-                }
-            }
-        } else {
-            const [tabToCloseId] = getCloseInfo({ observedTab: observedTab, openedTab: retainedTab, activeWindowId: details.activeWindowId });
-            if (tabToCloseId === retainedTab.id) {
-                invalidateRetainedURLKey(retainedTab, matchingKey, retainedTabs);
-                retainedTabs.set(matchingKey, observedTab);
-            }
-            const tabs = duplicateTabsGroups.get(matchingKey) || new Set([retainedTab]);
-            tabs.add(observedTab);
-            duplicateTabsGroups.set(matchingKey, tabs);
-        }
-    }
+    applyDuplicateAction(details, observedTab, match);
 };
 
 const findFuzzyTitleKey = (title, retainedTabs) => {
@@ -433,6 +463,7 @@ const getDuplicateTabsForPanel = async (duplicateTabsGroups, retainedTabs) => {
 // eslint-disable-next-line no-unused-vars
 const requestDuplicateTabsFromPanel = async (windowId) => {
     const searchResult = await searchForDuplicateTabs(windowId, false);
+    if (!searchResult) return;
     sendDuplicateTabs(searchResult.duplicateTabsGroups, searchResult.retainedTabs);
 };
 
@@ -477,7 +508,7 @@ const debouncedBatchClose = debounce(closeDuplicateTabs, 300, false);
 const dispatchTabCompletion = (tab, activeTabId, { queryComplete = false, alreadyComplete = false } = {}) => {
     if (startupBurst.active && (Date.now() - startupBurst.startedAt) < POST_STARTUP_BURST_MAX_MS) {
         clearTimeout(startupBurst.timerId);
-        startupBurst.timerId = setTimeout(() => { startupBurst.active = false; }, POST_STARTUP_BURST_EXTEND_MS);
+        startupBurst.timerId = setTimeout(() => { startupBurst.active = false; _seededTabIds.clear(); }, POST_STARTUP_BURST_EXTEND_MS);
     }
     if (options.autoCloseTab) {
         if (!alreadyComplete) {

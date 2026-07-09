@@ -102,10 +102,6 @@ class TabsInfo {
         if (this.nbDuplicateTabs.has(windowId)) this.nbDuplicateTabs.delete(windowId);
     }
 
-    registerSessionId(sessionId) {
-        this.knownSessionIds.add(sessionId);
-    }
-
     storeTabSessionId(tabId, sessionId) {
         this.knownSessionIds.add(sessionId);
         this.tabSessionIdMap.set(tabId, sessionId);
@@ -137,7 +133,7 @@ class TabsInfo {
 
     setPendingCheck(tabId, promise) {
         this.pendingChecks.set(tabId, promise);
-        promise.finally(() => this.pendingChecks.delete(tabId));
+        promise.finally(() => { if (this.pendingChecks.get(tabId) === promise) this.pendingChecks.delete(tabId); });
     }
 
     awaitPendingCheck(tabId) {

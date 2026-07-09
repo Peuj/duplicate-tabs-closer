@@ -8,11 +8,11 @@ const wait = timeout => new Promise(resolve => setTimeout(resolve, timeout));
 const debounce = (func, delay, immediate = true) => {
     const storedArguments = new Map();
     const debouncedFn = (...args) => {
-        const windowId = args[0] || 1;
+        const windowId = args[0] ?? 1;
         const later = () => {
             const laterArgs = storedArguments.get(windowId);
             if (laterArgs) {
-                func(laterArgs);
+                func(...laterArgs);
                 setTimeout(later, delay);
                 storedArguments.set(windowId, null);
             }
@@ -23,17 +23,17 @@ const debounce = (func, delay, immediate = true) => {
 
         if (immediate) {
             if (!storedArguments.has(windowId)) {
-                func(args[1] || args[0]);
+                func(...args);
                 setTimeout(later, delay);
                 storedArguments.set(windowId, null);
             }
             else {
-                storedArguments.set(windowId, args[1] || args[0] || 1);
+                storedArguments.set(windowId, args);
             }
         }
         else {
             const alreadyQueued = storedArguments.has(windowId);
-            storedArguments.set(windowId, args[1] || args[0] || 1);
+            storedArguments.set(windowId, args);
             if (!alreadyQueued) setTimeout(later, delay);
         }
     };
@@ -59,8 +59,8 @@ const getTab = (tabId, silent = false) => new Promise((resolve) => {
 });
 
 const getTabs = (queryInfo) => new Promise((resolve) => {
-    queryInfo.windowType = "normal";
-    chrome.tabs.query(queryInfo, tabs => {
+    const info = { ...queryInfo, windowType: "normal" };
+    chrome.tabs.query(info, tabs => {
         if (chrome.runtime.lastError) console.error("getTabs error:", chrome.runtime.lastError.message);
         resolve(chrome.runtime.lastError ? null : tabs);
     });
@@ -68,7 +68,7 @@ const getTabs = (queryInfo) => new Promise((resolve) => {
 
 // eslint-disable-next-line no-unused-vars
 const getWindows = () => new Promise((resolve) => {
-    chrome.windows.getAll(null, windows => {
+    chrome.windows.getAll({}, windows => {
         if (chrome.runtime.lastError) console.error("getWindows error:", chrome.runtime.lastError.message);
         resolve(chrome.runtime.lastError ? null : windows);
     });
@@ -282,13 +282,13 @@ const titleSimilarity = (a, b) => {
     const m = s1.length, n = s2.length;
     if (m === 0 && n === 0) return 100;
     if (m === 0 || n === 0) return 0;
-    const prev = Array.from({ length: n + 1 }, (_, i) => i);
+    let prev = Array.from({ length: n + 1 }, (_, i) => i);
     for (let i = 1; i <= m; i++) {
         const curr = [i];
         for (let j = 1; j <= n; j++) {
             curr[j] = s1[i-1] === s2[j-1] ? prev[j-1] : 1 + Math.min(prev[j], curr[j-1], prev[j-1]);
         }
-        prev.splice(0, prev.length, ...curr);
+        prev = curr;
     }
     return Math.round((1 - prev[n] / Math.max(m, n)) * 100);
 };

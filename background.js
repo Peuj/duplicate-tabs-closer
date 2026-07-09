@@ -48,7 +48,6 @@ const toggleMonitorPause = async () => {
 	monitoringPaused = !monitoringPaused;
 	await chrome.storage.session.set({ monitoringPaused });
 	if (monitoringPaused) {
-		await setStoredOption("onDuplicateTabDetected", "N", false);
 		chrome.runtime.sendMessage({ action: "setStoredOption", data: { name: "onDuplicateTabDetected", value: "N" } }).catch(() => {});
 		setPausedBadge();
 		chrome.runtime.sendMessage({ action: "updateDuplicateTabsTable", data: { duplicateTabs: null } }).catch(() => {});
@@ -57,6 +56,11 @@ const toggleMonitorPause = async () => {
 		setBadgeIcon();
 		updateBadgeStyle();
 		refreshGlobalDuplicateTabsInfo();
+		// Restore the panel dropdown to the actual stored mode (was visually overridden to "N" on pause).
+		chrome.runtime.sendMessage({ action: "setStoredOption", data: { name: "onDuplicateTabDetected", value: options.autoCloseTab ? "A" : "N" } }).catch(() => {});
+		// initializeTabSessionIds is intentionally not re-called on unpause: tabs created during
+		// the pause have no session-ID tracking, but they are re-seeded as normal tabs by
+		// tabsInfo.initialize() above — the safe fallback (no false intentional-dup risk).
 	}
 };
 
@@ -155,7 +159,7 @@ const onBeforeNavigate = async (details) => {
 const onCompletedTab = async (details) => {
 	await ensureInitialized();
 	if (monitoringPaused) return;
-	if ((details.frameId == 0) && (details.tabId !== -1)) {
+	if ((details.frameId === 0) && (details.tabId !== -1)) {
 		if (tabsInfo.isClosingTab(details.tabId)) return;
 		const tab = await getTab(details.tabId);
 		if (tab) {
@@ -239,6 +243,7 @@ const onReplacedTab = async (addedTabId, removedTabId) => {
 		tabsInfo.setTab(addedTabId, prevLastComplete !== null
 			? { url: tab.url, complete: true, lastComplete: prevLastComplete }
 			: { url: tab.url });
+		if (startupBurst.active) { debouncedBatchClose(tab.windowId); return; }
 		await searchForDuplicateTabsToClose(tab);
 	}
 };
@@ -293,7 +298,7 @@ const onReferenceFragmentUpdated = async (details) => {
 
 const onCommand = async (command) => {
 	await ensureInitialized();
-	if (command == "close-duplicate-tabs") {
+	if (command === "close-duplicate-tabs") {
 		const windowId = options.searchInAllWindows ? undefined : await getActiveWindowId();
 		closeDuplicateTabs(windowId, true);
 	}

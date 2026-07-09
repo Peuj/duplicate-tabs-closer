@@ -162,7 +162,7 @@ const initializeOptions = async () => {
     } else {
         const storedKeys = Object.keys(storedOptions).sort();
         const defaultKeys = Object.keys(defaultOptions).sort();
-        if (JSON.stringify(storedKeys) !== JSON.stringify(defaultKeys)) {
+        if (storedKeys.length !== defaultKeys.length || storedKeys.some((k, i) => k !== defaultKeys[i])) {
             const obsoleteKeys = getNotInReferenceKeys(storedKeys, defaultKeys);
             if (obsoleteKeys.length > 0) {
                 obsoleteKeys.forEach(key => delete storedOptions[key]);
@@ -287,7 +287,7 @@ const whiteListToPattern = (whiteList) => {
             let pattern = "^";
             for (let index = 0; index < length; index += 1) {
                 const character = normalizedLine.charAt(index);
-                pattern = (character === "*") ? `${pattern}.*?` : pattern + escapeRegexChar(character);
+                pattern = (character === "*") ? `${pattern}.*` : pattern + escapeRegexChar(character);
             }
             whiteListPatterns.add(new RegExp(`${pattern}\\/?$`));
         }
@@ -304,7 +304,7 @@ const parsePatternRules = (text) => {
         .filter(line => (line.match(/\*/g) || []).length <= MAX_WILDCARDS)
         .map(line => {
             let pattern = "^";
-            for (const ch of line) pattern = ch === "*" ? `${pattern}.*?` : pattern + escapeRegexChar(ch);
+            for (const ch of line) pattern = ch === "*" ? `${pattern}.*` : pattern + escapeRegexChar(ch);
             return { source: line, regex: new RegExp(`${pattern}$`) };
         });
 };

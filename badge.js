@@ -74,7 +74,7 @@ const updateBadgesValue = async (duplicateTabsGroups, windowId, triggerTabId) =>
 	if (options.searchInAllWindows) {
 		const windows = await getWindows();
 		if (!windows) return;
-		windows.forEach(window => updateBadgeValue(nbDuplicateTabs, window.id, window.id === windowId ? triggerTabId : null));
+		await Promise.all(windows.map(window => updateBadgeValue(nbDuplicateTabs, window.id, window.id === windowId ? triggerTabId : null)));
 	}
 	else {
 		updateBadgeValue(nbDuplicateTabs, windowId, triggerTabId);
