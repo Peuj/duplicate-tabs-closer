@@ -327,48 +327,6 @@ chrome.storage.onChanged.addListener((changes, area) => {
 		refreshGlobalDuplicateTabsInfo();
 	});
 });
-const onCommittedTab = async (details) => {
-	if (!environment.isChrome) return;
-	if (details.frameId !== 0 || details.tabId <= 0) return;
-	await ensureInitialized();
-	const tab = await getTab(details.tabId);
-	if (tab && tab.id > 0) setBadge(tab.windowId, tab.id);
-};
-
-const onHistoryStateUpdated = async (details) => {
-	await ensureInitialized();
-	if (monitoringPaused) return;
-	if (details.frameId !== 0 || details.tabId === -1) return;
-	if (isBlankURL(details.url)) return;
-	if (!tabsInfo.hasTab(details.tabId)) return;
-	if (tabsInfo.isClosingTab(details.tabId)) return;
-	const prev = _lastNavigate.get(details.tabId);
-	if (prev && prev.url === details.url && (Date.now() - prev.ts) < 1000) return;
-	_lastNavigate.set(details.tabId, { url: details.url, ts: Date.now() });
-	const tab = await getTab(details.tabId);
-	if (!tab) return;
-	if (!tabsInfo.hasUrlChanged(tab)) return;
-	tabsInfo.setTab(tab.id, { url: details.url, complete: true });
-	dispatchTabCompletion(tab, tab.id);
-};
-
-const onReferenceFragmentUpdated = async (details) => {
-	await ensureInitialized();
-	if (monitoringPaused) return;
-	if (details.frameId !== 0 || details.tabId === -1) return;
-	if (isBlankURL(details.url)) return;
-	if (!tabsInfo.hasTab(details.tabId)) return;
-	if (tabsInfo.isClosingTab(details.tabId)) return;
-	const prev = _lastNavigate.get(details.tabId);
-	if (prev && prev.url === details.url && (Date.now() - prev.ts) < 1000) return;
-	_lastNavigate.set(details.tabId, { url: details.url, ts: Date.now() });
-	const tab = await getTab(details.tabId);
-	if (!tab) return;
-	if (!tabsInfo.hasUrlChanged(tab)) return;
-	tabsInfo.setTab(tab.id, { url: details.url, complete: true });
-	dispatchTabCompletion(tab, tab.id);
-};
-
 chrome.tabs.onCreated.addListener(onCreatedTab);
 chrome.webNavigation.onBeforeNavigate.addListener(onBeforeNavigate);
 chrome.webNavigation.onCommitted.addListener(onCommittedTab);
