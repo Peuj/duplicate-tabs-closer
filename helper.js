@@ -252,7 +252,9 @@ const _sendMessageOnce = (action, data) => new Promise((resolve, reject) => {
     const CHROME_SEND_MESSAGE_CALLBACK_NO_RESPONSE_MESSAGE = "The message port closed before a response was received.";
     chrome.runtime.sendMessage({ action: action, data: data }, response => {
         if (chrome.runtime.lastError) {
-            if (chrome.runtime.lastError.message === CHROME_SEND_MESSAGE_CALLBACK_NO_RESPONSE_MESSAGE) {
+            const msg = chrome.runtime.lastError.message || "";
+            if (msg === CHROME_SEND_MESSAGE_CALLBACK_NO_RESPONSE_MESSAGE
+                    || msg.includes("receiving end does not exist")) {
                 resolve(undefined);
             } else {
                 reject(chrome.runtime.lastError);
