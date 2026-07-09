@@ -40,7 +40,10 @@ const buildTabRow = (duplicateTab, activeWindowId) => {
     }
     if (duplicateTab.whitelisted) {
         const badge = document.createElement("span");
-        badge.className = "whitelist-badge fa-solid fa-list-check";
+        // Alternative (file-lines + shield): badge.innerHTML = '<span class="fa-solid fa-file-lines wb-base"></span>' + '<span class="fa-solid fa-shield-halved wb-shield"></span>';
+        badge.className = "whitelist-badge wb-stack";
+        badge.innerHTML = '<span class="fa-solid fa-clipboard-check wb-base"></span>'
+            + '<span class="fa-solid fa-shield-halved wb-shield"></span>';
         badge.title = chrome.i18n.getMessage("whitelistedTab");
         tdTitle.appendChild(badge);
         tdTitle.appendChild(document.createTextNode(" "));

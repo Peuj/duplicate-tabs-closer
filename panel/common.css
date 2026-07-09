@@ -304,7 +304,30 @@ html.theme-violet {
 
 .whitelist-badge {
     font-size: 11px;
-    opacity: 0.7;
+}
+
+.wb-stack {
+    display: inline-block;
+    position: relative;
+    width: 1em;
+    height: 1em;
+    vertical-align: -0.15em;
+    line-height: 0;
+}
+
+.wb-base {
+    font-size: 1em;
+    line-height: 1;
+    color: #b0b0b0;
+}
+
+.wb-shield {
+    position: absolute;
+    font-size: 0.6em;
+    right: -0.25em;
+    bottom: -0.2em;
+    color: var(--dtc-header-bg);
+    opacity: 0.95;
 }
 
 .tab-row-duplicate td {
