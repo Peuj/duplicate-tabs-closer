@@ -108,7 +108,7 @@ Controls how two tabs are compared to determine whether they are duplicates.
 | **Ignore case in URL** | off | Treats uppercase and lowercase as equal (`Example.com` = `example.com`). |
 | **Ignore 'www' in URL domain name** | off | Treats `www.example.com` and `example.com` as identical. |
 | **Ignore hash part in URL** | off | Ignores everything after `#` (`page.html#intro` = `page.html#setup`). Has no effect when *Ignore path part* is enabled. |
-| **Ignore search part in URL** | off | Ignores the query string (everything after `?`). Has no effect when *Ignore path part* is enabled. |
+| **Ignore query parameters in URL (search part)** | off | Ignores the query string (everything after `?`). Has no effect when *Ignore path part* is enabled. |
 | **Ignore path part in URL (domain only)** | off | Compares only the origin (scheme + domain), ignoring path, query string, and hash. When this is enabled, *Ignore hash part* and *Ignore search part* are redundant. |
 | **Compare with title** | off | Two tabs are also considered duplicates when their page titles match (see *% title similarity* below). Useful for pages that display the same title across different URLs. |
 | **% title similarity** | 100 | Minimum similarity percentage (1–100) for two titles to be considered a match. `100` requires an exact match (case-insensitive). Only active when *Compare with title* is enabled. |
@@ -194,7 +194,7 @@ In the duplicate tabs list, tabs that will be closed show a strikethrough title.
 
 * **Grouped view:** click the group icon in the duplicate tabs footer to switch between flat and grouped views. In grouped view, duplicate tabs are organised by matching rule group, collapsed by default. Each group shows a count badge and a close button to close all tabs in the group at once. Expand/collapse state per group is preserved while the panel is open. The view preference is saved and shared with the options page.
 
-* **Hide whitelisted tabs:** click the hide-whitelisted icon in the duplicate tabs footer to show or hide whitelisted tabs in the list. When active, tabs whose URLs match a whitelist entry are hidden from the panel. The preference is saved and shared with the options page. When hiding is active, the **Close duplicates** button also skips whitelisted tabs.
+* **Hide whitelisted tabs:** click the hide-whitelisted icon in the duplicate tabs footer to suppress whitelisted duplicate groups from the badge count and popup list. A small count bubble on the button shows how many groups are hidden. When active, the **Close duplicates** button also skips whitelisted tabs. The preference is saved and shared with the options page.
 
 * **Hide options column:** in two-column layout, click the chevron tab on the left edge of the duplicate tabs column to hide the options column. The popup narrows to focus on the duplicate tabs list. Click the chevron again to restore the options column. The state is saved and restored the next time the popup is opened.
 
@@ -215,7 +215,7 @@ In the duplicate tabs list, tabs that will be closed show a strikethrough title.
 | Ignore case in URL | No |
 | Ignore 'www' in URL domain name | No |
 | Ignore hash part in URL | No |
-| Ignore search part in URL | No |
+| Ignore query parameters in URL (search part) | No |
 | Ignore path part in URL | Yes |
 | Compare with title | Yes |
 | URL pattern rules | Yes |
