@@ -169,6 +169,7 @@ body {
 }
 
 #hideWhitelistedTabsBtn {
+  position: relative;
   margin-right: 6px;
   opacity: 0.55;
   transition: opacity 0.15s;
@@ -192,6 +193,24 @@ body {
 #hideWhitelistedTabsBtn.disabled {
   opacity: 0.3;
   cursor: not-allowed;
+}
+
+#hideWhitelistedTabsBtn.active[data-wl-count]:not([data-wl-count="0"])::after {
+  content: attr(data-wl-count);
+  position: absolute;
+  top: -5px;
+  right: -6px;
+  background: #0ea5e9;
+  color: #fff;
+  border-radius: 50%;
+  font-size: 8px;
+  min-width: 12px;
+  height: 12px;
+  line-height: 12px;
+  text-align: center;
+  padding: 0 2px;
+  font-weight: 600;
+  pointer-events: none;
 }
 
 .popup-pin-label {

@@ -225,6 +225,7 @@ const setOptions = (storedOptions) => {
     options.showBadgeIfNoDuplicateTabs = storedOptions.showBadgeIfNoDuplicateTabs.value;
     options.skipBlankTabs = storedOptions.skipBlankTabs.value;
     options.openPopupOnDuplicateDetected = storedOptions.openPopupOnDuplicateDetected.value;
+    options.hideWhitelistedTabs = storedOptions.hideWhitelistedTabs.value;
     options.theme = storedOptions.theme.value;
 };
 

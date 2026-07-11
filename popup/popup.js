@@ -186,6 +186,7 @@ const setDuplicateTabsTable = async (duplicateTabs) => {
         hideBtn.setAttribute("aria-disabled", "true");
         hideBtn.setAttribute("disabled", "");
     }
+    hideBtn.dataset.wlCount = String(duplicateTabs ? duplicateTabs.filter(t => t.whitelisted).length : 0);
 };
 
 const resizeDuplicateTabsPanel = (refresh) => {
@@ -509,7 +510,7 @@ const loadListenerEvents = () => {
         if (this.classList.contains("disabled")) return;
         const newValue = !this.classList.contains("active");
         updateHideWhitelistedButton(newValue);
-        saveOption("hideWhitelistedTabs", newValue, false);
+        saveOption("hideWhitelistedTabs", newValue, true);
     });
 
     /* Toggle options panel visibility */

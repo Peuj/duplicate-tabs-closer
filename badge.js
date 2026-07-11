@@ -40,9 +40,13 @@ const setBadge = async (windowId, activeTabId) => {
 
 const getNbDuplicateTabs = (duplicateTabsGroups) => {
 	let nbDuplicateTabs = 0;
-	if (duplicateTabsGroups.size !== 0) {
-		duplicateTabsGroups.forEach(duplicateTabs => (nbDuplicateTabs += duplicateTabs.size - 1));
-	}
+	duplicateTabsGroups.forEach(duplicateTabs => {
+		if (options.hideWhitelistedTabs) {
+			const firstTab = duplicateTabs.values().next().value;
+			if (firstTab && isUrlWhiteListed(firstTab.url)) return;
+		}
+		nbDuplicateTabs += duplicateTabs.size - 1;
+	});
 	return nbDuplicateTabs;
 };
 

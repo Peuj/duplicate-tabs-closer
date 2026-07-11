@@ -302,13 +302,17 @@ html.theme-violet {
     cursor: pointer;
 }
 
-.whitelist-badge {
+.whitelist-row-badge {
     font-size: 11px;
+    color: #888;
+    margin-right: 3px;
+    vertical-align: -0.05em;
 }
 
 .wb-stack {
     display: inline-block;
     position: relative;
+    font-size: 0.875em;
     width: 1em;
     height: 1em;
     vertical-align: -0.15em;
@@ -318,16 +322,13 @@ html.theme-violet {
 .wb-base {
     font-size: 1em;
     line-height: 1;
-    color: #b0b0b0;
 }
 
 .wb-shield {
     position: absolute;
-    font-size: 0.6em;
-    right: -0.25em;
-    bottom: -0.2em;
-    color: var(--dtc-header-bg);
-    opacity: 0.95;
+    font-size: 0.55em;
+    right: -0.3em;
+    bottom: -0.25em;
 }
 
 .tab-row-duplicate td {

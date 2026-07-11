@@ -196,7 +196,7 @@ const loadPopupEvents = () => {
     if (this.classList.contains("disabled")) return;
     const newValue = !this.classList.contains("active");
     updateHideWhitelistedButton(newValue);
-    saveOption("hideWhitelistedTabs", newValue, false);
+    saveOption("hideWhitelistedTabs", newValue, true);
   });
 
 };
@@ -290,6 +290,7 @@ const setDuplicateTabsTable = (duplicateTabs) => {
     hideBtn.setAttribute("aria-disabled", "true");
     hideBtn.setAttribute("disabled", "");
   }
+  hideBtn.dataset.wlCount = String(duplicateTabs ? duplicateTabs.filter(t => t.whitelisted).length : 0);
   if (duplicateTabs) resizeDuplicateTabsPanel(isUpdate);
 };
 
