@@ -255,24 +255,13 @@ const findRetainedTab = (observedTab, retainedTabs, matchingTabURL, matchingTabT
     // 1. Direct URL key
     let tab = retainedTabs.get(matchingTabURL);
     if (tab) return { tab, key: matchingTabURL };
-    // 2. Hash-asymmetric match (one tab has hash, the other doesn't, same base URL)
-    if (!options.ignoreHashPart && isValidURL(observedTab.url)) {
-        const observedHasHash = observedTab.url.includes("#");
-        const baseKey = getMatchingURL(observedTab.url.split("#")[0]) + (options.searchPerContainer ? observedTab.cookieStoreId : "");
-        for (const [key, candidate] of retainedTabs) {
-            if (candidate.url.includes("#") !== observedHasHash &&
-                getMatchingURL(candidate.url.split("#")[0]) + (options.searchPerContainer ? candidate.cookieStoreId : "") === baseKey) {
-                return { tab: candidate, key };
-            }
-        }
-    }
-    // 3. Fuzzy title key
+    // 2. Fuzzy title key
     if (matchingTabTitle) {
         const titleKey = findFuzzyTitleKey(observedTab.title, retainedTabs) || matchingTabTitle;
         tab = retainedTabs.get(titleKey);
         if (tab) return { tab, key: titleKey };
     }
-    // 4. URL pattern key
+    // 3. URL pattern key
     if (options.urlRegexRules.length > 0) {
         const urlPatSource = findPatternSource(observedTab.url, options.urlRegexRules);
         if (urlPatSource) {
@@ -281,7 +270,7 @@ const findRetainedTab = (observedTab, retainedTabs, matchingTabURL, matchingTabT
             if (tab) return { tab, key: patKey };
         }
     }
-    // 5. Title pattern key
+    // 4. Title pattern key
     if (isTabComplete(observedTab) && options.titleRegexRules.length > 0) {
         const titlePatSource = findPatternSource(observedTab.title, options.titleRegexRules);
         if (titlePatSource) {
