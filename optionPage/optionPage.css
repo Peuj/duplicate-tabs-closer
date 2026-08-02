@@ -290,3 +290,11 @@ body {
   cursor: pointer;
   margin: 0;
 }
+
+.file-access-warning {
+  color: #b45309;
+}
+
+[data-theme="dark"] .file-access-warning {
+  color: #fbbf24;
+}

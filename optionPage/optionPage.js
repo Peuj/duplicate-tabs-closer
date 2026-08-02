@@ -85,6 +85,7 @@ const loadPopupEvents = () => {
     const whiteList = cleanUpWhiteList(this.value);
     setWhiteList(whiteList);
     saveOption(this.id, whiteList, true);
+    updateFileAccessWarning();
   });
 
   /* Save URL/title pattern rules */
@@ -204,6 +205,16 @@ const loadPopupEvents = () => {
 const setWhiteList = (whiteList) => {
   const el = document.getElementById("whiteList");
   if (el) el.value = whiteList;
+};
+
+const updateFileAccessWarning = async () => {
+  const warningEl = document.getElementById("fileAccessWarning");
+  if (!warningEl) return;
+  const whiteListEl = document.getElementById("whiteList");
+  const hasFilePattern = whiteListEl && whiteListEl.value.split("\n").some(line => line.trim().startsWith("file://"));
+  if (!hasFilePattern) { warningEl.classList.add("hidden"); return; }
+  const allowed = await chrome.extension.isAllowedFileSchemeAccess();
+  warningEl.classList.toggle("hidden", allowed);
 };
 
 const cleanUpWhiteList = (whiteList) => {
@@ -373,6 +384,7 @@ const setPanelOptions = async () => {
     setPanelOption({ storedOption: storedOption, value: storedOptions[storedOption].value, isLockedKey: lockedKeys.includes(storedOption) });
   }
   updateIgnorePathPartDependents(storedOptions.ignorePathPart ? storedOptions.ignorePathPart.value : false);
+  updateFileAccessWarning();
 };
 
 const handleMessage = (message) => {
