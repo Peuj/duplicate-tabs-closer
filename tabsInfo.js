@@ -120,7 +120,6 @@ class TabsInfo {
         if (!this.intentionalDuplicates.has(tabId)) return;
         this.intentionalDuplicates.delete(tabId);
         this._persistIntentionalDuplicates();
-        dtcLog("tabsInfo", "intentional-dup-clear", { tabId });
     }
 
     _persistIntentionalDuplicates() {
