@@ -107,9 +107,17 @@
     "message": "Правила URL",
     "description": "URL pattern rules"
   },
+  "urlRegexRulesHint": {
+    "message": "Используйте * как шаблон или /regex/flags для регулярных выражений",
+    "description": "Hint below URL pattern rules textarea"
+  },
   "titleRegexRules": {
     "message": "Правила заголовков",
     "description": "Title pattern rules"
+  },
+  "titleRegexRulesHint": {
+    "message": "Используйте * как шаблон или /regex/flags для регулярных выражений",
+    "description": "Hint below title pattern rules textarea"
   },
   "duplicatetabs": {
     "message": "Дубликаты вкладок",

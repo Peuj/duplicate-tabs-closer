@@ -107,9 +107,17 @@
     "message": "Regras de padrão de URL",
     "description": "URL pattern rules"
   },
+  "urlRegexRulesHint": {
+    "message": "Use * como curinga, ou /regex/flags para expressões regulares",
+    "description": "Hint below URL pattern rules textarea"
+  },
   "titleRegexRules": {
     "message": "Regras de padrão de título",
     "description": "Title pattern rules"
+  },
+  "titleRegexRulesHint": {
+    "message": "Use * como curinga, ou /regex/flags para expressões regulares",
+    "description": "Hint below title pattern rules textarea"
   },
   "duplicatetabs": {
     "message": "Abas duplicadas",

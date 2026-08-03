@@ -107,9 +107,17 @@
     "message": "URL パターンルール",
     "description": "URL pattern rules"
   },
+  "urlRegexRulesHint": {
+    "message": "ワイルドカードには * を、正規表現には /regex/flags を使用してください",
+    "description": "Hint below URL pattern rules textarea"
+  },
   "titleRegexRules": {
     "message": "タイトルパターンルール",
     "description": "Title pattern rules"
+  },
+  "titleRegexRulesHint": {
+    "message": "ワイルドカードには * を、正規表現には /regex/flags を使用してください",
+    "description": "Hint below title pattern rules textarea"
   },
   "duplicatetabs": {
     "message": "重複したタブ",

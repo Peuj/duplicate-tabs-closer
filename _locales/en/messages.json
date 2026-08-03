@@ -107,9 +107,17 @@
     "message": "URL pattern rules",
     "description": "URL pattern rules"
   },
+  "urlRegexRulesHint": {
+    "message": "Use * as wildcard, or /regex/flags for regex patterns",
+    "description": "Hint below URL pattern rules textarea"
+  },
   "titleRegexRules": {
     "message": "Title pattern rules",
     "description": "Title pattern rules"
+  },
+  "titleRegexRulesHint": {
+    "message": "Use * as wildcard, or /regex/flags for regex patterns",
+    "description": "Hint below title pattern rules textarea"
   },
   "duplicatetabs": {
     "message": "Duplicate tabs",

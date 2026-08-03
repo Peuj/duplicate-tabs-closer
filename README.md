@@ -119,11 +119,12 @@ A list of URL patterns, one per line. Any two open tabs whose URLs both match th
 
 Useful for grouping all tabs from a single service as duplicates of each other regardless of the specific path.
 
-**Pattern syntax:** `*` matches any sequence of characters. All other characters match literally.
+**Pattern syntax:** `*` matches any sequence of characters. All other characters match literally. For more complex matching, wrap the pattern in `/` slashes to use a regular expression: `/regex/flags`.
 
 ```text
 *://docs.google.com/*
 *://github.com/*/pull/*
+/example\.com\/(threads|t)\//
 ```
 
 #### Title Pattern Rules
@@ -132,14 +133,14 @@ Works identically to URL Pattern Rules but is applied to the page title instead 
 
 Only active when *Detect duplicates by* is set to *URL match or title match*.
 
-**Pattern syntax:** `*` matches any sequence of characters. All other characters match literally.
+**Pattern syntax:** `*` matches any sequence of characters. All other characters match literally. Wrap in `/` slashes for regex: `/regex/flags`.
 
 ```text
 * - Gmail
 GitHub - *
 ```
 
-> **Pattern syntax note:** The Whitelist, URL Pattern Rules, and Title Pattern Rules all use the same simple wildcard syntax. The only special character is `*`, which matches any sequence of characters (including none). This is **not** full regular expression syntax. Characters such as `.`, `+`, `?`, `(`, `)` etc. are matched literally, not as regex metacharacters.
+> **Pattern syntax note:** The Whitelist, URL Pattern Rules, and Title Pattern Rules all support the same syntax. Use `*` as a wildcard (matches any sequence of characters). To use a regular expression, wrap the pattern in `/` slashes: `/regex/flags`. Plain patterns treat `.`, `+`, `?`, `(`, `)` etc. as literals, not regex metacharacters.
 
 ### Scope
 

@@ -302,13 +302,19 @@ const whiteListToPattern = (whiteList) => {
 const parsePatternRules = (text) => {
     const MAX_LINE_LENGTH = 200;
     const MAX_WILDCARDS = 5;
-    return text.split("\n")
-        .map(line => line.trim().slice(0, MAX_LINE_LENGTH))
-        .filter(line => line.length > 0)
-        .filter(line => (line.match(/\*/g) || []).length <= MAX_WILDCARDS)
-        .map(line => {
+    const results = [];
+    for (const rawLine of text.split("\n")) {
+        const line = rawLine.trim().slice(0, MAX_LINE_LENGTH);
+        if (!line) continue;
+        const regexMatch = line.match(/^\/(.+)\/([gimsuy]*)$/);
+        if (regexMatch) {
+            try { results.push({ source: line, regex: new RegExp(regexMatch[1], regexMatch[2]) }); } catch (_) {}
+        } else {
+            if ((line.match(/\*/g) || []).length > MAX_WILDCARDS) continue;
             let pattern = "^";
             for (const ch of line) pattern = ch === "*" ? `${pattern}.*` : pattern + escapeRegexChar(ch);
-            return { source: line, regex: new RegExp(`${pattern}$`) };
-        });
+            results.push({ source: line, regex: new RegExp(`${pattern}$`) });
+        }
+    }
+    return results;
 };

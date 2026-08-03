@@ -107,9 +107,17 @@
     "message": "URL 比對規則",
     "description": "URL pattern rules"
   },
+  "urlRegexRulesHint": {
+    "message": "使用 * 作為萬用字元，或使用 /regex/flags 表示正規表示式",
+    "description": "Hint below URL pattern rules textarea"
+  },
   "titleRegexRules": {
     "message": "標題比對規則",
     "description": "Title pattern rules"
+  },
+  "titleRegexRulesHint": {
+    "message": "使用 * 作為萬用字元，或使用 /regex/flags 表示正規表示式",
+    "description": "Hint below title pattern rules textarea"
   },
   "duplicatetabs": {
     "message": "重複的分頁",

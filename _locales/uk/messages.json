@@ -107,9 +107,17 @@
     "message": "Правила URL",
     "description": "URL pattern rules"
   },
+  "urlRegexRulesHint": {
+    "message": "Використовуйте * як шаблон або /regex/flags для регулярних виразів",
+    "description": "Hint below URL pattern rules textarea"
+  },
   "titleRegexRules": {
     "message": "Правила заголовків",
     "description": "Title pattern rules"
+  },
+  "titleRegexRulesHint": {
+    "message": "Використовуйте * як шаблон або /regex/flags для регулярних виразів",
+    "description": "Hint below title pattern rules textarea"
   },
   "duplicatetabs": {
     "message": "Дублікати вкладок",

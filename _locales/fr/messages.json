@@ -107,9 +107,17 @@
     "message": "Règles de correspondance URL",
     "description": "URL pattern rules"
   },
+  "urlRegexRulesHint": {
+    "message": "Utilisez * comme joker, ou /regex/flags pour les expressions régulières",
+    "description": "Hint below URL pattern rules textarea"
+  },
   "titleRegexRules": {
     "message": "Règles de correspondance titre",
     "description": "Title pattern rules"
+  },
+  "titleRegexRulesHint": {
+    "message": "Utilisez * comme joker, ou /regex/flags pour les expressions régulières",
+    "description": "Hint below title pattern rules textarea"
   },
   "duplicatetabs": {
     "message": "Onglets en doublon",
