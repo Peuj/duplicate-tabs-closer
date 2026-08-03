@@ -83,9 +83,21 @@
     "message": "Ignorer la casse de l'URL",
     "description": "Ignorer la casse de l'URL"
   },
-  "compareWithTitle": {
-    "message": "Comparer avec le titre",
-    "description": "Compare with title"
+  "titleMatchMode": {
+    "message": "Détecter les doublons par",
+    "description": "Title matching mode"
+  },
+  "titleMatchModeN": {
+    "message": "URL uniquement",
+    "description": "No title matching"
+  },
+  "titleMatchModeT": {
+    "message": "Correspondance URL ou titre",
+    "description": "Match tabs by URL or by title"
+  },
+  "titleMatchModeU": {
+    "message": "URL identique et même titre",
+    "description": "Tabs with the same URL but different titles are not considered duplicates"
   },
   "titleSimilarityThreshold": {
     "message": "% similitude du titre",

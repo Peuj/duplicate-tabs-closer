@@ -83,9 +83,21 @@
     "message": "Игнорировать регистр букв в URL",
     "description": "Ignore case in URL"
   },
-  "compareWithTitle": {
-    "message": "Сравнить заголовки вкладок",
-    "description": "Compare with title"
+  "titleMatchMode": {
+    "message": "Определять дубликаты по",
+    "description": "Title matching mode"
+  },
+  "titleMatchModeN": {
+    "message": "Только URL",
+    "description": "No title matching"
+  },
+  "titleMatchModeT": {
+    "message": "URL или заголовок совпадают",
+    "description": "Match tabs by URL or by title"
+  },
+  "titleMatchModeU": {
+    "message": "URL совпадает и заголовок одинаковый",
+    "description": "Tabs with the same URL but different titles are not considered duplicates"
   },
   "titleSimilarityThreshold": {
     "message": "% совпадение заголовков",

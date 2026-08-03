@@ -130,21 +130,23 @@
                                         <span i18n-content="ignorePathPart"></span>
                                     </label>
                                 </div>
+                                <div class="checkboxes checkboxes-regex-label">
+                                    <label for="urlRegexRules"><span i18n-content="urlRegexRules"></span></label>
+                                    <textarea id="urlRegexRules" class="form-control rules-textarea" rows="3"></textarea>
+                                </div>
                                 <div class="checkboxes">
-                                    <label for="compareWithTitle">
-                                        <input type="checkbox" class="checkbox-filter" id="compareWithTitle" />
-                                        <span i18n-content="compareWithTitle"></span>
-                                    </label>
+                                    <label for="titleMatchMode"><span i18n-content="titleMatchMode"></span></label>
+                                    <select class="form-select form-control-xs" id="titleMatchMode" name="titleMatchMode">
+                                        <option value="N" i18n-content="titleMatchModeN"></option>
+                                        <option value="T" i18n-content="titleMatchModeT"></option>
+                                        <option value="U" i18n-content="titleMatchModeU"></option>
+                                    </select>
                                 </div>
                                 <div class="checkboxes checkboxes-threshold">
                                     <label>
                                         <input type="number" id="titleSimilarityThreshold" min="1" max="100" class="form-control-xs" disabled />
                                         <span i18n-content="titleSimilarityThreshold"></span>
                                     </label>
-                                </div>
-                                <div class="checkboxes checkboxes-regex-label">
-                                    <label for="urlRegexRules"><span i18n-content="urlRegexRules"></span></label>
-                                    <textarea id="urlRegexRules" class="form-control rules-textarea" rows="3"></textarea>
                                 </div>
                                 <div class="checkboxes checkboxes-regex-label">
                                     <label for="titleRegexRules"><span i18n-content="titleRegexRules"></span></label>

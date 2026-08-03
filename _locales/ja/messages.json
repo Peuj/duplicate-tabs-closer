@@ -83,9 +83,21 @@
     "message": "URLの大文字と小文字を区別しない",
     "description": "Ignore case in URL"
   },
-  "compareWithTitle": {
-    "message": "タブのタイトルを比較する",
-    "description": "Compare with title"
+  "titleMatchMode": {
+    "message": "重複タブの検出方法",
+    "description": "Title matching mode"
+  },
+  "titleMatchModeN": {
+    "message": "URLのみ",
+    "description": "No title matching"
+  },
+  "titleMatchModeT": {
+    "message": "URLまたはタイトルが一致",
+    "description": "Match tabs by URL or by title"
+  },
+  "titleMatchModeU": {
+    "message": "URLが一致かつ同じタイトル",
+    "description": "Tabs with the same URL but different titles are not considered duplicates"
   },
   "titleSimilarityThreshold": {
     "message": "% タイトルの一致率",

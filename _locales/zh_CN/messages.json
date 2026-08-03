@@ -83,9 +83,21 @@
     "message": "忽略 URL 中的大小写",
     "description": "Ignore case in URL"
   },
-  "compareWithTitle": {
-    "message": "比较依据标签页标题",
-    "description": "Compare with title"
+  "titleMatchMode": {
+    "message": "检测重复标签依据",
+    "description": "Title matching mode"
+  },
+  "titleMatchModeN": {
+    "message": "仅 URL",
+    "description": "No title matching"
+  },
+  "titleMatchModeT": {
+    "message": "URL 或标题匹配",
+    "description": "Match tabs by URL or by title"
+  },
+  "titleMatchModeU": {
+    "message": "URL 匹配且标题相同",
+    "description": "Tabs with the same URL but different titles are not considered duplicates"
   },
   "titleSimilarityThreshold": {
     "message": "% 标题相似度",

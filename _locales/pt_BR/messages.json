@@ -83,9 +83,21 @@
     "message": "Ignorar maiúsculas e minúsculas no URL",
     "description": "Ignore case in URL"
   },
-  "compareWithTitle": {
-    "message": "Comparar com o título",
-    "description": "Compare with title"
+  "titleMatchMode": {
+    "message": "Detectar duplicatas por",
+    "description": "Title matching mode"
+  },
+  "titleMatchModeN": {
+    "message": "Apenas URL",
+    "description": "No title matching"
+  },
+  "titleMatchModeT": {
+    "message": "URL ou título coincide",
+    "description": "Match tabs by URL or by title"
+  },
+  "titleMatchModeU": {
+    "message": "URL e título iguais",
+    "description": "Tabs with the same URL but different titles are not considered duplicates"
   },
   "titleSimilarityThreshold": {
     "message": "% similaridade de título",

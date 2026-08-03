@@ -110,8 +110,8 @@ Controls how two tabs are compared to determine whether they are duplicates.
 | **Ignore hash part in URL** | off | Ignores everything after `#` (`page.html#intro` = `page.html#setup`). Has no effect when *Ignore path part* is enabled. |
 | **Ignore query parameters in URL (search part)** | off | Ignores the query string (everything after `?`). Has no effect when *Ignore path part* is enabled. |
 | **Ignore path part in URL (domain only)** | off | Compares only the origin (scheme + domain), ignoring path, query string, and hash. When this is enabled, *Ignore hash part* and *Ignore search part* are redundant. |
-| **Compare with title** | off | Two tabs are also considered duplicates when their page titles match (see *% title similarity* below). Useful for pages that display the same title across different URLs. |
-| **% title similarity** | 100 | Minimum similarity percentage (1–100) for two titles to be considered a match. `100` requires an exact match (case-insensitive). Only active when *Compare with title* is enabled. |
+| **Detect duplicates by** | URL only | Controls how tabs are matched: **URL only** uses URL comparison only (default). **URL match or title match** also closes tabs whose page titles match, even across different URLs: useful for pages that display the same title on different URLs. **URL match and same title** keeps tabs with the same URL but different titles: useful when you rename tabs to distinguish them. |
+| **% title similarity** | 100 | Minimum similarity percentage (1–100) for two titles to be considered a match. `100` requires an exact match (case-insensitive). Only active when *Detect duplicates by* is set to *URL match or title match*. |
 
 #### URL Pattern Rules
 
@@ -129,6 +129,8 @@ Useful for grouping all tabs from a single service as duplicates of each other r
 #### Title Pattern Rules
 
 Works identically to URL Pattern Rules but is applied to the page title instead of the URL. Any two tabs whose titles both match the same pattern are treated as duplicates.
+
+Only active when *Detect duplicates by* is set to *URL match or title match*.
 
 **Pattern syntax:** `*` matches any sequence of characters. All other characters match literally.
 
@@ -217,7 +219,7 @@ In the duplicate tabs list, tabs that will be closed show a strikethrough title.
 | Ignore hash part in URL | No |
 | Ignore query parameters in URL (search part) | No |
 | Ignore path part in URL | Yes |
-| Compare with title | Yes |
+| Detect duplicates by | Yes |
 | URL pattern rules | Yes |
 | Title pattern rules | No |
 

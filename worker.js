@@ -45,6 +45,10 @@ const restoreDiscardedUrls = (tabs) => {
     }
 };
 
+const titleMatchesExact = (tab1, tab2) =>
+    isTabComplete(tab1) && isTabComplete(tab2) &&
+    tab1.title.toLowerCase() === tab2.title.toLowerCase();
+
 const matchTitle = (tab1, tab2) => {
     if (options.compareWithTitle) {
         if (isTabComplete(tab1) && isTabComplete(tab2)) {
@@ -163,7 +167,8 @@ const searchForDuplicateTabsToClose = async (observedTab, queryComplete, loading
     if (options.skipBlankTabs && isBlankURL(observedTabUrl)) return;
     if (observedTabUrl.startsWith("view-source:")) return;
     const queryInfo = {};
-    if (isValidURL(observedTabUrl) && options.urlRegexRules.length === 0 && options.titleRegexRules.length === 0) {
+    if (isValidURL(observedTabUrl) && options.urlRegexRules.length === 0
+        && (!options.compareWithTitle || options.titleRegexRules.length === 0)) {
         const matchPattern = getMatchPatternURL(observedTabUrl);
         if (matchPattern) queryInfo.url = matchPattern;
     }
@@ -183,10 +188,11 @@ const searchForDuplicateTabsToClose = async (observedTab, queryComplete, loading
         if (openedTab.id === observedTab.id) continue;
         const skipReason = shouldSkipTab(openedTab, { queryComplete });
         if (skipReason) continue;
-        if ((getMatchingURL(openedTab.url) === matchingObservedTabUrl)
+        if ((getMatchingURL(openedTab.url) === matchingObservedTabUrl
+            && (!options.requireTitleMatch || titleMatchesExact(openedTab, observedTab)))
             || matchTitle(openedTab, observedTab)
             || matchByUrlPattern(openedTab.url, observedTabUrl)
-            || (isTabComplete(openedTab) && isTabComplete(observedTab) && matchByTitlePattern(openedTab.title, observedTab.title))) {
+            || (options.compareWithTitle && isTabComplete(openedTab) && isTabComplete(observedTab) && matchByTitlePattern(openedTab.title, observedTab.title))) {
             match = true;
             const [tabToCloseId, remainingTabInfo] = getCloseInfo({ observedTab: observedTab, observedTabUrl: observedTabUrl, openedTab: openedTab, activeWindowId: activeWindowId });
             closeDuplicateTab(tabToCloseId, remainingTabInfo);
@@ -254,7 +260,8 @@ const invalidateAllRetainedKeys = (retainedTab, currentMatchingKey, retainedTabs
 const findRetainedTab = (observedTab, retainedTabs, matchingTabURL, matchingTabTitle) => {
     // 1. Direct URL key
     let tab = retainedTabs.get(matchingTabURL);
-    if (tab) return { tab, key: matchingTabURL };
+    if (tab && (!options.requireTitleMatch || titleMatchesExact(tab, observedTab)))
+        return { tab, key: matchingTabURL };
     // 2. Fuzzy title key
     if (matchingTabTitle) {
         const titleKey = findFuzzyTitleKey(observedTab.title, retainedTabs) || matchingTabTitle;
@@ -271,7 +278,7 @@ const findRetainedTab = (observedTab, retainedTabs, matchingTabURL, matchingTabT
         }
     }
     // 4. Title pattern key
-    if (isTabComplete(observedTab) && options.titleRegexRules.length > 0) {
+    if (options.compareWithTitle && isTabComplete(observedTab) && options.titleRegexRules.length > 0) {
         const titlePatSource = findPatternSource(observedTab.title, options.titleRegexRules);
         if (titlePatSource) {
             const patKey = `titlepattern=${titlePatSource}`;
@@ -294,7 +301,7 @@ const registerTab = (observedTab, retainedTabs, matchingTabURL, matchingTabTitle
             if (!retainedTabs.has(patKey)) retainedTabs.set(patKey, observedTab);
         }
     }
-    if (isTabComplete(observedTab) && options.titleRegexRules.length > 0) {
+    if (options.compareWithTitle && isTabComplete(observedTab) && options.titleRegexRules.length > 0) {
         const titlePatSource = findPatternSource(observedTab.title, options.titleRegexRules);
         if (titlePatSource) {
             const patKey = `titlepattern=${titlePatSource}`;

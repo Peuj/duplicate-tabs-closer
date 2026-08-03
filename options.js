@@ -43,8 +43,8 @@ const defaultOptions = {
     caseInsensitive: {
         value: false
     },
-    compareWithTitle: {
-        value: false
+    titleMatchMode: {
+        value: "N"
     },
     titleSimilarityThreshold: {
         value: 100
@@ -70,7 +70,7 @@ const defaultOptions = {
     ignorePathPart_popup: {
         value: true
     },
-    compareWithTitle_popup: {
+    titleMatchMode_popup: {
         value: true
     },
     urlRegexRules_popup: {
@@ -160,6 +160,8 @@ const initializeOptions = async () => {
         const initialOptions = setupDefaultOptions();
         storedOptions = await saveStoredOptions(initialOptions);
     } else {
+        if (storedOptions.compareWithTitle?.value === true && !storedOptions.titleMatchMode)
+            storedOptions.titleMatchMode = { value: "T" };
         const storedKeys = Object.keys(storedOptions).sort();
         const defaultKeys = Object.keys(defaultOptions).sort();
         if (storedKeys.length !== defaultKeys.length || storedKeys.some((k, i) => k !== defaultKeys[i])) {
@@ -210,7 +212,8 @@ const setOptions = (storedOptions) => {
     options.ignoreHashPart = storedOptions.ignoreHashPart.value;
     options.ignoreSearchPart = storedOptions.ignoreSearchPart.value;
     options.ignorePathPart = storedOptions.ignorePathPart.value;
-    options.compareWithTitle = storedOptions.compareWithTitle.value;
+    options.compareWithTitle = storedOptions.titleMatchMode.value === "T";
+    options.requireTitleMatch = storedOptions.titleMatchMode.value === "U";
     options.titleSimilarityThreshold = storedOptions.titleSimilarityThreshold.value;
     options.ignore3w = storedOptions.ignore3w.value;
     options.caseInsensitive = storedOptions.caseInsensitive.value;

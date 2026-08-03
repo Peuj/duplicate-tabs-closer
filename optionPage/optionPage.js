@@ -34,6 +34,16 @@ const applyPausedState = (paused) => {
   }
 };
 
+const updateTitleMatchModeDependents = (value) => {
+  const titleOnly = value === "T";
+  const thresh = document.getElementById("titleSimilarityThreshold");
+  if (thresh) thresh.disabled = !titleOnly;
+  const threshRow = thresh?.closest(".checkboxes");
+  if (threshRow) threshRow.classList.toggle("hidden", !titleOnly);
+  const titleRulesGroup = document.getElementById("titleRegexRulesGroup");
+  if (titleRulesGroup) titleRulesGroup.classList.toggle("hidden", !titleOnly);
+};
+
 // eslint-disable-next-line max-lines-per-function
 const loadPopupEvents = () => {
 
@@ -43,11 +53,7 @@ const loadPopupEvents = () => {
       saveOption(this.id, this.checked, false);
       return;
     }
-    if (this.id === "compareWithTitle") {
-      const thresh = document.getElementById("titleSimilarityThreshold");
-      if (thresh) thresh.disabled = !this.checked;
-    }
-    else if (this.id === "ignorePathPart") updateIgnorePathPartDependents(this.checked);
+    if (this.id === "ignorePathPart") updateIgnorePathPartDependents(this.checked);
     const refresh = this.className.includes("checkbox-filter")
       || this.id === "keepTabWithHttps"
       || this.id === "keepPinnedTab"
@@ -59,11 +65,12 @@ const loadPopupEvents = () => {
   /* Save combobox settings */
   getElements(".list-group select").forEach(el => el.addEventListener("change", function (event) {
     event.stopPropagation();
-    const refresh = this.id === "scope" || this.id === "keepTabBasedOnAge";
+    const refresh = this.id === "scope" || this.id === "keepTabBasedOnAge" || this.id === "titleMatchMode";
     saveOption(this.id, this.value, refresh);
     if (this.id === "onDuplicateTabDetected") changeAutoCloseOptionState(this.value, true);
     else if (this.id === "theme") applyTheme(this.value);
     else if (this.id === "scope") updatePrioritizeActiveWindowState(this.value);
+    else if (this.id === "titleMatchMode") updateTitleMatchModeDependents(this.value);
   }));
 
   /* Save badge color settings */
@@ -346,11 +353,7 @@ const setPanelOption = (details) => {
     const el = document.getElementById(storedOption);
     if (typeof (value) === "boolean") {
       if (el) el.checked = value;
-      if (storedOption === "compareWithTitle") {
-        const thresh = document.getElementById("titleSimilarityThreshold");
-        if (thresh) thresh.disabled = !value;
-      }
-      else if (storedOption === "ignorePathPart") updateIgnorePathPartDependents(value);
+      if (storedOption === "ignorePathPart") updateIgnorePathPartDependents(value);
       else if (storedOption === "popupGroupedView") {
         groupedView = value;
         updateGroupButton(value);
@@ -371,6 +374,7 @@ const setPanelOption = (details) => {
       if (storedOption === "onDuplicateTabDetected") changeAutoCloseOptionState(value, resize);
       else if (storedOption === "theme") applyTheme(value);
       else if (storedOption === "scope") updatePrioritizeActiveWindowState(value);
+      else if (storedOption === "titleMatchMode") updateTitleMatchModeDependents(value);
     }
     if (isLockedKey && el) el.disabled = true;
   }
@@ -384,6 +388,7 @@ const setPanelOptions = async () => {
     setPanelOption({ storedOption: storedOption, value: storedOptions[storedOption].value, isLockedKey: lockedKeys.includes(storedOption) });
   }
   updateIgnorePathPartDependents(storedOptions.ignorePathPart ? storedOptions.ignorePathPart.value : false);
+  updateTitleMatchModeDependents(storedOptions.titleMatchMode ? storedOptions.titleMatchMode.value : "N");
   updateFileAccessWarning();
 };
 

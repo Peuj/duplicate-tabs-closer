@@ -256,10 +256,6 @@ const setPanelOptions = async () => {
                     groupedView = value;
                     updateGroupButton(value);
                 }
-                else if (storedOption === "compareWithTitle") {
-                    const thresh = document.getElementById("titleSimilarityThreshold");
-                    if (thresh) thresh.disabled = !value;
-                }
                 else if (storedOption === "hideWhitelistedTabs") {
                     updateHideWhitelistedButton(value);
                 }
@@ -280,6 +276,7 @@ const setPanelOptions = async () => {
                 if (storedOption === "onDuplicateTabDetected") changeAutoCloseOptionState(value, false);
                 else if (storedOption === "theme") applyTheme(value);
                 else if (storedOption === "popupTwoColumns") applyTwoColumnsMode(value === "2");
+                else if (storedOption === "titleMatchMode") updateTitleMatchModeDependents(value);
             }
             if (isLockedKey && el) el.disabled = true;
         }
@@ -287,6 +284,7 @@ const setPanelOptions = async () => {
     if (collapseOptions) toggleExpendOptions(false);
     applyPopupRuleVisibility(storedOptions);
     updateIgnorePathPartDependents(storedOptions.ignorePathPart ? storedOptions.ignorePathPart.value : false);
+    updateTitleMatchModeDependents(storedOptions.titleMatchMode ? storedOptions.titleMatchMode.value : "N");
     const sessionData = await chrome.storage.session.get(['autoOpenedPopup', 'autoOpenedTabId']);
     if (sessionData.autoOpenedPopup) {
         chrome.storage.session.remove(['autoOpenedPopup', 'autoOpenedTabId']);
@@ -321,20 +319,27 @@ const updatePauseButton = (paused) => {
     }
 };
 
+const updateTitleMatchModeDependents = (value) => {
+    const titleOnly = value === "T";
+    const thresh = document.getElementById("titleSimilarityThreshold");
+    if (thresh) thresh.disabled = !titleOnly;
+    const threshRow = thresh?.closest(".checkboxes");
+    if (threshRow) threshRow.classList.toggle("hidden", !titleOnly);
+    const titleRulesEl = document.getElementById("titleRegexRules");
+    const titleRulesRow = titleRulesEl?.closest(".checkboxes");
+    if (titleRulesRow) titleRulesRow.classList.toggle("hidden", !titleOnly);
+};
+
 const applyPopupRuleVisibility = (storedOptions) => {
     const rules = ["caseInsensitive", "ignore3w", "ignoreHashPart", "ignoreSearchPart",
-        "ignorePathPart", "compareWithTitle", "urlRegexRules", "titleRegexRules"];
+        "ignorePathPart", "urlRegexRules", "titleMatchMode"];
     rules.forEach(rule => {
         const visible = storedOptions[rule + "_popup"] ? storedOptions[rule + "_popup"].value : true;
         const el = document.getElementById(rule);
         if (el) el.closest(".checkboxes").classList.toggle("hidden", !visible);
     });
-    const compareTitleVisible = (storedOptions["compareWithTitle_popup"]
-        ? storedOptions["compareWithTitle_popup"].value : true)
-        && (storedOptions["compareWithTitle"]
-        ? storedOptions["compareWithTitle"].value : true);
-    const thresh = document.getElementById("titleSimilarityThreshold");
-    if (thresh) thresh.closest(".checkboxes").classList.toggle("hidden", !compareTitleVisible);
+    const titleMatchValue = storedOptions["titleMatchMode"] ? storedOptions["titleMatchMode"].value : "N";
+    updateTitleMatchModeDependents(titleMatchValue);
 };
 
 const handleMessage = (message) => {
@@ -344,12 +349,10 @@ const handleMessage = (message) => {
         const visible = message.data.value;
         const el = document.getElementById(rule);
         if (el) el.closest(".checkboxes").classList.toggle("hidden", !visible);
-        if (rule === "compareWithTitle") {
-            const compareWithTitleEl = document.getElementById("compareWithTitle");
-            const thresholdVisible = visible && compareWithTitleEl && compareWithTitleEl.checked;
-            const thresh = document.getElementById("titleSimilarityThreshold");
-            if (thresh) thresh.closest(".checkboxes").classList.toggle("hidden", !thresholdVisible);
-        }
+        resizeDuplicateTabsPanel();
+    }
+    if (message.action === "setStoredOption" && message.data.name === "titleMatchMode") {
+        updateTitleMatchModeDependents(message.data.value);
         resizeDuplicateTabsPanel();
     }
     if (message.action === "setStoredOption" && message.data.name === "onDuplicateTabDetected") {
@@ -368,11 +371,6 @@ const loadListenerEvents = () => {
     getElements("input[type='checkbox']").forEach(el => el.addEventListener("change", function () {
         if (this.id.endsWith("Pinned")) toggleExpendGroup(this.id, false, this.checked, true);
         else if (this.id === "shrunkMode") toggleShrunkMode(this.checked);
-        else if (this.id === "compareWithTitle") {
-            const thresh = document.getElementById("titleSimilarityThreshold");
-            thresh.disabled = !this.checked;
-            thresh.closest(".checkboxes").classList.toggle("hidden", !this.checked);
-        }
         else if (this.id === "ignorePathPart") {
             updateIgnorePathPartDependents(this.checked);
         }
@@ -385,10 +383,11 @@ const loadListenerEvents = () => {
     /* Save combobox settings */
     getElements(".list-group select").forEach(el => el.addEventListener("change", function (event) {
         event.stopPropagation();
-        const refresh = this.id === "scope" || this.id === "keepTabBasedOnAge";
+        const refresh = this.id === "scope" || this.id === "keepTabBasedOnAge" || this.id === "titleMatchMode";
         saveOption(this.id, this.value, refresh);
         if (this.id === "onDuplicateTabDetected") changeAutoCloseOptionState(this.value, true);
         else if (this.id === "popupTwoColumns") applyTwoColumnsMode(this.value === "2");
+        else if (this.id === "titleMatchMode") updateTitleMatchModeDependents(this.value);
     }));
 
     /* Save title similarity threshold */

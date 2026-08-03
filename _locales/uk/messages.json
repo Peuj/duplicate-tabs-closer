@@ -83,9 +83,21 @@
     "message": "Ігнорувати регістр букв в URL",
     "description": "Ignore case in URL"
   },
-  "compareWithTitle": {
-    "message": "Порівняти заголовки вкладок",
-    "description": "Compare with title"
+  "titleMatchMode": {
+    "message": "Визначати дублікати за",
+    "description": "Title matching mode"
+  },
+  "titleMatchModeN": {
+    "message": "Лише URL",
+    "description": "No title matching"
+  },
+  "titleMatchModeT": {
+    "message": "URL або заголовок збігаються",
+    "description": "Match tabs by URL or by title"
+  },
+  "titleMatchModeU": {
+    "message": "URL та однаковий заголовок",
+    "description": "Tabs with the same URL but different titles are not considered duplicates"
   },
   "titleSimilarityThreshold": {
     "message": "% збіг заголовків",
