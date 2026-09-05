@@ -283,7 +283,7 @@ const whiteListToPattern = (whiteList) => {
     whiteListLines.forEach(whiteListLine => {
         const regexMatch = whiteListLine.match(/^\/(.+)\/([gimsuy]*)$/);
         if (regexMatch) {
-            try { whiteListPatterns.add(new RegExp(regexMatch[1], regexMatch[2])); } catch (_) {}
+            try { whiteListPatterns.add(new RegExp(regexMatch[1], regexMatch[2].replace(/[gy]/g, ""))); } catch (_) {}
         } else {
             const normalizedLine = whiteListLine.replace(/\/$/, "");
             if ((normalizedLine.match(/\*/g) || []).length > MAX_WILDCARDS) return;
@@ -308,7 +308,7 @@ const parsePatternRules = (text) => {
         if (!line) continue;
         const regexMatch = line.match(/^\/(.+)\/([gimsuy]*)$/);
         if (regexMatch) {
-            try { results.push({ source: line, regex: new RegExp(regexMatch[1], regexMatch[2]) }); } catch (_) {}
+            try { results.push({ source: line, regex: new RegExp(regexMatch[1], regexMatch[2].replace(/[gy]/g, "")) }); } catch (_) {}
         } else {
             if ((line.match(/\*/g) || []).length > MAX_WILDCARDS) continue;
             let pattern = "^";

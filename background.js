@@ -245,6 +245,8 @@ const onReplacedTab = async (addedTabId, removedTabId) => {
 			: { url: tab.url });
 		if (startupBurst.active) { debouncedBatchClose(tab.windowId); return; }
 		await searchForDuplicateTabsToClose(tab);
+	} else {
+		await refreshGlobalDuplicateTabsInfo();
 	}
 };
 

@@ -153,21 +153,6 @@ const removeTab = (tabId) => new Promise((resolve, reject) => {
     });
 });
 
-// eslint-disable-next-line no-unused-vars
-const setIcon = (details) => new Promise((resolve) => {
-    chrome.action.setIcon(details, () => {
-        if (chrome.runtime.lastError) console.error("setIcon error:", chrome.runtime.lastError.message);
-        resolve();
-    });
-});
-
-// eslint-disable-next-line no-unused-vars
-const getTabBadgeText = (tabId) => new Promise((resolve) => {
-    chrome.action.getBadgeText({ tabId: tabId }, badgeText => {
-        if (chrome.runtime.lastError) console.error("getTabBadgeText error:", chrome.runtime.lastError.message);
-        resolve(badgeText);
-    });
-});
 
 
 // eslint-disable-next-line no-unused-vars
