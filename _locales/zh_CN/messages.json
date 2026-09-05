@@ -316,5 +316,9 @@
   "whiteListHint": {
     "message": "使用 * 作为通配符，或用 /.../ 包裹正则表达式，例如: /^(?!.*google\\.com)/",
     "description": "Hint below the whitelist textarea showing pattern syntax examples"
+  },
+  "fileAccessWarning": {
+    "message": "警告：此扩展程序未获得访问本地 file:// URL 的权限。请前往 about:addons，打开 Duplicate Tabs Closer，并查看「权限」选项卡以启用文件访问。",
+    "description": "Warning shown on Firefox when isAllowedFileSchemeAccess() returns false"
   }
 }

@@ -316,5 +316,9 @@
   "whiteListHint": {
     "message": "Utilisez * comme joker, ou entourez de /.../ pour une regex : /^(?!.*google\\.com)/",
     "description": "Hint below the whitelist textarea showing pattern syntax examples"
+  },
+  "fileAccessWarning": {
+    "message": "Avertissement : cette extension n'a pas reçu l'accès aux URL file:// locales. Rendez-vous sur about:addons, ouvrez Duplicate Tabs Closer et consultez l'onglet Permissions pour activer l'accès aux fichiers.",
+    "description": "Warning shown on Firefox when isAllowedFileSchemeAccess() returns false"
   }
 }

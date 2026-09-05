@@ -316,5 +316,9 @@
   "whiteListHint": {
     "message": "Використовуйте * як символ підстановки або оберніть у /.../ для регулярного виразу: /^(?!.*google\\.com)/",
     "description": "Hint below the whitelist textarea showing pattern syntax examples"
+  },
+  "fileAccessWarning": {
+    "message": "Попередження: розширення не отримало доступ до локальних URL-адрес file://. Перейдіть на about:addons, відкрийте Duplicate Tabs Closer і перевірте вкладку «Дозволи», щоб увімкнути доступ до файлів.",
+    "description": "Warning shown on Firefox when isAllowedFileSchemeAccess() returns false"
   }
 }

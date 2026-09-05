@@ -318,7 +318,7 @@
     "description": "Hint below the whitelist textarea showing pattern syntax examples"
   },
   "fileAccessWarning": {
-    "message": "Warning: your whitelist contains file:// patterns but Firefox has not granted this extension access to local files. Go to about:addons, open Duplicate Tabs Closer, and check the Permissions tab to enable file access.",
-    "description": "Warning shown when the whitelist has file:// patterns but isAllowedFileSchemeAccess() returns false on Firefox"
+    "message": "Warning: this extension has not been granted access to local file:// URLs. Go to about:addons, open Duplicate Tabs Closer, and check the Permissions tab to enable file access.",
+    "description": "Warning shown on Firefox when isAllowedFileSchemeAccess() returns false (user declined the file:///* host_permission prompt)"
   }
 }

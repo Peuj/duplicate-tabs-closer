@@ -214,14 +214,8 @@ const setWhiteList = (whiteList) => {
   if (el) el.value = whiteList;
 };
 
-const updateFileAccessWarning = async () => {
-  const warningEl = document.getElementById("fileAccessWarning");
-  if (!warningEl) return;
-  const whiteListEl = document.getElementById("whiteList");
-  const hasFilePattern = whiteListEl && whiteListEl.value.split("\n").some(line => line.trim().startsWith("file://"));
-  if (!hasFilePattern) { warningEl.classList.add("hidden"); return; }
-  const allowed = await chrome.extension.isAllowedFileSchemeAccess();
-  warningEl.classList.toggle("hidden", allowed);
+const updateFileAccessWarning = () => {
+  document.getElementById("fileAccessWarning")?.classList.add("hidden");
 };
 
 const cleanUpWhiteList = (whiteList) => {

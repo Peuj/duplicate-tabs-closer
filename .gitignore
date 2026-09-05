@@ -7,3 +7,6 @@ manifest.json
 
 ### VisualStudioCode ###
 .vscode/*
+
+### Claude Code ###
+.claude/

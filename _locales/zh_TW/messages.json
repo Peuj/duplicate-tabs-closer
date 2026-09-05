@@ -316,5 +316,9 @@
   "whiteListHint": {
     "message": "使用 * 作為萬用字元，或用 /.../ 包裹正規表示式，例如: /^(?!.*google\\.com)/",
     "description": "Hint below the whitelist textarea showing pattern syntax examples"
+  },
+  "fileAccessWarning": {
+    "message": "警告：此擴充功能尚未獲得存取本機 file:// URL 的權限。請前往 about:addons，開啟 Duplicate Tabs Closer，並查看「權限」分頁以啟用檔案存取。",
+    "description": "Warning shown on Firefox when isAllowedFileSchemeAccess() returns false"
   }
 }
