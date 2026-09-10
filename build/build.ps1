@@ -27,7 +27,7 @@ $Directories = @(
     "optionPage",
     "panel",
     "ext_lib\bootstrap-5.3.8-dist",
-    "ext_lib\font-awesome-6.7"
+    "ext_lib\font-awesome-7.3.1"
 )
 
 function Build-Package {
