@@ -8,7 +8,7 @@ let lastNbRows = 0;
 let monitoringPaused = false;
 
 const initialize = async () => {
-  const [, windowId, sessionData] = await Promise.all([setPanelOptions(), saveActiveWindowId(), chrome.storage.session.get("monitoringPaused")]);
+  const [, windowId, sessionData] = await Promise.all([setPanelOptions(), getActiveWindowId(), chrome.storage.session.get("monitoringPaused")]);
   monitoringPaused = sessionData.monitoringPaused || false;
   activeWindowId = windowId;
   requestGetDuplicateTabs();
@@ -20,20 +20,7 @@ const applyPausedState = (paused) => {
   monitoringPaused = paused;
   const sel = document.getElementById("onDuplicateTabDetected");
   if (sel) sel.disabled = paused;
-  const btn = document.getElementById("pauseMonitorBtn");
-  if (!btn) return;
-  const icon = btn.querySelector("span");
-  btn.classList.toggle("paused", paused);
-  btn.setAttribute("aria-pressed", paused ? "true" : "false");
-  if (paused) {
-    icon.className = "fa-solid fa-play fa-lg";
-    btn.setAttribute("aria-label", chrome.i18n.getMessage("resumeMonitoring"));
-    btn.setAttribute("title", chrome.i18n.getMessage("resumeMonitoring"));
-  } else {
-    icon.className = "fa-solid fa-pause fa-lg";
-    btn.setAttribute("aria-label", chrome.i18n.getMessage("pauseMonitoring"));
-    btn.setAttribute("title", chrome.i18n.getMessage("pauseMonitoring"));
-  }
+  updatePauseButton(paused);
 };
 
 const updateTitleMatchModeDependents = (value) => {
@@ -138,6 +125,7 @@ const loadPopupEvents = () => {
       if (groupCloseBtn) {
         e.stopPropagation();
         const headerRow = groupCloseBtn.closest(".tr-group-header");
+        if (!headerRow) return;
         headerRow.dataset.groupTabIds.split(",").map(Number).forEach(id => removeTab(id));
         return;
       }
@@ -157,7 +145,7 @@ const loadPopupEvents = () => {
         const row = titleCell.parentElement;
         const tabId = parseInt(row.getAttribute("tabId"), 10);
         const windowId = parseInt(row.getAttribute("windowId"), 10);
-        focusTab(tabId, windowId);
+        focusTab(tabId, windowId).catch(err => console.error("DTC: focusTab failed:", err));
       }
       const closeCell = e.target.closest(".td-close-button");
       if (closeCell) {
@@ -239,12 +227,6 @@ const cleanUpWhiteList = (whiteList) => {
   return Array.from(whiteListCleaned).join("\n");
 };
 
-/* Show/Hide the AutoClose option */
-const changeAutoCloseOptionState = (state, resize) => {
-  document.getElementById("onRemainingTabGroup").classList.toggle("hidden", state !== "A");
-  if (resize) resizeDuplicateTabsPanel();
-};
-
 const setDuplicateTabsTable = (duplicateTabs) => {
   if (duplicateTabs !== null && areSameArrays(duplicateTabs, lastDuplicateTabs)) return;
   const expandedGroups = new Set();
@@ -280,15 +262,7 @@ const setDuplicateTabsTable = (duplicateTabs) => {
         }
       });
     }
-    closeBtn.classList.toggle("disabled", false);
-    closeBtn.setAttribute("aria-disabled", "false");
-    closeBtn.removeAttribute("disabled");
-    groupBtn.classList.remove("disabled");
-    groupBtn.setAttribute("aria-disabled", "false");
-    groupBtn.removeAttribute("disabled");
-    hideBtn.classList.remove("disabled");
-    hideBtn.setAttribute("aria-disabled", "false");
-    hideBtn.removeAttribute("disabled");
+    setDuplicateTableButtonsEnabled(closeBtn, groupBtn, hideBtn, true);
   }
   else {
     const tr = document.createElement("tr");
@@ -303,15 +277,7 @@ const setDuplicateTabsTable = (duplicateTabs) => {
     tr.appendChild(td);
     tbody.appendChild(tr);
     resizeDuplicateTabsPanel(isUpdate);
-    closeBtn.classList.toggle("disabled", true);
-    closeBtn.setAttribute("aria-disabled", "true");
-    closeBtn.setAttribute("disabled", "");
-    groupBtn.classList.add("disabled");
-    groupBtn.setAttribute("aria-disabled", "true");
-    groupBtn.setAttribute("disabled", "");
-    hideBtn.classList.add("disabled");
-    hideBtn.setAttribute("aria-disabled", "true");
-    hideBtn.setAttribute("disabled", "");
+    setDuplicateTableButtonsEnabled(closeBtn, groupBtn, hideBtn, false);
   }
   hideBtn.dataset.wlCount = String(duplicateTabs ? duplicateTabs.filter(t => t.whitelisted).length : 0);
   if (duplicateTabs) resizeDuplicateTabsPanel(isUpdate);
@@ -393,6 +359,10 @@ const setPanelOption = (details) => {
 
 const setPanelOptions = async () => {
   const response = await sendMessage("getStoredOptions");
+  if (!response?.data) {
+    console.error("DTC: getStoredOptions failed");
+    return;
+  }
   const storedOptions = response.data.storedOptions;
   const lockedKeys = response.data.lockedKeys;
   for (const storedOption in storedOptions) {
@@ -416,21 +386,3 @@ const handleDOMContentLoaded = () => {
 };
 
 document.addEventListener("DOMContentLoaded", handleDOMContentLoaded);
-
-const localizePopup = (node) => {
-  const attribute = "i18n-content";
-  const elements = node.querySelectorAll(`[${attribute}]`);
-  elements.forEach(element => {
-    const value = element.getAttribute(attribute);
-    element.textContent = chrome.i18n.getMessage(value);
-  });
-
-  node.querySelectorAll("[Title]").forEach(el => {
-    el.setAttribute("Title", chrome.i18n.getMessage(el.getAttribute("Title")));
-  });
-
-  const ariaLabelAttribute = "i18n-aria-label";
-  node.querySelectorAll(`[${ariaLabelAttribute}]`).forEach(el => {
-    el.setAttribute("aria-label", chrome.i18n.getMessage(el.getAttribute(ariaLabelAttribute)));
-  });
-};

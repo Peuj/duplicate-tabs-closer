@@ -11,9 +11,6 @@ const areSameArrays = (array1, array2) => {
         t.whitelisted === array2[i].whitelisted);
 };
 
-const escapeHTML = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/'/g, "&#39;");
-
- 
 const buildTabRow = (duplicateTab, activeWindowId) => {
     const tr = document.createElement("tr");
     tr.setAttribute("tabId", parseInt(duplicateTab.id, 10));
@@ -199,10 +196,52 @@ const getHighlightBounds = (textarea) => {
     return { top: pt + topOffset, bottom: pt + topOffset + m.scrollHeight };
 };
 
-const saveActiveWindowId = () => getActiveWindowId();
-
 const requestCloseDuplicateTabs = (skipWhitelisted) => sendMessage("closeDuplicateTabs", { "windowId": activeWindowId, skipWhitelisted });
 
 const saveOption = (name, value, refresh) => sendMessage("setStoredOption", { name, value, refresh });
 
 const requestGetDuplicateTabs = () => sendMessage("getDuplicateTabs", { "windowId": activeWindowId });
+
+const changeAutoCloseOptionState = (state, resize) => {
+    const el = document.getElementById("onRemainingTabGroup");
+    if (el) el.classList.toggle("hidden", state !== "A");
+    if (resize) resizeDuplicateTabsPanel();
+};
+
+const setDuplicateTableButtonsEnabled = (closeBtn, groupBtn, hideBtn, enabled) => {
+    [closeBtn, groupBtn, hideBtn].forEach(btn => {
+        btn.classList.toggle("disabled", !enabled);
+        btn.setAttribute("aria-disabled", String(!enabled));
+        if (enabled) btn.removeAttribute("disabled");
+        else btn.setAttribute("disabled", "");
+    });
+};
+
+const updatePauseButton = (paused) => {
+    const btn = document.getElementById("pauseMonitorBtn");
+    if (!btn) return;
+    const icon = btn.querySelector("span");
+    btn.classList.toggle("paused", paused);
+    btn.setAttribute("aria-pressed", paused ? "true" : "false");
+    if (paused) {
+        if (icon) icon.className = "fa-solid fa-play fa-lg";
+        btn.setAttribute("aria-label", chrome.i18n.getMessage("resumeMonitoring"));
+        btn.setAttribute("title", chrome.i18n.getMessage("resumeMonitoring"));
+    } else {
+        if (icon) icon.className = "fa-solid fa-pause fa-lg";
+        btn.setAttribute("aria-label", chrome.i18n.getMessage("pauseMonitoring"));
+        btn.setAttribute("title", chrome.i18n.getMessage("pauseMonitoring"));
+    }
+};
+
+const localizePopup = (node = document.documentElement) => {
+    node.querySelectorAll("[i18n-content]").forEach(el => {
+        el.textContent = chrome.i18n.getMessage(el.getAttribute("i18n-content"));
+    });
+    node.querySelectorAll("[Title]").forEach(el => {
+        el.setAttribute("Title", chrome.i18n.getMessage(el.getAttribute("Title")));
+    });
+    node.querySelectorAll("[i18n-aria-label]").forEach(el => {
+        el.setAttribute("aria-label", chrome.i18n.getMessage(el.getAttribute("i18n-aria-label")));
+    });
+};

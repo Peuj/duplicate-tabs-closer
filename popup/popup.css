@@ -13,14 +13,7 @@ body {
 }
 
 .card-header {
-    height: 32px;
-    padding: 10px 15px;
     margin: -1px;
-    font-size: 15px;
-    background-image: none;
-    background-color: var(--dtc-header-bg);
-    border: 1px solid var(--dtc-header-border);
-    color: var(--dtc-header-text);
 }
 
 #optionHeader>span:hover {
@@ -39,90 +32,6 @@ body {
 
 #pauseMonitorBtn {
     margin-right: 8px;
-}
-
-#pauseMonitorBtn:hover {
-    transform: scale(1.2);
-}
-
-#pauseMonitorBtn.paused {
-    color: #f59e0b;
-}
-
-#pauseMonitorBtn.paused:hover {
-    color: #fbbf24;
-    transform: scale(1.2);
-}
-
-#groupDuplicateTabsBtn {
-    margin-right: 6px;
-    opacity: 0.55;
-    transition: opacity 0.15s;
-}
-
-#groupDuplicateTabsBtn:not(.disabled):hover {
-    transform: scale(1.2);
-    opacity: 1;
-}
-
-#groupDuplicateTabsBtn.active {
-    color: #0ea5e9;
-    opacity: 1;
-}
-
-#groupDuplicateTabsBtn.active:hover {
-    color: #38bdf8;
-    transform: scale(1.2);
-}
-
-#groupDuplicateTabsBtn.disabled {
-    opacity: 0.3;
-    cursor: not-allowed;
-}
-
-#hideWhitelistedTabsBtn {
-    position: relative;
-    margin-right: 6px;
-    opacity: 0.55;
-    transition: opacity 0.15s;
-}
-
-#hideWhitelistedTabsBtn:not(.disabled):hover {
-    transform: scale(1.2);
-    opacity: 1;
-}
-
-#hideWhitelistedTabsBtn.active {
-    color: #0ea5e9;
-    opacity: 1;
-}
-
-#hideWhitelistedTabsBtn.active:hover {
-    color: #38bdf8;
-    transform: scale(1.2);
-}
-
-#hideWhitelistedTabsBtn.disabled {
-    opacity: 0.3;
-    cursor: not-allowed;
-}
-
-#hideWhitelistedTabsBtn.active[data-wl-count]:not([data-wl-count="0"])::after {
-    content: attr(data-wl-count);
-    position: absolute;
-    top: -5px;
-    right: -6px;
-    background: #0ea5e9;
-    color: #fff;
-    border-radius: 50%;
-    font-size: 8px;
-    min-width: 12px;
-    height: 12px;
-    line-height: 12px;
-    text-align: center;
-    padding: 0 2px;
-    font-weight: 600;
-    pointer-events: none;
 }
 
 .fa-gear:hover {
@@ -186,10 +95,6 @@ body {
     transform: scale(1.1);
 }
 
-.checkbox-fa {
-    display: none;
-}
-
 .checkbox-fa-compress-label {
     padding: 0 6px;
     margin: 2px 8px 2px 0;
@@ -204,51 +109,6 @@ body {
 .checkbox-fa:checked+.checkbox-fa-compress-label, .checkbox-fa:checked+.checkbox-fa-compress-label:active, .checkbox-fa-compress-label:active {
     background-color: color-mix(in srgb, var(--dtc-header-bg) 40%, white);
     box-shadow: inset 0 0 2px color-mix(in srgb, var(--dtc-header-bg) 60%, white);
-}
-
-.checkbox-fa+.checkbox-fa-label>.fa-thumbtack:not(:hover) {
-    color: #ffd39e;
-}
-
-.checkbox-fa:checked+.checkbox-fa-label>.fa-thumbtack:not(:hover) {
-    color: #FF8C00;
-}
-
-.checkbox-fa+.checkbox-fa-label>.fa-thumbtack:hover {
-    color: #fdbc6c;
-}
-
-.checkbox-fa:checked+.checkbox-fa-label>.fa-thumbtack:hover {
-    color: #ffaa42;
-}
-
-.fa-thumbtack {
-    margin-top: 6px;
-}
-
-.fa-thumbtack:hover {
-    cursor: pointer;
-    transform: scale(1.1);
-}
-
-.titleLabel {
-    margin: 4px 2px;
-}
-
-#onDuplicateTabDetectedBody {
-    margin-bottom: 6px;
-}
-
-#matchingRulesBody {
-    margin-top: -4px;
-}
-
-#titleMatchMode {
-    margin-bottom: 8px;
-}
-
-#scopeBody {
-    margin-bottom: 5px;
 }
 
 #scopeGroup .list-group-item {

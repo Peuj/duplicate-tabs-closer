@@ -12,12 +12,6 @@ let _highlightOnOpen = false;
 let titleSimilarityThresholdPopupVisible = true;
 let titleRegexRulesPopupVisible = false;
 
-/* Show/Hide the AutoClose option */
-const changeAutoCloseOptionState = (state, resize) => {
-    document.getElementById("onRemainingTabGroup").classList.toggle("hidden", state !== "A");
-    if (resize) resizeDuplicateTabsPanel();
-};
-
 const toggleShrunkMode = (checked) => {
     getElements(".list-group-form").forEach(el => el.classList.toggle("shrunk", checked));
     if (!checked && document.getElementById("optionHeader").classList.contains("collapsed")) {
@@ -61,6 +55,7 @@ const toggleExpendGroup = (eventId, isTitleClickEvent, pinned, resize) => {
         const pinnedEls = getElements(".pinned");
         if (pinnedEls.length) pinnedEls.at(-1).classList.remove("last-list-group");
         const group = document.getElementById(groupId);
+        if (!group) return;
         group.classList.toggle("collapsed", !pinned);
         group.classList.toggle("pinned", pinned);
         if (resize) resizeDuplicateTabsPanel();
@@ -121,47 +116,26 @@ const setDuplicateTabsTable = async (duplicateTabs) => {
             if (i + CHUNK < rows.length) await new Promise(r => requestAnimationFrame(r));
         }
         if (_renderGen !== gen) return;
-        if (groupedView && expandedGroups.size > 0) {
+        if (groupedView && (expandedGroups.size > 0 || newTabIds.size > 0)) {
             tbody.querySelectorAll(".tr-group-header").forEach(header => {
-                if (expandedGroups.has(header.dataset.groupTabIds.split(",")[0])) {
-                    header.classList.remove("collapsed");
-                    let row = header.nextElementSibling;
-                    while (row && row.classList.contains("group-row")) {
-                        row.classList.remove("group-collapsed");
-                        row = row.nextElementSibling;
-                    }
+                const groupIds = header.dataset.groupTabIds.split(",");
+                const shouldExpand = expandedGroups.has(groupIds[0]) ||
+                    (newTabIds.size > 0 && groupIds.map(Number).some(id => newTabIds.has(id)));
+                if (!shouldExpand) return;
+                header.classList.remove("collapsed");
+                let row = header.nextElementSibling;
+                while (row && row.classList.contains("group-row")) {
+                    row.classList.remove("group-collapsed");
+                    row = row.nextElementSibling;
                 }
             });
-        }
-        if (newTabIds.size > 0 && groupedView) {
-            tbody.querySelectorAll(".tr-group-header").forEach(header => {
-                const ids = header.dataset.groupTabIds.split(",").map(Number);
-                if (ids.some(id => newTabIds.has(id))) {
-                    header.classList.remove("collapsed");
-                    let row = header.nextElementSibling;
-                    while (row && row.classList.contains("group-row")) {
-                        row.classList.remove("group-collapsed");
-                        row = row.nextElementSibling;
-                    }
-                }
-            });
-        }
-        if ((groupedView && expandedGroups.size > 0) || (newTabIds.size > 0 && groupedView)) {
             resizeDuplicateTabsPanel();
         }
         if (newTabIds.size > 0) {
             const firstNewRow = tbody.querySelector(".tab-row-new");
             if (firstNewRow) firstNewRow.scrollIntoView({ block: "nearest" });
         }
-        closeBtn.classList.remove("disabled");
-        closeBtn.setAttribute("aria-disabled", "false");
-        closeBtn.removeAttribute("disabled");
-        groupBtn.classList.remove("disabled");
-        groupBtn.setAttribute("aria-disabled", "false");
-        groupBtn.removeAttribute("disabled");
-        hideBtn.classList.remove("disabled");
-        hideBtn.setAttribute("aria-disabled", "false");
-        hideBtn.removeAttribute("disabled");
+        setDuplicateTableButtonsEnabled(closeBtn, groupBtn, hideBtn, true);
     }
     else {
         const tr = document.createElement("tr");
@@ -176,15 +150,7 @@ const setDuplicateTabsTable = async (duplicateTabs) => {
         tr.appendChild(td);
         tbody.appendChild(tr);
         resizeDuplicateTabsPanel(isUpdate);
-        closeBtn.classList.add("disabled");
-        closeBtn.setAttribute("aria-disabled", "true");
-        closeBtn.setAttribute("disabled", "");
-        groupBtn.classList.add("disabled");
-        groupBtn.setAttribute("aria-disabled", "true");
-        groupBtn.setAttribute("disabled", "");
-        hideBtn.classList.add("disabled");
-        hideBtn.setAttribute("aria-disabled", "true");
-        hideBtn.setAttribute("disabled", "");
+        setDuplicateTableButtonsEnabled(closeBtn, groupBtn, hideBtn, false);
     }
     hideBtn.dataset.wlCount = String(duplicateTabs ? duplicateTabs.filter(t => t.whitelisted).length : 0);
 };
@@ -286,7 +252,7 @@ const setPanelOptions = async () => {
     updateTitleMatchModeDependents(storedOptions.titleMatchMode ? storedOptions.titleMatchMode.value : "N");
     const sessionData = await chrome.storage.session.get(["autoOpenedPopup", "autoOpenedTabId"]);
     if (sessionData.autoOpenedPopup) {
-        chrome.storage.session.remove(["autoOpenedPopup", "autoOpenedTabId"]);
+        await chrome.storage.session.remove(["autoOpenedPopup", "autoOpenedTabId"]);
         _highlightOnOpen = sessionData.autoOpenedTabId ?? null;
         document.getElementById("optionHeader").classList.add("collapsed");
         resizeDuplicateTabsPanel();
@@ -299,23 +265,6 @@ const applyPausedState = (paused) => {
     const sel = document.getElementById("onDuplicateTabDetected");
     if (sel) sel.disabled = paused;
     updatePauseButton(paused);
-};
-
-const updatePauseButton = (paused) => {
-    const btn = document.getElementById("pauseMonitorBtn");
-    if (!btn) return;
-    const icon = btn.querySelector("span");
-    btn.classList.toggle("paused", paused);
-    btn.setAttribute("aria-pressed", paused ? "true" : "false");
-    if (paused) {
-        icon.className = "fa-solid fa-play fa-lg";
-        btn.setAttribute("aria-label", chrome.i18n.getMessage("resumeMonitoring"));
-        btn.setAttribute("title", chrome.i18n.getMessage("resumeMonitoring"));
-    } else {
-        icon.className = "fa-solid fa-pause fa-lg";
-        btn.setAttribute("aria-label", chrome.i18n.getMessage("pauseMonitoring"));
-        btn.setAttribute("title", chrome.i18n.getMessage("pauseMonitoring"));
-    }
 };
 
 const updateTitleMatchModeDependents = (value) => {
@@ -458,6 +407,7 @@ const loadListenerEvents = () => {
             if (groupCloseBtn) {
                 e.stopPropagation();
                 const headerRow = groupCloseBtn.closest(".tr-group-header");
+                if (!headerRow) return;
                 headerRow.dataset.groupTabIds.split(",").map(Number).forEach(id => removeTab(id));
                 return;
             }
@@ -477,7 +427,7 @@ const loadListenerEvents = () => {
                 const row = titleCell.parentElement;
                 const tabId = parseInt(row.getAttribute("tabId"), 10);
                 const windowId = parseInt(row.getAttribute("windowId"), 10);
-                focusTab(tabId, windowId);
+                focusTab(tabId, windowId).catch(err => console.error("DTC: focusTab failed:", err));
             }
             const closeCell = e.target.closest(".td-close-button");
             if (closeCell) {
@@ -545,30 +495,8 @@ const loadListenerEvents = () => {
 
 };
 
-const localizePopup = () => {
-    const node = document.documentElement;
-    const attribute = "i18n-content";
-    const elements = node.querySelectorAll(`[${attribute}]`);
-    elements.forEach(element => {
-        const value = element.getAttribute(attribute);
-        element.textContent = chrome.i18n.getMessage(value);
-    });
-
-    const tooltipAttribute = "Title";
-    const tooltipElements = node.querySelectorAll(`[${tooltipAttribute}]`);
-    tooltipElements.forEach(tooltipElement => {
-        const value = tooltipElement.getAttribute(tooltipAttribute);
-        tooltipElement.setAttribute(tooltipAttribute, chrome.i18n.getMessage(value));
-    });
-
-    const ariaLabelAttribute = "i18n-aria-label";
-    node.querySelectorAll(`[${ariaLabelAttribute}]`).forEach(el => {
-        el.setAttribute("aria-label", chrome.i18n.getMessage(el.getAttribute(ariaLabelAttribute)));
-    });
-};
-
 const initialize = async () => {
-    const [, windowId, sessionData] = await Promise.all([setPanelOptions(), saveActiveWindowId(), chrome.storage.session.get("monitoringPaused")]);
+    const [, windowId, sessionData] = await Promise.all([setPanelOptions(), getActiveWindowId(), chrome.storage.session.get("monitoringPaused")]);
     activeWindowId = windowId;
     monitoringPaused = sessionData.monitoringPaused || false;
     requestGetDuplicateTabs();
