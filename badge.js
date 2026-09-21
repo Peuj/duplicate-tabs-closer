@@ -46,30 +46,34 @@ const getNbDuplicateTabs = (duplicateTabsGroups) => {
 	return nbDuplicateTabs;
 };
 
-const updateBadgeValue = (nbDuplicateTabs, windowId, triggerTabId) => {
+const updateBadgeValue = async (nbDuplicateTabs, windowId, triggerTabId) => {
 	if (tabsInfo.hasNbDuplicateTabs(windowId) && tabsInfo.getNbDuplicateTabs(windowId) === nbDuplicateTabs) {
 		return;
 	}
 	const hadPriorCount = tabsInfo.hasNbDuplicateTabs(windowId);
 	const prevCount = hadPriorCount ? tabsInfo.getNbDuplicateTabs(windowId) : 0;
 	tabsInfo.setNbDuplicateTabs(windowId, nbDuplicateTabs);
-	setBadge(windowId);
+	await setBadge(windowId);
 	// hadPriorCount guards against startup hydration (count going from unset→N on addon load).
 	// For a new browser window (count goes 0→N where 0 was explicitly set by onCreatedTab),
 	// hadPriorCount is true so the popup fires correctly.
 	if (options.openPopupOnDuplicateDetected && hadPriorCount && nbDuplicateTabs > prevCount) {
 		chrome.storage.session.set({ autoOpenedPopup: true, autoOpenedTabId: triggerTabId ?? null }).then(() => {
 			chrome.action.openPopup().catch(() => {
-					// ignore: popup may fail if dismissed or already open
-				});
-		});
-		// Cancel the highlight flag if the duplicate was transient (count dropped within 400ms).
-		wait(400).then(() => {
-			if (tabsInfo.getNbDuplicateTabs(windowId) <= prevCount) {
+				// Popup already open or dismissed: remove the stale flag we just wrote.
 				chrome.storage.session.remove(["autoOpenedPopup", "autoOpenedTabId"]).catch(() => {
 					// ignore
 				});
-			}
+			});
+			// Cancel the highlight flag if the duplicate was transient (count dropped within 400ms).
+			// Chained inside session.set.then() so session.remove only runs after session.set completes.
+			wait(400).then(() => {
+				if (tabsInfo.getNbDuplicateTabs(windowId) <= prevCount) {
+					chrome.storage.session.remove(["autoOpenedPopup", "autoOpenedTabId"]).catch(() => {
+						// ignore
+					});
+				}
+			});
 		});
 	}
 };
@@ -82,7 +86,7 @@ const updateBadgesValue = async (duplicateTabsGroups, windowId, triggerTabId) =>
 		await Promise.all(windows.map(window => updateBadgeValue(nbDuplicateTabs, window.id, window.id === windowId ? triggerTabId : null)));
 	}
 	else {
-		updateBadgeValue(nbDuplicateTabs, windowId, triggerTabId);
+		await updateBadgeValue(nbDuplicateTabs, windowId, triggerTabId);
 	}
 };
 

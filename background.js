@@ -221,6 +221,7 @@ const onAttached = async (tabId) => {
 const onRemovedTab = async (removedTabId, removeInfo) => {
 	await ensureInitialized();
 	tabsInfo.removeTab(removedTabId);
+	_preCreatedTabs.delete(removedTabId);
 	_lastNavigate.delete(removedTabId);
 	if (monitoringPaused) return;
 	if (removeInfo.isWindowClosing) {

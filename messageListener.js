@@ -43,10 +43,9 @@ const handleMessage = (message, sender, response) => {
 };
 
 const handleExternalMessage = (message, sender, response) => {
-    // Only allow messages from known companion extensions (e.g. dtc-test).
-    // externally_connectable is DEV-only and stripped from production builds,
-    // but this guard provides defense-in-depth if the build strip ever fails.
-    if (!sender || sender.id === chrome.runtime.id) return false;
+    // externally_connectable is DEV-only and stripped from production builds.
+    // This guard is defense-in-depth for the case where the build strip fails.
+    if (!sender) return false;
     return handleMessage(message, sender, response);
 };
 
