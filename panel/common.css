@@ -228,6 +228,7 @@ html.theme-violet {
     cursor: pointer;
     color: inherit;
     line-height: 1;
+    align-self: center;
 }
 
 .form-group {
@@ -396,6 +397,7 @@ html.theme-violet {
 }
 
 #titleMatchMode {
+    margin-top: 3px;
     margin-bottom: 8px;
 }
 
@@ -408,7 +410,8 @@ html.theme-violet {
 }
 
 .table-scrollable-overflow {
-    overflow: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
     scrollbar-width: thin;
     margin-right: 0;
 }
@@ -489,7 +492,7 @@ html.theme-violet {
     font-size: 0.875em;
     width: 1em;
     height: 1em;
-    vertical-align: -0.15em;
+    vertical-align: .05357em;
     line-height: 0;
 }
 
@@ -685,12 +688,12 @@ textarea.rules-textarea {
     border-radius: 3px;
     scrollbar-width: thin;
     background-size: 100%;
-    background-color: var(--dtc-textarea-bg);
+    background-color: var(--dtc-textarea-alt-bg);
+    margin-top: 4px;
 }
 
 #urlRegexRules,
 #titleRegexRules {
-    background-color: var(--dtc-textarea-alt-bg);
     margin-top: 4px;
 }
 

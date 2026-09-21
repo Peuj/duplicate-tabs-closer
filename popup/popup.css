@@ -36,7 +36,7 @@ body {
 
 .fa-gear:hover {
     cursor: pointer;
-    transform: scale(1.2);
+    transform: scale(1.1);
 }
 
 .card-body {
@@ -50,6 +50,10 @@ body {
 #duplicateTabsCard .card-body {
     overflow: hidden;
     margin-right: 0;
+}
+
+#duplicateTabsCard {
+    overflow: hidden;
 }
 
 .list-group-item {
@@ -159,6 +163,7 @@ body.two-columns #duplicateTabsCard .card-body {
 
 body.two-columns #duplicateTabsTableContainer {
     flex: 0 0 auto;
+    overflow-x: hidden;
     overflow-y: auto;
 }
 
