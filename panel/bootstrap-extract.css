@@ -1,0 +1,193 @@
+/* Bootstrap 5 extract — only the classes used by DTC */
+
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+html, body {
+    background-color: var(--dtc-textarea-bg);
+}
+
+/* ── Flex utilities ── */
+
+.d-flex                  { display: flex !important; }
+.align-items-center      { align-items: center !important; }
+.justify-content-between { justify-content: space-between !important; }
+
+/* ── Spacing / shadow / typography ── */
+
+.mt-1      { margin-top: .25rem !important; }
+.shadow-sm { box-shadow: 0 .125rem .25rem rgba(0,0,0,.075) !important; }
+.text-muted { color: color-mix(in srgb, var(--dtc-text) 60%, transparent) !important; }
+
+/* ── Form text ── */
+
+.form-text {
+    display: block;
+    margin-top: .25rem;
+    font-size: .875em;
+    color: color-mix(in srgb, var(--dtc-text) 60%, transparent);
+}
+
+/* ── Card ── */
+
+.card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: var(--dtc-textarea-bg);
+    border: 1px solid var(--dtc-card-border-color);
+    border-radius: .375rem;
+}
+
+.card-header {
+    padding: .5rem 1rem;
+    background-color: rgba(0,0,0,.03);
+    border-bottom: 1px solid var(--dtc-card-border-color);
+}
+
+.card-body {
+    flex: 1 1 auto;
+    padding: 1rem;
+}
+
+/* ── List group ── */
+
+.list-group {
+    display: flex;
+    flex-direction: column;
+    padding-left: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    list-style: none;
+    border-radius: .375rem;
+}
+
+.list-group-flush {
+    border-radius: 0;
+}
+
+.list-group-flush > .list-group-item {
+    border-width: 0 0 1px;
+}
+
+.list-group-flush > .list-group-item:last-child {
+    border-bottom-width: 0;
+}
+
+.list-group-item {
+    position: relative;
+    display: block;
+    padding: .5rem 1rem;
+    color: inherit;
+    text-decoration: none;
+    background-color: var(--dtc-textarea-bg);
+    border: 1px solid var(--dtc-list-group-border-color);
+}
+
+/* ── Button ── */
+
+.btn {
+    display: inline-block;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: inherit;
+    text-align: center;
+    text-decoration: none;
+    vertical-align: middle;
+    cursor: pointer;
+    user-select: none;
+    background-color: transparent;
+    border: 1px solid transparent;
+    border-radius: .375rem;
+    transition: color .15s ease-in-out, background-color .15s ease-in-out,
+                border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    appearance: button;
+    -webkit-appearance: button;
+}
+
+.btn:disabled,
+.btn.disabled {
+    pointer-events: none;
+    opacity: .65;
+}
+
+/* ── Form select ── */
+
+.form-select {
+    display: block;
+    width: 100%;
+    padding: .375rem 2.25rem .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--dtc-text);
+    background-color: var(--dtc-textarea-bg);
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right .75rem center;
+    background-size: 16px 12px;
+    border: 1px solid var(--dtc-border-color);
+    border-radius: .375rem;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+/* ── Form control (textarea / input) ── */
+
+.form-control {
+    display: block;
+    width: 100%;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--dtc-text);
+    background-color: var(--dtc-textarea-bg);
+    background-clip: padding-box;
+    border: 1px solid var(--dtc-border-color);
+    border-radius: .375rem;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+/* ── Table ── */
+
+.table {
+    --dtc-table-color: inherit;
+    --dtc-table-bg: transparent;
+    --dtc-table-border-color: var(--dtc-border-color);
+    --dtc-table-hover-bg: rgba(0,0,0,.075);
+
+    width: 100%;
+    margin-bottom: 1rem;
+    color: var(--dtc-table-color);
+    vertical-align: top;
+    border-color: var(--dtc-table-border-color);
+    border-collapse: collapse;
+}
+
+.table > :not(caption) > * > * {
+    padding: .5rem;
+    color: var(--dtc-table-color);
+    background-color: var(--dtc-table-bg);
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-color: inherit;
+}
+
+.table-hover > tbody > tr:hover > * {
+    background-color: var(--dtc-table-hover-bg);
+}
+
+.table-borderless > :not(caption) > * > * {
+    border-bottom-width: 0;
+}
+
+.table-borderless > :not(:first-child) {
+    border-top-width: 0;
+}

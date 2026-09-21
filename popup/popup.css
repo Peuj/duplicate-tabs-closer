@@ -163,7 +163,7 @@ body.two-columns #duplicateTabsTableContainer {
 }
 
 body.two-columns #scopeGroup.collapsed .list-group-item:last-child {
-    border-bottom: 1px solid var(--bs-list-group-border-color);
+    border-bottom: 1px solid var(--dtc-list-group-border-color);
 }
 
 body.two-columns #duplicateTabsCard .card-header #pauseMonitorBtn {

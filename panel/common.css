@@ -15,6 +15,9 @@
     --dtc-textarea-alt-bg: #f8f9fa;
     --dtc-scrollbar-track: #f5f5f5;
     --dtc-scrollbar-thumb: #0000001a;
+    --dtc-border-color: #dee2e6;
+    --dtc-card-border-color: rgba(0,0,0,.175);
+    --dtc-list-group-border-color: rgba(0,0,0,.125);
 }
 
 html.theme-ocean {
@@ -34,13 +37,9 @@ html.theme-ocean {
     --dtc-scrollbar-track: #0c1827;
     --dtc-scrollbar-thumb: #fff2;
 
-    /* Bootstrap alignment */
-    --bs-body-bg: #0c1827;
-    --bs-body-color: #c8ddef;
-    --bs-secondary-bg: #0e1e30;
-    --bs-tertiary-bg: #112436;
-    --bs-border-color: rgb(255 255 255 / 0.18);
-    --bs-border-color-translucent: rgb(255 255 255 / 0.15);
+    --dtc-border-color: rgb(255 255 255 / 0.18);
+    --dtc-card-border-color: rgb(255 255 255 / 0.15);
+    --dtc-list-group-border-color: rgb(255 255 255 / 0.18);
 }
 
 html.theme-charcoal {
@@ -60,13 +59,9 @@ html.theme-charcoal {
     --dtc-scrollbar-track: #1a1a1a;
     --dtc-scrollbar-thumb: #fff2;
 
-    /* Bootstrap alignment */
-    --bs-body-bg: #1a1a1a;
-    --bs-body-color: #d4d4d4;
-    --bs-secondary-bg: #1d1d1d;
-    --bs-tertiary-bg: #202020;
-    --bs-border-color: rgb(255 255 255 / 0.18);
-    --bs-border-color-translucent: rgb(255 255 255 / 0.15);
+    --dtc-border-color: rgb(255 255 255 / 0.18);
+    --dtc-card-border-color: rgb(255 255 255 / 0.15);
+    --dtc-list-group-border-color: rgb(255 255 255 / 0.18);
 }
 
 html.theme-purple {
@@ -86,13 +81,9 @@ html.theme-purple {
     --dtc-scrollbar-track: #15111e;
     --dtc-scrollbar-thumb: #fff2;
 
-    /* Bootstrap alignment */
-    --bs-body-bg: #15111e;
-    --bs-body-color: #e2dff4;
-    --bs-secondary-bg: #181226;
-    --bs-tertiary-bg: #1b152a;
-    --bs-border-color: rgb(255 255 255 / 0.18);
-    --bs-border-color-translucent: rgb(255 255 255 / 0.15);
+    --dtc-border-color: rgb(255 255 255 / 0.18);
+    --dtc-card-border-color: rgb(255 255 255 / 0.15);
+    --dtc-list-group-border-color: rgb(255 255 255 / 0.18);
 }
 
 html.theme-teal {
@@ -112,13 +103,9 @@ html.theme-teal {
     --dtc-scrollbar-track: #091918;
     --dtc-scrollbar-thumb: #fff2;
 
-    /* Bootstrap alignment */
-    --bs-body-bg: #091918;
-    --bs-body-color: #b2d8d4;
-    --bs-secondary-bg: #0c1f1e;
-    --bs-tertiary-bg: #0f2322;
-    --bs-border-color: rgb(255 255 255 / 0.18);
-    --bs-border-color-translucent: rgb(255 255 255 / 0.15);
+    --dtc-border-color: rgb(255 255 255 / 0.18);
+    --dtc-card-border-color: rgb(255 255 255 / 0.15);
+    --dtc-list-group-border-color: rgb(255 255 255 / 0.18);
 }
 
 html.theme-oled {
@@ -138,13 +125,9 @@ html.theme-oled {
     --dtc-scrollbar-track: #080808;
     --dtc-scrollbar-thumb: #fff3;
 
-    /* Bootstrap alignment */
-    --bs-body-bg: #080808;
-    --bs-body-color: #fff;
-    --bs-secondary-bg: #0a0a0a;
-    --bs-tertiary-bg: #0d0d0d;
-    --bs-border-color: rgb(255 255 255 / 0.18);
-    --bs-border-color-translucent: rgb(255 255 255 / 0.15);
+    --dtc-border-color: rgb(255 255 255 / 0.18);
+    --dtc-card-border-color: rgb(255 255 255 / 0.15);
+    --dtc-list-group-border-color: rgb(255 255 255 / 0.18);
 }
 
 html.theme-sage {
@@ -444,8 +427,8 @@ html.theme-violet {
     color: inherit;
     font-family: inherit;
 
-    --bs-table-color: var(--dtc-text);
-    --bs-table-bg: transparent;
+    --dtc-table-color: var(--dtc-text);
+    --dtc-table-bg: transparent;
 }
 
 /* ── Duplicate tabs table ── */
@@ -468,7 +451,7 @@ html.theme-violet {
 }
 
 #duplicateTabsTable tr:has(.td-tab-text):hover > * {
-    --bs-table-hover-bg: transparent;
+    --dtc-table-hover-bg: transparent;
 }
 
 .td-tab-icon {
@@ -564,7 +547,7 @@ html.theme-violet {
 }
 
 .tr-group-header:hover > * {
-    --bs-table-hover-bg: var(--dtc-header-bg);
+    --dtc-table-hover-bg: var(--dtc-header-bg);
 
     cursor: pointer;
 }
@@ -685,7 +668,7 @@ html.theme-violet {
     padding: 0 20px 2px 4px;
     font-size: 12px;
     line-height: 1.5;
-    border: 1px solid var(--bs-border-color);
+    border: 1px solid var(--dtc-border-color);
     border-radius: 3px;
     color: var(--dtc-text);
     font-family: Arial, Helvetica, sans-serif;
