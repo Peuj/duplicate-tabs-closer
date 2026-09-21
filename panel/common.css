@@ -18,6 +18,7 @@
 }
 
 html.theme-ocean {
+    color-scheme: dark;
     --dtc-header-bg: #0facf3;
     --dtc-header-border: #0d9fd8;
     --dtc-header-text: #fff;
@@ -43,6 +44,7 @@ html.theme-ocean {
 }
 
 html.theme-charcoal {
+    color-scheme: dark;
     --dtc-header-bg: #0facf3;
     --dtc-header-border: #0d9fd8;
     --dtc-header-text: #fff;
@@ -68,6 +70,7 @@ html.theme-charcoal {
 }
 
 html.theme-purple {
+    color-scheme: dark;
     --dtc-header-bg: #6d28d9;
     --dtc-header-border: #5b21b6;
     --dtc-header-text: #e9d5ff;
@@ -93,6 +96,7 @@ html.theme-purple {
 }
 
 html.theme-teal {
+    color-scheme: dark;
     --dtc-header-bg: #0d9488;
     --dtc-header-border: #0b8279;
     --dtc-header-text: #fff;
@@ -118,6 +122,7 @@ html.theme-teal {
 }
 
 html.theme-oled {
+    color-scheme: dark;
     --dtc-header-bg: #111;
     --dtc-header-border: #222;
     --dtc-header-text: #fff;
