@@ -16,12 +16,13 @@
     --dtc-scrollbar-track: #f5f5f5;
     --dtc-scrollbar-thumb: #0000001a;
     --dtc-border-color: #dee2e6;
-    --dtc-card-border-color: rgba(0,0,0,.175);
-    --dtc-list-group-border-color: rgba(0,0,0,.125);
+    --dtc-card-border-color: rgb(0,0,0,.175);
+    --dtc-list-group-border-color: rgb(0,0,0,.125);
 }
 
 html.theme-ocean {
     color-scheme: dark;
+
     --dtc-header-bg: #0facf3;
     --dtc-header-border: #0d9fd8;
     --dtc-header-text: #fff;
@@ -36,7 +37,6 @@ html.theme-ocean {
     --dtc-textarea-alt-bg: #0e1e30;
     --dtc-scrollbar-track: #0c1827;
     --dtc-scrollbar-thumb: #fff2;
-
     --dtc-border-color: rgb(255 255 255 / 0.18);
     --dtc-card-border-color: rgb(255 255 255 / 0.15);
     --dtc-list-group-border-color: rgb(255 255 255 / 0.18);
@@ -44,6 +44,7 @@ html.theme-ocean {
 
 html.theme-charcoal {
     color-scheme: dark;
+
     --dtc-header-bg: #0facf3;
     --dtc-header-border: #0d9fd8;
     --dtc-header-text: #fff;
@@ -58,7 +59,6 @@ html.theme-charcoal {
     --dtc-textarea-alt-bg: #1d1d1d;
     --dtc-scrollbar-track: #1a1a1a;
     --dtc-scrollbar-thumb: #fff2;
-
     --dtc-border-color: rgb(255 255 255 / 0.18);
     --dtc-card-border-color: rgb(255 255 255 / 0.15);
     --dtc-list-group-border-color: rgb(255 255 255 / 0.18);
@@ -66,6 +66,7 @@ html.theme-charcoal {
 
 html.theme-purple {
     color-scheme: dark;
+
     --dtc-header-bg: #6d28d9;
     --dtc-header-border: #5b21b6;
     --dtc-header-text: #e9d5ff;
@@ -80,7 +81,6 @@ html.theme-purple {
     --dtc-textarea-alt-bg: #181226;
     --dtc-scrollbar-track: #15111e;
     --dtc-scrollbar-thumb: #fff2;
-
     --dtc-border-color: rgb(255 255 255 / 0.18);
     --dtc-card-border-color: rgb(255 255 255 / 0.15);
     --dtc-list-group-border-color: rgb(255 255 255 / 0.18);
@@ -88,6 +88,7 @@ html.theme-purple {
 
 html.theme-teal {
     color-scheme: dark;
+
     --dtc-header-bg: #0d9488;
     --dtc-header-border: #0b8279;
     --dtc-header-text: #fff;
@@ -102,7 +103,6 @@ html.theme-teal {
     --dtc-textarea-alt-bg: #0c1f1e;
     --dtc-scrollbar-track: #091918;
     --dtc-scrollbar-thumb: #fff2;
-
     --dtc-border-color: rgb(255 255 255 / 0.18);
     --dtc-card-border-color: rgb(255 255 255 / 0.15);
     --dtc-list-group-border-color: rgb(255 255 255 / 0.18);
@@ -110,6 +110,7 @@ html.theme-teal {
 
 html.theme-oled {
     color-scheme: dark;
+
     --dtc-header-bg: #111;
     --dtc-header-border: #222;
     --dtc-header-text: #fff;
@@ -124,7 +125,6 @@ html.theme-oled {
     --dtc-textarea-alt-bg: #0a0a0a;
     --dtc-scrollbar-track: #080808;
     --dtc-scrollbar-thumb: #fff3;
-
     --dtc-border-color: rgb(255 255 255 / 0.18);
     --dtc-card-border-color: rgb(255 255 255 / 0.15);
     --dtc-list-group-border-color: rgb(255 255 255 / 0.18);
@@ -410,8 +410,7 @@ html.theme-violet {
 }
 
 .table-scrollable-overflow {
-    overflow-x: hidden;
-    overflow-y: auto;
+    overflow: hidden auto;
     scrollbar-width: thin;
     margin-right: 0;
 }
@@ -492,7 +491,7 @@ html.theme-violet {
     font-size: 0.875em;
     width: 1em;
     height: 1em;
-    vertical-align: .05357em;
+    vertical-align: .0536em;
     line-height: 0;
 }
 

@@ -163,8 +163,7 @@ body.two-columns #duplicateTabsCard .card-body {
 
 body.two-columns #duplicateTabsTableContainer {
     flex: 0 0 auto;
-    overflow-x: hidden;
-    overflow-y: auto;
+    overflow: hidden auto;
 }
 
 body.two-columns #scopeGroup.collapsed .list-group-item:last-child {
