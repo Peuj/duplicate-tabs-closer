@@ -126,18 +126,33 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin: 4px 0;
+  margin: 4px 0 4px 4px;
 }
 
 .badgeColor {
-  width: 18px;
-  height: 18px;
-  padding: 1px 2px;
+  width: 14px;
+  height: 14px;
+  padding: 0;
   border: 1px solid var(--dtc-header-border);
-  border-radius: 5px;
+  border-radius: 3px;
   cursor: pointer;
-  background: none;
   flex-shrink: 0;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.badgeColor::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.badgeColor::-webkit-color-swatch {
+  border: none;
+  border-radius: 2px;
+}
+
+.badgeColor::-moz-color-swatch {
+  border: none;
+  border-radius: 2px;
 }
 
 .color-row label {
