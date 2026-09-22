@@ -53,10 +53,11 @@ const updateBadgeValue = async (nbDuplicateTabs, windowId, triggerTabId) => {
 	const hadPriorCount = tabsInfo.hasNbDuplicateTabs(windowId);
 	const prevCount = hadPriorCount ? tabsInfo.getNbDuplicateTabs(windowId) : 0;
 	tabsInfo.setNbDuplicateTabs(windowId, nbDuplicateTabs);
-	await setBadge(windowId);
 	// hadPriorCount guards against startup hydration (count going from unset→N on addon load).
 	// For a new browser window (count goes 0→N where 0 was explicitly set by onCreatedTab),
 	// hadPriorCount is true so the popup fires correctly.
+	// openPopup must be triggered before any await to preserve the synchronous event-callback
+	// context Firefox requires; await setBadge is moved after so callers still get completion.
 	if (options.openPopupOnDuplicateDetected && hadPriorCount && nbDuplicateTabs > prevCount) {
 		chrome.storage.session.set({ autoOpenedPopup: true, autoOpenedTabId: triggerTabId ?? null }).then(() => {
 			chrome.action.openPopup().catch(() => {
@@ -76,6 +77,7 @@ const updateBadgeValue = async (nbDuplicateTabs, windowId, triggerTabId) => {
 			});
 		});
 	}
+	await setBadge(windowId);
 };
 
 const updateBadgesValue = async (duplicateTabsGroups, windowId, triggerTabId) => {
