@@ -48,12 +48,14 @@ const buildTabRow = (duplicateTab, activeWindowId) => {
 
     const tdClose = document.createElement("td");
     tdClose.className = "td-close-button";
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "btn-tab-close";
-    btn.setAttribute("aria-label", chrome.i18n.getMessage("closeTabButton"));
-    btn.textContent = "×";
-    tdClose.appendChild(btn);
+    if (!duplicateTab.isRetained) {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "btn-tab-close";
+        btn.setAttribute("aria-label", chrome.i18n.getMessage("closeTabButton"));
+        btn.textContent = "×";
+        tdClose.appendChild(btn);
+    }
 
     tr.appendChild(tdIcon);
     tr.appendChild(tdTitle);
@@ -73,7 +75,7 @@ const buildGroupedDuplicateTabRows = (duplicateTabs, activeWindowId) => {
     groups.forEach((tabs) => {
         const headerTr = document.createElement("tr");
         headerTr.className = "tr-group-header collapsed";
-        headerTr.dataset.groupTabIds = tabs.map(t => t.id).join(",");
+        headerTr.dataset.groupTabIds = tabs.filter(t => !t.isRetained).map(t => t.id).join(",");
         if (tabs.every(tab => tab.whitelisted)) headerTr.setAttribute("data-whitelisted", "true");
 
         const tdHeader = document.createElement("td");

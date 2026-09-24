@@ -126,7 +126,7 @@ const loadPopupEvents = () => {
         e.stopPropagation();
         const headerRow = groupCloseBtn.closest(".tr-group-header");
         if (!headerRow) return;
-        headerRow.dataset.groupTabIds.split(",").map(Number).forEach(id => removeTab(id));
+        headerRow.dataset.groupTabIds.split(",").filter(Boolean).map(Number).forEach(id => removeTab(id));
         return;
       }
       const headerRow = e.target.closest(".tr-group-header");
