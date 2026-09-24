@@ -229,6 +229,7 @@ In the duplicate tabs list, tabs that will be closed show a strikethrough title.
 | Ignore query parameters in URL (search part) | No |
 | Ignore path part in URL | Yes |
 | Detect duplicates by | Yes |
+| % title similarity | Yes |
 | URL pattern rules | Yes |
 | Title pattern rules | No |
 
