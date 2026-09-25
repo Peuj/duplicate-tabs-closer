@@ -236,6 +236,43 @@ const updatePauseButton = (paused) => {
     }
 };
 
+const registerDuplicateTableClickHandler = (table, resizeFn) => {
+    table.addEventListener("click", (e) => {
+        const groupCloseBtn = e.target.closest(".btn-group-close");
+        if (groupCloseBtn) {
+            e.stopPropagation();
+            const headerRow = groupCloseBtn.closest(".tr-group-header");
+            if (!headerRow) return;
+            headerRow.dataset.groupTabIds.split(",").filter(Boolean).map(Number).forEach(id => removeTab(id));
+            return;
+        }
+        const headerRow = e.target.closest(".tr-group-header");
+        if (headerRow) {
+            const isCollapsed = headerRow.classList.toggle("collapsed");
+            let row = headerRow.nextElementSibling;
+            while (row && row.classList.contains("group-row")) {
+                row.classList.toggle("group-collapsed", isCollapsed);
+                row = row.nextElementSibling;
+            }
+            resizeFn(false);
+            return;
+        }
+        const titleCell = e.target.closest(".td-tab-title");
+        if (titleCell) {
+            const row = titleCell.parentElement;
+            const tabId = parseInt(row.getAttribute("tabId"), 10);
+            const windowId = parseInt(row.getAttribute("windowId"), 10);
+            focusTab(tabId, windowId).catch(err => console.error("DTC: focusTab failed:", err));
+        }
+        const closeCell = e.target.closest(".td-close-button");
+        if (closeCell) {
+            const row = closeCell.parentElement;
+            const tabId = parseInt(row.getAttribute("tabId"), 10);
+            removeTab(tabId);
+        }
+    });
+};
+
 const localizePopup = (node = document.documentElement) => {
     node.querySelectorAll("[i18n-content]").forEach(el => {
         el.textContent = chrome.i18n.getMessage(el.getAttribute("i18n-content"));

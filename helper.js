@@ -7,7 +7,7 @@ const wait = timeout => new Promise(resolve => setTimeout(resolve, timeout));
 const debounce = (func, delay, immediate = true) => {
     const storedArguments = new Map();
     const debouncedFn = (...args) => {
-        const windowId = args[0] ?? 1;
+        const windowId = typeof args[0] !== "undefined" ? args[0] : 1;
         const later = () => {
             const laterArgs = storedArguments.get(windowId);
             if (laterArgs) {
@@ -255,13 +255,17 @@ s2 = b.toLowerCase();
 n = s2.length;
     if (m === 0 && n === 0) return 100;
     if (m === 0 || n === 0) return 0;
-    let prev = Array.from({ length: n + 1 }, (_, i) => i);
+    let prev = new Int32Array(n + 1);
+    let curr = new Int32Array(n + 1);
+    for (let i = 0; i <= n; i += 1) prev[i] = i;
     for (let i = 1; i <= m; i += 1) {
-        const curr = [i];
+        curr[0] = i;
         for (let j = 1; j <= n; j += 1) {
             curr[j] = s1[i - 1] === s2[j - 1] ? prev[j - 1] : 1 + Math.min(prev[j], curr[j - 1], prev[j - 1]);
         }
+        const tmp = prev;
         prev = curr;
+        curr = tmp;
     }
     return Math.round((1 - (prev[n] / Math.max(m, n))) * 100);
 };

@@ -100,6 +100,8 @@ module.exports = [
                 tabExists: "readonly",
                 titleSimilarity: "readonly",
                 toggleMonitorPause: "readonly",
+                _pendingTriggerTabId: "writable",
+                registerDuplicateTableClickHandler: "readonly",
                 updatePrioritizeActiveWindowState: "readonly"
             }
         },

@@ -6,15 +6,12 @@ const isChromeURL = (url) => url.startsWith("chrome://") || url.startsWith("chro
 
 const isBrowserURL = (url) => url.startsWith("about:") || url.startsWith("chrome://") || url.startsWith("edge://") || url.startsWith("opera://") || url.startsWith("vivaldi://") || url.startsWith("brave://");
 
-const isValidURL = (url) => {
-	const regex = /^((f|ht)tps?|file):\/\//i;
-	return regex.test(url);
-};
+const _VALID_URL_RE = /^((f|ht)tps?|file):\/\//i;
+const _HTTPS_RE = /^https:\/\//i;
 
-const isHttps = (url) => {
-	const regex = /^https:\/\//i;
-	return regex.test(url);
-};
+const isValidURL = (url) => _VALID_URL_RE.test(url);
+
+const isHttps = (url) => _HTTPS_RE.test(url);
 
 const getMatchingURL = (url) => {	
 	if (!isValidURL(url)) return url;

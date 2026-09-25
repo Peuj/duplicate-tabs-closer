@@ -8,7 +8,7 @@ const setBadgeIcon = () => {
 	if (environment.isFirefox) browser.action.setBadgeTextColor({ color: "white" });
 };
 
-const setBadge = async (windowId, activeTabId = null) => {
+const setBadge = async (windowId, activeTabId = null, windowTabs = null) => {
 	if (monitoringPaused) {
 		if (!environment.isFirefox && activeTabId !== null) {
 			setTabBadgeText(activeTabId, PAUSED_BADGE_TEXT);
@@ -27,7 +27,7 @@ const setBadge = async (windowId, activeTabId = null) => {
 		setTabBadgeText(activeTabId, badgeText);
 		setTabBadgeBackgroundColor(activeTabId, backgroundColor);
 	} else {
-		const tabs = await getTabs({ windowId });
+		const tabs = windowTabs ?? await getTabs({ windowId });
 		if (tabs) tabs.forEach(tab => {
 			setTabBadgeText(tab.id, badgeText);
 			setTabBadgeBackgroundColor(tab.id, backgroundColor);
@@ -38,15 +38,24 @@ const setBadge = async (windowId, activeTabId = null) => {
 const getNbDuplicateTabs = (duplicateTabsGroups) => {
 	let nbDuplicateTabs = 0;
 	duplicateTabsGroups.forEach(duplicateTabs => {
-		if (options.hideWhitelistedTabs && [...duplicateTabs].some(tab => isUrlWhiteListed(tab.url))) {
-			return;
+		if (options.hideWhitelistedTabs) {
+			let hasWhitelisted = false;
+			for (const tab of duplicateTabs) {
+				if (isUrlWhiteListed(tab.url)) {
+					hasWhitelisted = true;
+					break;
+				}
+			}
+			if (hasWhitelisted) {
+				return;
+			}
 		}
 		nbDuplicateTabs += duplicateTabs.size - 1;
 	});
 	return nbDuplicateTabs;
 };
 
-const updateBadgeValue = async (nbDuplicateTabs, windowId, triggerTabId) => {
+const updateBadgeValue = async (nbDuplicateTabs, windowId, triggerTabId, windowTabs = null) => {
 	if (tabsInfo.hasNbDuplicateTabs(windowId) && tabsInfo.getNbDuplicateTabs(windowId) === nbDuplicateTabs) {
 		return;
 	}
@@ -77,15 +86,18 @@ const updateBadgeValue = async (nbDuplicateTabs, windowId, triggerTabId) => {
 			});
 		});
 	}
-	await setBadge(windowId);
+	await setBadge(windowId, null, windowTabs);
 };
 
 const updateBadgesValue = async (duplicateTabsGroups, windowId, triggerTabId) => {
 	const nbDuplicateTabs = getNbDuplicateTabs(duplicateTabsGroups);
 	if (options.searchInAllWindows) {
-		const windows = await getWindows();
+		const [windows, allTabs] = await Promise.all([getWindows(), getTabs({})]);
 		if (!windows) return;
-		await Promise.all(windows.map(window => updateBadgeValue(nbDuplicateTabs, window.id, window.id === windowId ? triggerTabId : null)));
+		await Promise.all(windows.map(w => {
+			const wTabs = allTabs ? allTabs.filter(t => t.windowId === w.id) : null;
+			return updateBadgeValue(nbDuplicateTabs, w.id, w.id === windowId ? triggerTabId : null, wTabs);
+		}));
 	}
 	else {
 		await updateBadgeValue(nbDuplicateTabs, windowId, triggerTabId);

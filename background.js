@@ -33,9 +33,13 @@ const ensureInitialized = () => {
 const initialize = async () => {
 	await initializeOptions();
 	await tabsInfo.initialize();
-	if (environment.isFirefox) await registerWithTST();
-	const sessionData = await chrome.storage.session.get("monitoringPaused");
-	monitoringPaused = sessionData.monitoringPaused || false;
+	if (environment.isFirefox) {
+		const [, sessionData] = await Promise.all([registerWithTST(), chrome.storage.session.get("monitoringPaused")]);
+		monitoringPaused = sessionData.monitoringPaused || false;
+	} else {
+		const sessionData = await chrome.storage.session.get("monitoringPaused");
+		monitoringPaused = sessionData.monitoringPaused || false;
+	}
 	setBadgeIcon();
 	if (monitoringPaused) setPausedBadge();
 	if (environment.isFirefox) await initializeTabSessionIds();
@@ -130,7 +134,7 @@ const onCreatedTab = async (tab) => {
 		// go through dispatchTabCompletion so duplicates are detected.
 		// The skipBlankTabs option handles user-facing exclusion downstream in worker.js.
 		if (tab.url !== "about:blank") {
-			dispatchTabCompletion(tab, null, { queryComplete: true });
+			dispatchTabCompletion(tab, tab.active ? tab.id : null, { queryComplete: true });
 		}
 	}
 };
@@ -215,7 +219,7 @@ const onAttached = async (tabId) => {
 	await ensureInitialized();
 	if (monitoringPaused) return;
 	const tab = await getTab(tabId);
-	if (tab) dispatchTabCompletion(tab, null);
+	if (tab) dispatchTabCompletion(tab, tab.active ? tab.id : null);
 };
 
 const onRemovedTab = async (removedTabId, removeInfo) => {
@@ -223,6 +227,7 @@ const onRemovedTab = async (removedTabId, removeInfo) => {
 	tabsInfo.removeTab(removedTabId);
 	_preCreatedTabs.delete(removedTabId);
 	_lastNavigate.delete(removedTabId);
+	_seededTabIds.delete(removedTabId);
 	if (monitoringPaused) return;
 	if (removeInfo.isWindowClosing) {
 		if (options.searchInAllWindows && tabsInfo.needsRefresh(removeInfo.windowId)) {
@@ -230,6 +235,7 @@ const onRemovedTab = async (removedTabId, removeInfo) => {
 		}
 		tabsInfo.clearDuplicateTabsInfo(removeInfo.windowId);
 		refreshDuplicateTabsInfo.cleanup(removeInfo.windowId);
+		_pendingTriggerTabId.delete(removeInfo.windowId);
 		handleRemainingTab.cleanup(removeInfo.windowId);
 		debouncedBatchClose.cleanup(removeInfo.windowId);
 		updateBadgeStyle();
@@ -261,11 +267,13 @@ const onReplacedTab = async (addedTabId, removedTabId) => {
 	if (monitoringPaused) return;
 	const prevLastComplete = tabsInfo.getLastComplete(removedTabId);
 	tabsInfo.removeTab(removedTabId);
+	_lastNavigate.delete(removedTabId);
+	_preCreatedTabs.delete(removedTabId);
 	const tab = await getTab(addedTabId);
+	tabsInfo.setTab(addedTabId, tab && prevLastComplete !== null
+		? { url: tab.url, complete: true, lastComplete: prevLastComplete }
+		: tab ? { url: tab.url } : {});
 	if (tab) {
-		tabsInfo.setTab(addedTabId, prevLastComplete !== null
-			? { url: tab.url, complete: true, lastComplete: prevLastComplete }
-			: { url: tab.url });
 		if (startupBurst.active) {
 				debouncedBatchClose(tab.windowId);
 				return;
@@ -317,8 +325,8 @@ const onCommand = async (command) => {
 		if (!options.searchInAllWindows) windowId = await getActiveWindowId();
 		closeDuplicateTabs(windowId, true);
 	}
-	else if (command == "toggle-close-mode") setStoredOption("onDuplicateTabDetected", options.autoCloseTab ? "N" : "A", false);
-	else if (command == "toggle-monitor-pause") toggleMonitorPause();
+	else if (command === "toggle-close-mode") setStoredOption("onDuplicateTabDetected", options.autoCloseTab ? "N" : "A", false);
+	else if (command === "toggle-monitor-pause") toggleMonitorPause();
 };
 
 // MV3: event listeners must be registered synchronously at top level (no await before this point),
@@ -343,6 +351,8 @@ chrome.storage.onChanged.addListener((changes, area) => {
 	getStoredOptions().then(current => {
 		setOptions(current.storedOptions);
 		refreshGlobalDuplicateTabsInfo();
+	}).catch(() => {
+		// ignore
 	});
 });
 chrome.tabs.onCreated.addListener(onCreatedTab);

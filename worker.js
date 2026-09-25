@@ -26,6 +26,7 @@ const findPatternSource = (value, rules) => {
 const shouldSkipTab = (tab, { queryComplete = false, skipWhitelisted = true } = {}) => {
     if (tabsInfo.isClosingTab(tab.id)) return "closing";
     if (skipWhitelisted && tabsInfo.isIntentionalDuplicate(tab.id)) return "intentional-duplicate";
+    if (!tab.url) return "no-url";
     const storedUrl = tabsInfo.getStoredUrl(tab.id);
     if (tab.url === "about:blank" && (!storedUrl || storedUrl === "about:blank")) return "blank";
     if (tab.url.startsWith("view-source:")) return "view-source";
@@ -46,11 +47,12 @@ const restoreDiscardedUrls = (tabs) => {
 };
 
 const titleMatchesExact = (tab1, tab2) => isTabComplete(tab1) && isTabComplete(tab2) &&
+    typeof tab1.title === "string" && typeof tab2.title === "string" &&
     tab1.title.toLowerCase() === tab2.title.toLowerCase();
 
 const matchTitle = (tab1, tab2) => {
     if (options.compareWithTitle) {
-        if (isTabComplete(tab1) && isTabComplete(tab2)) {
+        if (isTabComplete(tab1) && isTabComplete(tab2) && typeof tab1.title === "string" && typeof tab2.title === "string") {
             if (options.titleSimilarityThreshold >= 100) return tab1.title.toLowerCase() === tab2.title.toLowerCase();
             const t = options.titleSimilarityThreshold;
             const maxLen = Math.max(tab1.title.length, tab2.title.length);
@@ -130,7 +132,7 @@ const getCloseInfo = (details) => {
             }
         }
     }
-    if (retainedTabId == observedTab.id) {
+    if (retainedTabId === observedTab.id) {
         const keepInfo = {
             observedTabClosed: false,
             active: openedTab.active,
@@ -147,7 +149,7 @@ const getCloseInfo = (details) => {
         tabIndex: observedTab.index,
         tabId: openedTab.id,
         windowId: openedTab.windowId,
-        reloadTab: Boolean(options.keepReloadOlderTab)
+        reloadTab: options.keepReloadOlderTab
     };
     return [observedTab.id, keepInfo];
 };
@@ -157,6 +159,7 @@ const searchForDuplicateTabsToClose = async (observedTab, queryComplete, loading
     const observedTabUrl = loadingUrl || observedTab.url;
     const observedWindowsId = observedTab.windowId;
     await tabsInfo.awaitPendingCheck(observedTab.id);
+    if (tabsInfo.isClosingTab(observedTab.id)) return;
     if (tabsInfo.isIntentionalDuplicate(observedTab.id)) {
         refreshDuplicateTabsInfo(observedWindowsId);
         return;
@@ -490,10 +493,10 @@ const _refreshDuplicateTabsInfo = async (windowId) => {
     _pendingTriggerTabId.delete(windowId);
     const searchResult = await searchForDuplicateTabs(windowId, false);
     if (!searchResult) return;
-    updateBadgesValue(searchResult.duplicateTabsGroups, windowId, triggerTabId);
+    await updateBadgesValue(searchResult.duplicateTabsGroups, windowId, triggerTabId);
     const panelOpen = await isPanelOptionOpen();
     if (panelOpen && (options.searchInAllWindows || (windowId === searchResult.activeWindowId))) {
-        sendDuplicateTabs(searchResult.duplicateTabsGroups, searchResult.retainedTabs);
+        await sendDuplicateTabs(searchResult.duplicateTabsGroups, searchResult.retainedTabs);
     }
 };
 
@@ -540,6 +543,7 @@ const refreshGlobalDuplicateTabsInfo = async () => {
     if (options.searchInAllWindows) {
         refreshDuplicateTabsInfo(null);
     } else {
+        tabsInfo.clearDuplicateTabsInfo(null);
         const windows = await getWindows();
         if (windows) windows.forEach(window => {
             refreshDuplicateTabsInfo(window.id);

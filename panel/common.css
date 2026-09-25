@@ -759,29 +759,11 @@ label>input:disabled~* {
 
 /* ── New tab highlight ── */
 
-@keyframes tab-flash-first {
-    from { background-color: color-mix(in srgb, var(--dtc-header-bg) 75%, transparent); }
-    to   { background-color: transparent; }
-}
-
-@keyframes tab-flash-mid {
-    from { background-color: color-mix(in srgb, var(--dtc-header-bg) 75%, transparent); }
-    to   { background-color: transparent; }
-}
-
-@keyframes tab-flash-last {
+@keyframes tab-flash {
     from { background-color: color-mix(in srgb, var(--dtc-header-bg) 75%, transparent); }
     to   { background-color: transparent; }
 }
 
 .tab-row-new td {
-    animation: tab-flash-mid 3s ease-out forwards;
-}
-
-.tab-row-new td:first-child {
-    animation: tab-flash-first 3s ease-out forwards;
-}
-
-.tab-row-new td:last-child {
-    animation: tab-flash-last 3s ease-out forwards;
+    animation: tab-flash 3s ease-out forwards;
 }

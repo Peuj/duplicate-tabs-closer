@@ -44,8 +44,9 @@ const handleMessage = (message, sender, response) => {
 
 const handleExternalMessage = (message, sender, response) => {
     // externally_connectable is DEV-only and stripped from production builds.
-    // This guard is defense-in-depth for the case where the build strip fails.
-    if (!sender) return false;
+    // This guard is defense-in-depth; restrict manifest-c.json ids to the exact
+    // dtc-test extension ID before any published/sideloaded build.
+    if (!sender || !sender.id) return false;
     return handleMessage(message, sender, response);
 };
 

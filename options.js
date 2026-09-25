@@ -97,15 +97,6 @@ const defaultOptions = {
     scopePinned: {
         value: true
     },
-    themePinned: {
-        value: true
-    },
-    popupPinned: {
-        value: true
-    },
-    badgePinned: {
-        value: true
-    },
     whiteList: {
         value: ""
     },
@@ -165,7 +156,6 @@ const initializeOptions = async () => {
         const initialOptions = setupDefaultOptions();
         storedOptions = await saveStoredOptions(initialOptions);
     } else {
-        if (storedOptions.compareWithTitle?.value === true && !storedOptions.titleMatchMode) storedOptions.titleMatchMode = { value: "T" };
         const storedKeys = Object.keys(storedOptions).sort();
         const defaultKeys = Object.keys(defaultOptions).sort();
         if (storedKeys.length !== defaultKeys.length || storedKeys.some((k, i) => k !== defaultKeys[i])) {

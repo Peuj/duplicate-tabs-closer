@@ -71,7 +71,8 @@ const loadPopupEvents = () => {
   /* Save title similarity threshold */
   const threshEl = getElement(".list-group #titleSimilarityThreshold");
   if (threshEl) threshEl.addEventListener("change", function () {
-    const val = Math.min(100, Math.max(1, parseInt(this.value, 10) || 100));
+    const parsed = parseInt(this.value, 10);
+    const val = Math.min(100, Math.max(1, isNaN(parsed) ? 100 : parsed));
     this.value = val;
     saveOption("titleSimilarityThreshold", val, true);
   });
@@ -119,42 +120,7 @@ const loadPopupEvents = () => {
 
   /* Active selected tab (delegated) */
   const table = document.getElementById("duplicateTabsTable");
-  if (table) {
-    table.addEventListener("click", (e) => {
-      const groupCloseBtn = e.target.closest(".btn-group-close");
-      if (groupCloseBtn) {
-        e.stopPropagation();
-        const headerRow = groupCloseBtn.closest(".tr-group-header");
-        if (!headerRow) return;
-        headerRow.dataset.groupTabIds.split(",").filter(Boolean).map(Number).forEach(id => removeTab(id));
-        return;
-      }
-      const headerRow = e.target.closest(".tr-group-header");
-      if (headerRow) {
-        const isCollapsed = headerRow.classList.toggle("collapsed");
-        let row = headerRow.nextElementSibling;
-        while (row && row.classList.contains("group-row")) {
-          row.classList.toggle("group-collapsed", isCollapsed);
-          row = row.nextElementSibling;
-        }
-        resizeDuplicateTabsPanel(false);
-        return;
-      }
-      const titleCell = e.target.closest(".td-tab-title");
-      if (titleCell) {
-        const row = titleCell.parentElement;
-        const tabId = parseInt(row.getAttribute("tabId"), 10);
-        const windowId = parseInt(row.getAttribute("windowId"), 10);
-        focusTab(tabId, windowId).catch(err => console.error("DTC: focusTab failed:", err));
-      }
-      const closeCell = e.target.closest(".td-close-button");
-      if (closeCell) {
-        const row = closeCell.parentElement;
-        const tabId = parseInt(row.getAttribute("tabId"), 10);
-        removeTab(tabId);
-      }
-    });
-  }
+  if (table) registerDuplicateTableClickHandler(table, resizeDuplicateTabsPanel);
 
   /* Pause/resume monitoring */
   const pauseBtn = document.getElementById("pauseMonitorBtn");
