@@ -1,11 +1,15 @@
 html {
     max-height: 591px;
+    background-color: transparent;
 }
 
 body {
-    margin: 5px;
+    margin: 8px;
+    padding: 0;
     overflow: hidden;
-    width: 320px;
+    border-radius: 8px;
+    background-color: Canvas;
+    width: 314px;
     font-size: 12px;
     line-height: 1.5;
     color: var(--dtc-text);
@@ -121,7 +125,7 @@ body {
 
 /* ── Two-column popup layout ── */
 body.two-columns {
-    width: 650px;
+    width: 644px;
 }
 
 body.two-columns .panel-group {
@@ -225,7 +229,7 @@ body.two-columns.options-hidden #toggleOptionsPanelBtn .fa-chevron-left {
 }
 
 body.two-columns.options-hidden {
-    width: 320px;
+    width: 314px;
 }
 
 body.two-columns.options-hidden .panel-group {
