@@ -189,6 +189,7 @@ body:not(.two-columns) #toggleOptionsPanelBtn {
 
 body.two-columns #duplicateTabsCard {
     position: relative;
+    overflow: visible;
 }
 
 body.two-columns #toggleOptionsPanelBtn {
