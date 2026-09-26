@@ -81,7 +81,7 @@ const toggleMonitorPause = async () => {
 };
 
 const initializeTabSessionIds = async () => {
-	const tabs = await getTabs({ windowType: "normal" });
+	const tabs = await getTabs();
 	if (!tabs) return;
 	await Promise.allSettled(tabs.map(async tab => {
 		_seededTabIds.add(tab.id);
@@ -228,7 +228,6 @@ const onRemovedTab = async (removedTabId, removeInfo) => {
 	_preCreatedTabs.delete(removedTabId);
 	_lastNavigate.delete(removedTabId);
 	_seededTabIds.delete(removedTabId);
-	if (monitoringPaused) return;
 	if (removeInfo.isWindowClosing) {
 		if (options.searchInAllWindows && tabsInfo.needsRefresh(removeInfo.windowId)) {
 			refreshDuplicateTabsInfo();
@@ -239,6 +238,12 @@ const onRemovedTab = async (removedTabId, removeInfo) => {
 		handleRemainingTab.cleanup(removeInfo.windowId);
 		debouncedBatchClose.cleanup(removeInfo.windowId);
 		updateBadgeStyle();
+	}
+	if (monitoringPaused) return;
+	if (removeInfo.isWindowClosing) {
+		if (options.searchInAllWindows && tabsInfo.needsRefresh(removeInfo.windowId)) {
+			refreshDuplicateTabsInfo();
+		}
 	}
 	else if (tabsInfo.needsRefresh(removeInfo.windowId)) {
 		refreshDuplicateTabsInfo(removeInfo.windowId);
@@ -264,11 +269,12 @@ const onActivatedTab = async (activeInfo) => {
 // Chrome only — Firefox does not fire tabs.onReplaced (used when a tab is discarded/replaced by a new one).
 const onReplacedTab = async (addedTabId, removedTabId) => {
 	await ensureInitialized();
-	if (monitoringPaused) return;
 	const prevLastComplete = tabsInfo.getLastComplete(removedTabId);
 	tabsInfo.removeTab(removedTabId);
 	_lastNavigate.delete(removedTabId);
 	_preCreatedTabs.delete(removedTabId);
+	_seededTabIds.delete(removedTabId);
+	if (monitoringPaused) return;
 	const tab = await getTab(addedTabId);
 	tabsInfo.setTab(addedTabId, tab && prevLastComplete !== null
 		? { url: tab.url, complete: true, lastComplete: prevLastComplete }
@@ -314,10 +320,6 @@ const _handleSpaNavigation = async (details) => {
 	if (wasIntentionalDup) refreshDuplicateTabsInfo(tab.windowId);
 };
 
-const onHistoryStateUpdated = (details) => _handleSpaNavigation(details);
-
-const onReferenceFragmentUpdated = (details) => _handleSpaNavigation(details);
-
 const onCommand = async (command) => {
 	await ensureInitialized();
 	if (command === "close-duplicate-tabs") {
@@ -358,8 +360,8 @@ chrome.storage.onChanged.addListener((changes, area) => {
 chrome.tabs.onCreated.addListener(onCreatedTab);
 chrome.webNavigation.onBeforeNavigate.addListener(onBeforeNavigate);
 chrome.webNavigation.onCommitted.addListener(onCommittedTab);
-chrome.webNavigation.onHistoryStateUpdated.addListener(onHistoryStateUpdated);
-chrome.webNavigation.onReferenceFragmentUpdated.addListener(onReferenceFragmentUpdated);
+chrome.webNavigation.onHistoryStateUpdated.addListener(_handleSpaNavigation);
+chrome.webNavigation.onReferenceFragmentUpdated.addListener(_handleSpaNavigation);
 chrome.tabs.onAttached.addListener(onAttached);
 chrome.tabs.onDetached.addListener(onDetachedTab);
 chrome.tabs.onUpdated.addListener(onUpdatedTab);

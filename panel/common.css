@@ -649,7 +649,7 @@ html.theme-violet {
     cursor: not-allowed;
 }
 
-.btn-close-tabs:focus, .btn-close-tabs.focus {
+.btn-close-tabs:focus {
     box-shadow: 0 0 0 0.1rem color-mix(in srgb, var(--dtc-header-bg) 50%, transparent);
 }
 

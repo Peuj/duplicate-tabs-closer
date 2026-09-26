@@ -236,6 +236,24 @@ const updatePauseButton = (paused) => {
     }
 };
 
+const applyLineHighlight = (textarea) => {
+    const { top, bottom } = getHighlightBounds(textarea);
+    const s = textarea.scrollTop;
+    textarea.style.backgroundImage = `linear-gradient(transparent ${top - s}px, rgba(0, 0, 0, 0.075) ${top - s}px, rgba(0, 0, 0, 0.075) ${bottom - s}px, transparent ${bottom - s}px)`;
+};
+
+const applyPausedStateUI = (paused) => {
+    const sel = document.getElementById("onDuplicateTabDetected");
+    if (sel) sel.disabled = paused;
+    updatePauseButton(paused);
+};
+
+const registerPauseListener = (fn) => {
+    chrome.storage.session.onChanged.addListener((changes) => {
+        if ("monitoringPaused" in changes) fn(changes.monitoringPaused.newValue || false);
+    });
+};
+
 const registerDuplicateTableClickHandler = (table, resizeFn) => {
     table.addEventListener("click", (e) => {
         const groupCloseBtn = e.target.closest(".btn-group-close");

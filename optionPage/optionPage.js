@@ -18,9 +18,7 @@ const initialize = async () => {
 
 const applyPausedState = (paused) => {
   monitoringPaused = paused;
-  const sel = document.getElementById("onDuplicateTabDetected");
-  if (sel) sel.disabled = paused;
-  updatePauseButton(paused);
+  applyPausedStateUI(paused);
 };
 
 const updateTitleMatchModeDependents = (value) => {
@@ -87,12 +85,6 @@ const loadPopupEvents = () => {
   });
 
   /* Save URL/title pattern rules */
-  const applyLineHighlight = (textarea) => {
-    const { top, bottom } = getHighlightBounds(textarea);
-    const s = textarea.scrollTop;
-    textarea.style.backgroundImage = `linear-gradient(transparent ${top - s}px, rgba(0, 0, 0, 0.075) ${top - s}px, rgba(0, 0, 0, 0.075) ${bottom - s}px, transparent ${bottom - s}px)`;
-  };
-
   ["urlRegexRules", "titleRegexRules"].forEach(id => {
     const el = document.getElementById(id);
     if (!el) return;
@@ -130,9 +122,7 @@ const loadPopupEvents = () => {
     });
   });
 
-  chrome.storage.session.onChanged.addListener((changes) => {
-    if ("monitoringPaused" in changes) applyPausedState(changes.monitoringPaused.newValue || false);
-  });
+  registerPauseListener(applyPausedState);
 
   /* Close all */
   const closeBtn = document.getElementById("closeDuplicateTabsBtn");
@@ -346,9 +336,7 @@ const handleMessage = (message) => {
 
 chrome.runtime.onMessage.addListener(handleMessage);
 
-const handleDOMContentLoaded = () => {
+document.addEventListener("DOMContentLoaded", () => {
   initialize();
   loadPopupEvents();
-};
-
-document.addEventListener("DOMContentLoaded", handleDOMContentLoaded);
+});

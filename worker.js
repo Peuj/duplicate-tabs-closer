@@ -202,7 +202,7 @@ const searchForDuplicateTabsToClose = async (observedTab, queryComplete, loading
             (!options.requireTitleMatch || titleMatchesExact(openedTab, observedTab))) ||
             matchTitle(openedTab, observedTab) ||
             matchByUrlPattern(openedTab.url, observedTabUrl) ||
-            (options.compareWithTitle && isTabComplete(openedTab) && isTabComplete(observedTab) && matchByTitlePattern(openedTab.title, observedTab.title))) {
+            (options.compareWithTitle && isTabComplete(openedTab) && isTabComplete(observedTab) && typeof openedTab.title === "string" && typeof observedTab.title === "string" && matchByTitlePattern(openedTab.title, observedTab.title))) {
             match = true;
             const [tabToCloseId, remainingTabInfo] = getCloseInfo({ observedTab, observedTabUrl, openedTab, activeWindowId });
             closeDuplicateTab(tabToCloseId, remainingTabInfo);
@@ -236,7 +236,7 @@ const closeDuplicateTab = async (tabToCloseId, remainingTabInfo) => {
         }
     }
     catch {
-        tabsInfo.setClosingTab(tabToCloseId, false);
+        if (tabsInfo.hasTab(tabToCloseId)) tabsInfo.setClosingTab(tabToCloseId, false);
         return;
     }
     if (await tabExists(tabToCloseId)) {
@@ -257,8 +257,11 @@ const _handleRemainingTab = async (windowId, details) => {
     }
     if (details.reloadTab) {
         tabsInfo.setClosingTab(details.tabId, true);
-        await reloadTab(details.tabId);
-        tabsInfo.setClosingTab(details.tabId, false);
+        try {
+            await reloadTab(details.tabId);
+        } finally {
+            tabsInfo.setClosingTab(details.tabId, false);
+        }
     }
     refreshDuplicateTabsInfo(details.windowId);
     if (environment.isChrome) setBadge(details.windowId, details.tabId);
@@ -351,7 +354,7 @@ const applyDuplicateAction = (details, observedTab, match) => {
 const handleObservedTab = (details) => {
     const observedTab = details.tab;
     let matchingTabURL = getMatchingURL(observedTab.url);
-    let matchingTabTitle = options.compareWithTitle && isTabComplete(observedTab) ? `title=${observedTab.title.toLowerCase()}` : null;
+    let matchingTabTitle = options.compareWithTitle && isTabComplete(observedTab) && typeof observedTab.title === "string" ? `title=${observedTab.title.toLowerCase()}` : null;
     if (options.searchPerContainer) {
         matchingTabURL += observedTab.cookieStoreId;
         if (matchingTabTitle) matchingTabTitle += observedTab.cookieStoreId;
@@ -380,7 +383,7 @@ const findFuzzyTitleKey = (title, retainedTabs) => {
 
  
 const searchForDuplicateTabs = async (windowId, closeTabs, skipWhitelisted = true) => {
-    const queryInfo = { windowType: "normal" };
+    const queryInfo = {};
     if (!options.searchInAllWindows) queryInfo.windowId = windowId;
     const [activeWindowId, openedTabs] = await Promise.all([getActiveWindowId(), getTabs(queryInfo)]);
     restoreDiscardedUrls(openedTabs);
