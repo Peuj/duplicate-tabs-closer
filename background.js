@@ -228,6 +228,7 @@ const onRemovedTab = async (removedTabId, removeInfo) => {
 	_preCreatedTabs.delete(removedTabId);
 	_lastNavigate.delete(removedTabId);
 	_seededTabIds.delete(removedTabId);
+	const needsGlobalRefresh = options.searchInAllWindows && tabsInfo.needsRefresh(removeInfo.windowId);
 	if (removeInfo.isWindowClosing) {
 		if (options.searchInAllWindows && tabsInfo.needsRefresh(removeInfo.windowId)) {
 			refreshDuplicateTabsInfo();
@@ -240,10 +241,8 @@ const onRemovedTab = async (removedTabId, removeInfo) => {
 		updateBadgeStyle();
 	}
 	if (monitoringPaused) return;
-	if (removeInfo.isWindowClosing) {
-		if (options.searchInAllWindows && tabsInfo.needsRefresh(removeInfo.windowId)) {
-			refreshDuplicateTabsInfo();
-		}
+	if (removeInfo.isWindowClosing && needsGlobalRefresh) {
+		refreshDuplicateTabsInfo();
 	}
 	else if (tabsInfo.needsRefresh(removeInfo.windowId)) {
 		refreshDuplicateTabsInfo(removeInfo.windowId);
@@ -280,6 +279,9 @@ const onReplacedTab = async (addedTabId, removedTabId) => {
 		? { url: tab.url, complete: true, lastComplete: prevLastComplete }
 		: tab ? { url: tab.url } : {});
 	if (tab) {
+		if (_pendingTriggerTabId.get(tab.windowId) === removedTabId) {
+			_pendingTriggerTabId.set(tab.windowId, addedTabId);
+		}
 		if (startupBurst.active) {
 				debouncedBatchClose(tab.windowId);
 				return;
@@ -315,7 +317,7 @@ const _handleSpaNavigation = async (details) => {
 	if (!tabsInfo.hasUrlChanged(tab)) return;
 	const wasIntentionalDup = tabsInfo.isIntentionalDuplicate(tab.id);
 	if (wasIntentionalDup) tabsInfo.clearIntentionalDuplicate(tab.id);
-	tabsInfo.setTab(tab.id, { url: details.url, complete: true });
+	tabsInfo.setTab(tab.id, { url: tab.url, complete: true });
 	dispatchTabCompletion(tab, tab.id);
 	if (wasIntentionalDup) refreshDuplicateTabsInfo(tab.windowId);
 };

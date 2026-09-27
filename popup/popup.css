@@ -99,7 +99,7 @@ body {
     color: var(--dtc-section-hover);
 }
 
-.fa-compress, .fa-expand {
+.fa-compress {
     transform: scale(1.1);
 }
 

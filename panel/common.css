@@ -412,6 +412,7 @@ html.theme-violet {
 .table-scrollable-overflow {
     overflow: hidden auto;
     scrollbar-width: thin;
+    scrollbar-color: var(--dtc-scrollbar-thumb) var(--dtc-scrollbar-track);
     margin-right: 0;
 }
 

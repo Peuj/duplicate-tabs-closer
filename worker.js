@@ -47,12 +47,12 @@ const restoreDiscardedUrls = (tabs) => {
 };
 
 const titleMatchesExact = (tab1, tab2) => isTabComplete(tab1) && isTabComplete(tab2) &&
-    typeof tab1.title === "string" && typeof tab2.title === "string" &&
+    tab1.title && tab2.title &&
     tab1.title.toLowerCase() === tab2.title.toLowerCase();
 
 const matchTitle = (tab1, tab2) => {
     if (options.compareWithTitle) {
-        if (isTabComplete(tab1) && isTabComplete(tab2) && typeof tab1.title === "string" && typeof tab2.title === "string") {
+        if (isTabComplete(tab1) && isTabComplete(tab2) && tab1.title && tab2.title) {
             if (options.titleSimilarityThreshold >= 100) return tab1.title.toLowerCase() === tab2.title.toLowerCase();
             const t = options.titleSimilarityThreshold;
             const maxLen = Math.max(tab1.title.length, tab2.title.length);
@@ -202,7 +202,7 @@ const searchForDuplicateTabsToClose = async (observedTab, queryComplete, loading
             (!options.requireTitleMatch || titleMatchesExact(openedTab, observedTab))) ||
             matchTitle(openedTab, observedTab) ||
             matchByUrlPattern(openedTab.url, observedTabUrl) ||
-            (options.compareWithTitle && isTabComplete(openedTab) && isTabComplete(observedTab) && typeof openedTab.title === "string" && typeof observedTab.title === "string" && matchByTitlePattern(openedTab.title, observedTab.title))) {
+            (options.compareWithTitle && isTabComplete(openedTab) && isTabComplete(observedTab) && openedTab.title && observedTab.title && matchByTitlePattern(openedTab.title, observedTab.title))) {
             match = true;
             const [tabToCloseId, remainingTabInfo] = getCloseInfo({ observedTab, observedTabUrl, openedTab, activeWindowId });
             closeDuplicateTab(tabToCloseId, remainingTabInfo);
@@ -250,10 +250,16 @@ const closeDuplicateTab = async (tabToCloseId, remainingTabInfo) => {
 const _handleRemainingTab = async (windowId, details) => {
     if (!tabsInfo.hasTab(details.tabId)) return;
     if (options.defaultTabBehavior && details.observedTabClosed) {
-        if (details.tabIndex > 0) moveTab(details.tabId, { index: details.tabIndex });
-        if (details.active) activateTab(details.tabId);
+        if (details.tabIndex > 0) moveTab(details.tabId, { index: details.tabIndex }).catch(() => {
+            // ignore: tab may no longer exist
+        });
+        if (details.active) activateTab(details.tabId).catch(() => {
+            // ignore: tab may no longer exist
+        });
     } else if (options.activateKeptTab) {
-        focusTab(details.tabId, details.windowId);
+        focusTab(details.tabId, details.windowId).catch(() => {
+            // ignore: tab may no longer exist
+        });
     }
     if (details.reloadTab) {
         tabsInfo.setClosingTab(details.tabId, true);
@@ -354,7 +360,7 @@ const applyDuplicateAction = (details, observedTab, match) => {
 const handleObservedTab = (details) => {
     const observedTab = details.tab;
     let matchingTabURL = getMatchingURL(observedTab.url);
-    let matchingTabTitle = options.compareWithTitle && isTabComplete(observedTab) && typeof observedTab.title === "string" ? `title=${observedTab.title.toLowerCase()}` : null;
+    let matchingTabTitle = options.compareWithTitle && isTabComplete(observedTab) && observedTab.title ? `title=${observedTab.title.toLowerCase()}` : null;
     if (options.searchPerContainer) {
         matchingTabURL += observedTab.cookieStoreId;
         if (matchingTabTitle) matchingTabTitle += observedTab.cookieStoreId;
@@ -369,6 +375,7 @@ const handleObservedTab = (details) => {
 
 const findFuzzyTitleKey = (title, retainedTabs) => {
     if (options.titleSimilarityThreshold >= 100) return null;
+    if (!title) return null;
     const t = options.titleSimilarityThreshold;
     const titleLen = title.length;
     for (const [key] of retainedTabs) {
@@ -496,8 +503,12 @@ const _refreshDuplicateTabsInfo = async (windowId) => {
     _pendingTriggerTabId.delete(windowId);
     const searchResult = await searchForDuplicateTabs(windowId, false);
     if (!searchResult) return;
-    await updateBadgesValue(searchResult.duplicateTabsGroups, windowId, triggerTabId);
-    const panelOpen = await isPanelOptionOpen();
+    if (monitoringPaused) return;
+    const [, panelOpen] = await Promise.all([
+        updateBadgesValue(searchResult.duplicateTabsGroups, windowId, triggerTabId),
+        isPanelOptionOpen()
+    ]);
+    if (monitoringPaused) return;
     if (panelOpen && (options.searchInAllWindows || (windowId === searchResult.activeWindowId))) {
         await sendDuplicateTabs(searchResult.duplicateTabsGroups, searchResult.retainedTabs);
     }

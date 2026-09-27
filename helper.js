@@ -248,15 +248,22 @@ const sendMessage = async (action, data, retries = 3, retryDelay = 300) => {
     }
 };
 
+let _dpPrev = new Int32Array(1);
+let _dpCurr = new Int32Array(1);
+
 const titleSimilarity = (a, b) => {
-    const s1 = a.toLowerCase(), 
+    const s1 = a.toLowerCase(),
 s2 = b.toLowerCase();
-    const m = s1.length, 
+    const m = s1.length,
 n = s2.length;
     if (m === 0 && n === 0) return 100;
     if (m === 0 || n === 0) return 0;
-    let prev = new Int32Array(n + 1);
-    let curr = new Int32Array(n + 1);
+    if (n + 1 > _dpPrev.length) {
+        _dpPrev = new Int32Array(n + 1);
+        _dpCurr = new Int32Array(n + 1);
+    }
+    let prev = _dpPrev;
+    let curr = _dpCurr;
     for (let i = 0; i <= n; i += 1) prev[i] = i;
     for (let i = 1; i <= m; i += 1) {
         curr[0] = i;
