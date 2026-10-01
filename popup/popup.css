@@ -183,6 +183,14 @@ body.two-columns #duplicateTabsCard .card-header #pauseMonitorBtn {
     border-top-right-radius: 3px;
 }
 
+body.two-columns #duplicateTabsCard .card-header {
+    margin-top: 0;
+    margin-left: 0;
+    margin-right: 0;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
 body:not(.two-columns) #toggleOptionsPanelBtn {
     display: none;
 }
