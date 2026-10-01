@@ -39,7 +39,7 @@ const shouldSkipTab = (tab, { queryComplete = false, skipWhitelisted = true } = 
 const restoreDiscardedUrls = (tabs) => {
     if (!tabs) return;
     for (const tab of tabs) {
-        if (tab.discarded && tab.url === "about:blank") {
+        if (tab.url === "about:blank") {
             const stored = tabsInfo.getStoredUrl(tab.id);
             if (stored && stored !== "about:blank") tab.url = stored;
         }

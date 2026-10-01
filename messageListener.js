@@ -9,6 +9,16 @@ const handleMessage = (message, sender, response) => {
                 then(() => response({})).catch(() => response({}));
             return true;
         }
+        case "setStoredOptions": {
+            if (!message.data || typeof message.data.options !== "object") return response({});
+            const opts = Object.entries(message.data.options).filter(([name]) => name in defaultOptions);
+            if (!opts.length) return response({});
+            Promise.all(opts.map(([name, value]) => setStoredOption(name, value, false))).
+                then(() => refreshGlobalDuplicateTabsInfo()).
+                then(() => response({})).
+                catch(() => response({}));
+            return true;
+        }
         case "getStoredOptions": {
             getStoredOptions().then(storedOptions => response({ data: storedOptions })).catch(() => response({}));
             return true;
