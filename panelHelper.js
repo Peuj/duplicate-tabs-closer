@@ -48,14 +48,12 @@ const buildTabRow = (duplicateTab, activeWindowId) => {
 
     const tdClose = document.createElement("td");
     tdClose.className = "td-close-button";
-    if (!duplicateTab.isRetained) {
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "btn-tab-close";
-        btn.setAttribute("aria-label", chrome.i18n.getMessage("closeTabButton"));
-        btn.textContent = "×";
-        tdClose.appendChild(btn);
-    }
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "btn-tab-close";
+    btn.setAttribute("aria-label", chrome.i18n.getMessage("closeTabButton"));
+    btn.textContent = "×";
+    tdClose.appendChild(btn);
 
     tr.appendChild(tdIcon);
     tr.appendChild(tdTitle);

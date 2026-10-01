@@ -4,9 +4,9 @@
     --dtc-header-bg: #0facf3;
     --dtc-header-border: #2eade7;
     --dtc-header-text: #fff;
-    --dtc-section-title: #0facf3;
-    --dtc-section-collapsed: #9facbd;
-    --dtc-section-hover: #0a95d3;
+    --dtc-section-title: #0769a2;
+    --dtc-section-collapsed: #64748b;
+    --dtc-section-hover: #054f7a;
     --dtc-text: #3c4859;
     --dtc-close-btn: #3c4859;
     --dtc-close-btn-hover: #1c2b3a;
@@ -134,9 +134,9 @@ html.theme-sage {
     --dtc-header-bg: #16a34a;
     --dtc-header-border: #15803d;
     --dtc-header-text: #fff;
-    --dtc-section-title: #16a34a;
-    --dtc-section-collapsed: #9facbd;
-    --dtc-section-hover: #15803d;
+    --dtc-section-title: #15803d;
+    --dtc-section-collapsed: #64748b;
+    --dtc-section-hover: #166534;
     --dtc-text: #3c4859;
     --dtc-close-btn: #3c4859;
     --dtc-close-btn-hover: #1c2b3a;
@@ -151,9 +151,9 @@ html.theme-rose {
     --dtc-header-bg: #e11d48;
     --dtc-header-border: #be123c;
     --dtc-header-text: #fff;
-    --dtc-section-title: #e11d48;
-    --dtc-section-collapsed: #9facbd;
-    --dtc-section-hover: #be123c;
+    --dtc-section-title: #be123c;
+    --dtc-section-collapsed: #64748b;
+    --dtc-section-hover: #9f1239;
     --dtc-text: #3c4859;
     --dtc-close-btn: #3c4859;
     --dtc-close-btn-hover: #1c2b3a;
@@ -165,12 +165,12 @@ html.theme-rose {
 }
 
 html.theme-amber {
-    --dtc-header-bg: #d97706;
-    --dtc-header-border: #b45309;
+    --dtc-header-bg: #b45309;
+    --dtc-header-border: #92400e;
     --dtc-header-text: #fff;
-    --dtc-section-title: #d97706;
-    --dtc-section-collapsed: #9facbd;
-    --dtc-section-hover: #b45309;
+    --dtc-section-title: #92400e;
+    --dtc-section-collapsed: #64748b;
+    --dtc-section-hover: #78350f;
     --dtc-text: #3c4859;
     --dtc-close-btn: #3c4859;
     --dtc-close-btn-hover: #1c2b3a;
@@ -186,7 +186,7 @@ html.theme-slate {
     --dtc-header-border: #334155;
     --dtc-header-text: #f1f5f9;
     --dtc-section-title: #475569;
-    --dtc-section-collapsed: #94a3b8;
+    --dtc-section-collapsed: #64748b;
     --dtc-section-hover: #334155;
     --dtc-text: #1e293b;
     --dtc-close-btn: #475569;
@@ -203,7 +203,7 @@ html.theme-violet {
     --dtc-header-border: #6d28d9;
     --dtc-header-text: #fff;
     --dtc-section-title: #7c3aed;
-    --dtc-section-collapsed: #9facbd;
+    --dtc-section-collapsed: #64748b;
     --dtc-section-hover: #6d28d9;
     --dtc-text: #3c4859;
     --dtc-close-btn: #3c4859;
@@ -434,12 +434,22 @@ html.theme-violet {
     --dtc-table-bg: transparent;
 }
 
+html.theme-ocean .table,
+html.theme-charcoal .table,
+html.theme-purple .table,
+html.theme-teal .table,
+html.theme-oled .table {
+    --dtc-table-hover-bg: rgb(255 255 255 / 0.08);
+}
+
 /* ── Duplicate tabs table ── */
 
 #duplicateTabsTable {
     margin: 0;
     width: 100%;
     table-layout: fixed;
+    border-collapse: separate;
+    border-spacing: 0;
 }
 
 .col-tab-icon  { width: 24px; }
@@ -455,6 +465,14 @@ html.theme-violet {
 
 #duplicateTabsTable tr:has(.td-tab-text):hover > * {
     --dtc-table-hover-bg: transparent;
+}
+
+#duplicateTabsTable > tbody > tr:hover > td:first-child {
+    border-radius: 3px 0 0 3px;
+}
+
+#duplicateTabsTable > tbody > tr:hover > td:last-child {
+    border-radius: 0 3px 3px 0;
 }
 
 .td-tab-icon {
@@ -508,8 +526,12 @@ html.theme-violet {
     bottom: -0.25em;
 }
 
-.tab-row-duplicate td {
+.tab-row-duplicate .td-tab-icon img {
     opacity: 0.6;
+}
+
+.tab-row-duplicate .td-tab-title {
+    color: color-mix(in srgb, var(--dtc-text) 60%, transparent);
 }
 
 .tab-row-duplicate .td-tab-title {
@@ -551,8 +573,14 @@ html.theme-violet {
 
 .tr-group-header:hover > * {
     --dtc-table-hover-bg: var(--dtc-header-bg);
-
+    color: var(--dtc-header-text);
     cursor: pointer;
+}
+
+.tr-group-header:hover .fa-chevron-right,
+.tr-group-header:hover .group-header-title,
+.tr-group-header:hover .group-count-badge {
+    color: var(--dtc-header-text);
 }
 
 .td-group-header-cell {
@@ -735,6 +763,16 @@ label>input:disabled~* {
     display: none;
 }
 
+/* ── Dark themes: form-select arrow ── */
+
+html.theme-ocean .form-select,
+html.theme-charcoal .form-select,
+html.theme-purple .form-select,
+html.theme-teal .form-select,
+html.theme-oled .form-select {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+}
+
 /* ── Scrollbars (Chrome/Edge/Safari) ── */
 
 ::-webkit-scrollbar-track {
@@ -767,4 +805,18 @@ label>input:disabled~* {
 
 .tab-row-new td {
     animation: tab-flash 3s ease-out forwards;
+}
+
+/* ── Dark theme overrides ── */
+
+html.theme-ocean .shadow-sm,
+html.theme-charcoal .shadow-sm,
+html.theme-purple .shadow-sm,
+html.theme-teal .shadow-sm,
+html.theme-oled .shadow-sm {
+    box-shadow: 0 .125rem .25rem rgb(255 255 255 / 0.07) !important;
+}
+
+html.theme-oled .highlight-scroll-bottom {
+    box-shadow: inset 0 -5px 5px -5px var(--dtc-section-title);
 }

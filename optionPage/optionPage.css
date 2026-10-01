@@ -72,7 +72,7 @@ body {
 }
 
 .checkbox-fa + .popup-pin-label > .fa-eye:not(:hover) {
-  color: #ddd;
+  color: color-mix(in srgb, var(--dtc-section-collapsed) 55%, transparent);
 }
 
 .checkbox-fa:checked + .popup-pin-label > .fa-eye:not(:hover) {
