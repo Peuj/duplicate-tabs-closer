@@ -532,9 +532,6 @@ html.theme-oled .table {
 
 .tab-row-duplicate .td-tab-title {
     color: color-mix(in srgb, var(--dtc-text) 60%, transparent);
-}
-
-.tab-row-duplicate .td-tab-title {
     text-decoration: line-through;
 }
 
@@ -573,6 +570,7 @@ html.theme-oled .table {
 
 .tr-group-header:hover > * {
     --dtc-table-hover-bg: var(--dtc-header-bg);
+
     color: var(--dtc-header-text);
     cursor: pointer;
 }
