@@ -48,13 +48,15 @@ const restoreDiscardedUrls = (tabs) => {
     }
 };
 
-const titleMatchesExact = (tab1, tab2) => isTabComplete(tab1) && isTabComplete(tab2) &&
+const isTabOrStoredComplete = (tab) => isTabComplete(tab) || tabsInfo.getLastComplete(tab.id) !== null;
+
+const titleMatchesExact = (tab1, tab2) => isTabOrStoredComplete(tab1) && isTabOrStoredComplete(tab2) &&
     tab1.title && tab2.title &&
     tab1.title.toLowerCase() === tab2.title.toLowerCase();
 
 const matchTitle = (tab1, tab2) => {
     if (options.compareWithTitle) {
-        if (isTabComplete(tab1) && isTabComplete(tab2) && tab1.title && tab2.title) {
+        if (isTabOrStoredComplete(tab1) && isTabOrStoredComplete(tab2) && tab1.title && tab2.title) {
             if (options.titleSimilarityThreshold >= 100) return tab1.title.toLowerCase() === tab2.title.toLowerCase();
             const t = options.titleSimilarityThreshold;
             const maxLen = Math.max(tab1.title.length, tab2.title.length);
