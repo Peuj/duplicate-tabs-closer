@@ -107,13 +107,13 @@
     "message": "% 标题相似度",
     "description": "Minimum title similarity to consider tabs as duplicates"
   },
-  "urlRegexRules": {
+  "urlRules": {
     "message": "URL 匹配规则",
-    "description": "URL pattern rules"
+    "description": "URL rules widget label"
   },
-  "urlRegexRulesHint": {
-    "message": "使用 * 作为通配符，或使用 /regex/flags 表示正则表达式",
-    "description": "Hint below URL pattern rules textarea"
+  "addUrlRule": {
+    "message": "Add rule",
+    "description": "Button to add a new URL rule row"
   },
   "titleRegexRules": {
     "message": "标题匹配规则",

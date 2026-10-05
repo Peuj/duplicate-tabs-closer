@@ -3,7 +3,8 @@
 const isUrlWhiteListed = (url) => options.whiteList.some(pattern => pattern.test(url));
 
 const matchByUrlPattern = (url1, url2) => {
-    for (const { source, regex } of options.urlRegexRules) {
+    for (const { type, source, regex } of options.urlRules) {
+        if (type !== "group") continue;
         if (regex.test(url1) && regex.test(url2)) return source;
     }
     return null;
@@ -17,7 +18,8 @@ const matchByTitlePattern = (title1, title2) => {
 };
 
 const findPatternSource = (value, rules) => {
-    for (const { source, regex } of rules) {
+    for (const { type, source, regex } of rules) {
+        if (type !== "group") continue;
         if (regex.test(value)) return source;
     }
     return null;
@@ -173,7 +175,7 @@ const searchForDuplicateTabsToClose = async (observedTab, queryComplete, loading
     if (options.skipBlankTabs && isBlankURL(observedTabUrl)) return;
     if (observedTabUrl.startsWith("view-source:")) return;
     const queryInfo = {};
-    if (isValidURL(observedTabUrl) && options.urlRegexRules.length === 0 &&
+    if (isValidURL(observedTabUrl) && !options.urlRules.some(r => r.type === "group") &&
         (!options.compareWithTitle || options.titleRegexRules.length === 0)) {
         const matchPattern = getMatchPatternURL(observedTabUrl);
         if (matchPattern) queryInfo.url = matchPattern;
@@ -292,8 +294,8 @@ const findRetainedTab = (observedTab, retainedTabs, matchingTabURL, matchingTabT
         if (tab) return { tab, key: titleKey };
     }
     // 3. URL pattern key
-    if (options.urlRegexRules.length > 0) {
-        const urlPatSource = findPatternSource(observedTab.url, options.urlRegexRules);
+    if (options.urlRules.some(r => r.type === "group")) {
+        const urlPatSource = findPatternSource(observedTab.url, options.urlRules);
         if (urlPatSource) {
             const patKey = `urlpattern=${urlPatSource}`;
             tab = retainedTabs.get(patKey);
@@ -315,8 +317,8 @@ const findRetainedTab = (observedTab, retainedTabs, matchingTabURL, matchingTabT
 const registerTab = (observedTab, retainedTabs, matchingTabURL, matchingTabTitle) => {
     if (isTabComplete(observedTab) || tabsInfo.getLastComplete(observedTab.id) !== null) retainedTabs.set(matchingTabURL, observedTab);
     if (matchingTabTitle && !retainedTabs.has(matchingTabTitle)) retainedTabs.set(matchingTabTitle, observedTab);
-    if (options.urlRegexRules.length > 0) {
-        const urlPatSource = findPatternSource(observedTab.url, options.urlRegexRules);
+    if (options.urlRules.some(r => r.type === "group")) {
+        const urlPatSource = findPatternSource(observedTab.url, options.urlRules);
         if (urlPatSource) {
             const patKey = `urlpattern=${urlPatSource}`;
             if (!retainedTabs.has(patKey)) retainedTabs.set(patKey, observedTab);

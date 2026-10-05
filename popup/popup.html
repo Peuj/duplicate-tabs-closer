@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="popup.css">
     <script src="../helper.js"></script>
     <script src="../panelHelper.js"></script>
+    <script src="../panel/urlRulesWidget.js"></script>
     <script src="popup.js"></script>
 </head>
 
@@ -138,9 +139,9 @@
                                     </label>
                                 </div>
                                 <div class="checkboxes checkboxes-regex-label">
-                                    <label for="urlRegexRules"><span i18n-content="urlRegexRules"></span></label>
-                                    <textarea id="urlRegexRules" class="form-control rules-textarea" rows="3"></textarea>
-                                    <small class="form-text text-muted" i18n-content="urlRegexRulesHint"></small>
+                                    <label for="urlRulesWidget"><span i18n-content="urlRules"></span></label>
+                                    <div id="urlRulesWidget" class="url-rules-widget"></div>
+                                    <button type="button" id="urlRulesAdd" class="btn-add-rule" i18n-content="addUrlRule"></button>
                                 </div>
                                 <div class="checkboxes checkboxes-threshold">
                                     <label>

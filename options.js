@@ -52,8 +52,8 @@ const defaultOptions = {
     titleSimilarityThreshold: {
         value: 100
     },
-    urlRegexRules: {
-        value: ""
+    urlRules: {
+        value: "[]"
     },
     titleRegexRules: {
         value: ""
@@ -79,7 +79,7 @@ const defaultOptions = {
     titleSimilarityThreshold_popup: {
         value: true
     },
-    urlRegexRules_popup: {
+    urlRules_popup: {
         value: true
     },
     titleRegexRules_popup: {
@@ -156,6 +156,13 @@ const initializeOptions = async () => {
         const initialOptions = setupDefaultOptions();
         storedOptions = await saveStoredOptions(initialOptions);
     } else {
+        if (storedOptions.urlRegexRules && !storedOptions.urlRules) {
+            const oldRules = parsePatternRules(storedOptions.urlRegexRules.value || "");
+            storedOptions.urlRules = { value: JSON.stringify(oldRules.map(r => ({ type: "group", pattern: r.source }))) };
+            if (storedOptions.urlRegexRules_popup) {
+                storedOptions.urlRules_popup = { value: storedOptions.urlRegexRules_popup.value };
+            }
+        }
         const storedKeys = Object.keys(storedOptions).sort();
         const defaultKeys = Object.keys(defaultOptions).sort();
         if (storedKeys.length !== defaultKeys.length || storedKeys.some((k, i) => k !== defaultKeys[i])) {
@@ -213,7 +220,7 @@ const setOptions = (storedOptions) => {
     options.searchPerContainer = storedOptions.scope.value === "CC" || storedOptions.scope.value === "CA";
     options.prioritizeActiveWindow = storedOptions.prioritizeActiveWindow.value;
     options.whiteList = whiteListToPattern(storedOptions.whiteList.value);
-    options.urlRegexRules = parsePatternRules(storedOptions.urlRegexRules.value);
+    options.urlRules = parseUrlRules(storedOptions.urlRules.value);
     options.titleRegexRules = parsePatternRules(storedOptions.titleRegexRules.value);
     options.badgeColorDuplicateTabs = storedOptions.badgeColorDuplicateTabs.value;
     options.badgeColorNoDuplicateTabs = storedOptions.badgeColorNoDuplicateTabs.value;
@@ -290,7 +297,7 @@ const parsePatternRules = (text) => {
         const regexMatch = line.match(/^\/(.+)\/([gimsuy]*)$/);
         if (regexMatch) {
             try {
-                results.push({ source: line, regex: new RegExp(regexMatch[1], regexMatch[2].replace(/[gy]/g, "")) });
+                results.push({ type: "group", source: line, regex: new RegExp(regexMatch[1], regexMatch[2].replace(/[gy]/g, "")) });
             } catch {
                 // ignore: invalid regex in pattern rule
             }
@@ -298,7 +305,48 @@ const parsePatternRules = (text) => {
             if ((line.match(/\*/g) || []).length > MAX_WILDCARDS) continue;
             let pattern = "^";
             for (const ch of line) pattern = ch === "*" ? `${pattern}.*` : pattern + escapeRegexChar(ch);
-            results.push({ source: line, regex: new RegExp(`${pattern}$`) });
+            results.push({ type: "group", source: line, regex: new RegExp(`${pattern}$`) });
+        }
+    }
+    return results;
+};
+
+const parseUrlRules = (jsonText) => {
+    const MAX_LINE_LENGTH = 200;
+    const MAX_WILDCARDS = 5;
+    let rows = [];
+    try {
+        rows = JSON.parse(jsonText);
+    } catch {
+        // ignore: invalid JSON in urlRules storage value
+    }
+    if (!Array.isArray(rows)) rows = [];
+    const results = [];
+    for (const row of rows) {
+        if (!row || !row.type || !row.pattern) continue;
+        const { type } = row;
+        const line = String(row.pattern).trim().slice(0, MAX_LINE_LENGTH);
+        if (!line) continue;
+        if (type === "group") {
+            const regexMatch = line.match(/^\/(.+)\/([gimsuy]*)$/);
+            if (regexMatch) {
+                try {
+                    results.push({ type: "group", source: line, regex: new RegExp(regexMatch[1], regexMatch[2].replace(/[gy]/g, "")) });
+                } catch {
+                    // ignore: invalid regex in group rule
+                }
+            } else {
+                if ((line.match(/\*/g) || []).length > MAX_WILDCARDS) continue;
+                let pattern = "^";
+                for (const ch of line) pattern = ch === "*" ? `${pattern}.*` : pattern + escapeRegexChar(ch);
+                results.push({ type: "group", source: line, regex: new RegExp(`${pattern}$`) });
+            }
+        } else if (type === "normalize") {
+            if ((line.match(/\*/g) || []).length > MAX_WILDCARDS) continue;
+            let pattern = "^";
+            for (const ch of line) pattern = ch === "*" ? `${pattern}.*` : pattern + escapeRegexChar(ch);
+            const normalized = line.replace(/\*/g, "x");
+            results.push({ type: "hostname", regex: new RegExp(`${pattern}$`), normalized });
         }
     }
     return results;

@@ -7,6 +7,12 @@ let groupedView = false;
 let lastNbRows = 0;
 let monitoringPaused = false;
 
+const _saveUrlRules = () => {
+  const widgetEl = document.getElementById("urlRulesWidget");
+  if (!widgetEl) return;
+  saveOption("urlRules", collectUrlRulesJson(widgetEl), true);
+};
+
 const initialize = async () => {
   const [, windowId, sessionData] = await Promise.all([setPanelOptions(), getActiveWindowId(), chrome.storage.session.get("monitoringPaused")]);
   monitoringPaused = sessionData.monitoringPaused || false;
@@ -84,8 +90,19 @@ const loadPopupEvents = () => {
     updateFileAccessWarning();
   });
 
-  /* Save URL/title pattern rules */
-  ["urlRegexRules", "titleRegexRules"].forEach(id => {
+  /* URL rules widget */
+  const urlRulesWidgetEl = document.getElementById("urlRulesWidget");
+  const urlRulesAddBtn = document.getElementById("urlRulesAdd");
+  if (urlRulesAddBtn) {
+    urlRulesAddBtn.addEventListener("click", () => {
+      const row = buildUrlRuleRow({ type: "group", pattern: "" }, _saveUrlRules);
+      urlRulesWidgetEl.appendChild(row);
+      row.querySelector(".url-rule-pattern").focus();
+    });
+  }
+
+  /* Save title pattern rules */
+  ["titleRegexRules"].forEach(id => {
     const el = document.getElementById(id);
     if (!el) return;
     el.addEventListener("change", function () {
@@ -275,7 +292,25 @@ const setPanelOption = (details) => {
       if (isLockedKey) el.disabled = true;
     }
   }
-  else if (storedOption === "urlRegexRules" || storedOption === "titleRegexRules") {
+  else if (storedOption === "urlRules") {
+    const widgetEl = document.getElementById("urlRulesWidget");
+    if (!widgetEl) return;
+    widgetEl.replaceChildren();
+    let rules = null;
+    try {
+      rules = JSON.parse(value);
+    } catch {
+      // ignore: invalid JSON in urlRules storage value
+    }
+    if (!Array.isArray(rules)) rules = [];
+    rules.forEach(rule => widgetEl.appendChild(buildUrlRuleRow(rule, _saveUrlRules)));
+    if (isLockedKey) {
+      widgetEl.querySelectorAll("input, select, button").forEach(el => {
+        el.disabled = true;
+      });
+    }
+  }
+  else if (storedOption === "titleRegexRules") {
     const el = document.getElementById(storedOption);
     if (el) {
       el.value = value;

@@ -121,23 +121,38 @@ Controls how two tabs are compared to determine whether they are duplicates.
 | **Detect duplicates by** | URL only | Controls how tabs are matched: **URL only** uses URL comparison only (default). **URL match or title match** also closes tabs whose page titles match, even across different URLs: useful for pages that display the same title on different URLs. **URL match and same title** keeps tabs with the same URL but different titles: useful when you rename tabs to distinguish them. |
 | **% title similarity** | 100 | Minimum similarity percentage (1–100) for two titles to be considered a match. `100` requires an exact match (case-insensitive). Only active when *Detect duplicates by* is set to *URL match or title match*. |
 
-#### URL Pattern Rules
+#### URL Rules
 
-A list of URL patterns, one per line. Any two open tabs whose URLs both match the same pattern are treated as duplicates, even if their full URLs differ.
+Each rule is a row with a **type** and a **pattern**. Two rule types are available.
 
-Useful for grouping all tabs from a single service as duplicates of each other regardless of the specific path.
+##### Group
 
-**Pattern syntax:** `*` matches any sequence of characters. All other characters match literally. For more complex matching, wrap the pattern in `/` slashes to use a regular expression: `/regex/flags`.
+Any two tabs whose URLs both match the same rule are treated as duplicates, even if their full URLs differ. Useful for grouping all tabs from a service as duplicates of each other regardless of the specific page.
+
+Pattern syntax: `*` matches any sequence of characters. All other characters match literally. For more complex matching, wrap the pattern in `/` slashes to use a regular expression: `/regex/flags`.
 
 ```text
-*://docs.google.com/*
+youtube.com/watch/*
 *://github.com/*/pull/*
-/example\.com\/(threads|t)\//
+/reddit\.com\/(r|user)\/.*/
 ```
+
+##### Normalize
+
+Rewrites the hostname before comparison. Useful for sites that serve identical content under several domain names or top-level domains. The path and query string are preserved, so only tabs at the same path are treated as duplicates.
+
+Pattern syntax: a hostname glob where `*` matches any sequence of characters including `.`. The canonical hostname used for comparison is the pattern with `*` replaced by `x`.
+
+```text
+bunkr.*    (bunkr.cr = bunkr.site = bunkr.ph, same path only)
+yandex.*   (yandex.com = yandex.ru = yandex.tr, same path only)
+```
+
+With `bunkr.*`, the tabs `bunkr.cr/video/abc` and `bunkr.site/video/abc` are treated as duplicates, but `bunkr.cr/video/abc` and `bunkr.site/video/xyz` are not.
 
 #### Title Pattern Rules
 
-Works identically to URL Pattern Rules but is applied to the page title instead of the URL. Any two tabs whose titles both match the same pattern are treated as duplicates.
+Works identically to URL Group rules but is applied to the page title instead of the URL. Any two tabs whose titles both match the same pattern are treated as duplicates.
 
 Only active when *Detect duplicates by* is set to *URL match or title match*.
 
@@ -148,7 +163,7 @@ Only active when *Detect duplicates by* is set to *URL match or title match*.
 GitHub - *
 ```
 
-> **Pattern syntax note:** The Whitelist, URL Pattern Rules, and Title Pattern Rules all support the same syntax. Use `*` as a wildcard (matches any sequence of characters). To use a regular expression, wrap the pattern in `/` slashes: `/regex/flags`. Plain patterns treat `.`, `+`, `?`, `(`, `)` etc. as literals, not regex metacharacters.
+> **Pattern syntax note:** The Whitelist, URL Group rules, and Title Pattern Rules all support the same syntax. Use `*` as a wildcard (matches any sequence of characters). To use a regular expression, wrap the pattern in `/` slashes: `/regex/flags`. Plain patterns treat `.`, `+`, `?`, `(`, `)` etc. as literals, not regex metacharacters.
 
 ### Scope
 
@@ -230,7 +245,7 @@ In the duplicate tabs list, tabs that will be closed show a strikethrough title.
 | Ignore path part in URL | Yes |
 | Detect duplicates by | Yes |
 | % title similarity | Yes |
-| URL pattern rules | Yes |
+| URL rules | Yes |
 | Title pattern rules | No |
 
 ### Hotkeys

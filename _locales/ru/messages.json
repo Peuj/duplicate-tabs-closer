@@ -107,13 +107,13 @@
     "message": "% совпадение заголовков",
     "description": "Minimum title similarity to consider tabs as duplicates"
   },
-  "urlRegexRules": {
+  "urlRules": {
     "message": "Правила URL",
-    "description": "URL pattern rules"
+    "description": "URL rules widget label"
   },
-  "urlRegexRulesHint": {
-    "message": "Используйте * как шаблон или /regex/flags для регулярных выражений",
-    "description": "Hint below URL pattern rules textarea"
+  "addUrlRule": {
+    "message": "Add rule",
+    "description": "Button to add a new URL rule row"
   },
   "titleRegexRules": {
     "message": "Правила заголовков",

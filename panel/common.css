@@ -749,6 +749,71 @@ input[type="number"].form-control-xs {
     margin-top: 4px;
 }
 
+/* ── URL rules widget ── */
+
+.url-rules-widget {
+    margin-top: 4px;
+}
+
+.url-rule-row {
+    margin-bottom: 3px;
+}
+
+.url-rule-main {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.url-rule-pattern {
+    flex: 1 1 0;
+    min-width: 0;
+    font-size: 11px;
+    padding: 2px 4px;
+    height: 22px;
+}
+
+.url-rule-type {
+    flex: 0 0 auto;
+    width: auto;
+    min-width: 95px;
+    font-size: 11px;
+    padding: 2px 18px 2px 4px;
+    height: 22px;
+}
+
+.url-rule-delete {
+    flex: 0 0 auto;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--dtc-text);
+    font-size: 14px;
+    line-height: 1;
+    padding: 0 2px;
+    opacity: 0.6;
+}
+
+.url-rule-delete:hover {
+    opacity: 1;
+}
+
+.btn-add-rule {
+    margin-top: 4px;
+    font-size: 11px;
+    padding: 2px 8px;
+    cursor: pointer;
+    background: var(--dtc-btn-bg, var(--dtc-section-bg));
+    color: var(--dtc-text);
+    border: 1px solid var(--dtc-header-border);
+    border-radius: 3px;
+}
+
+.btn-add-rule:hover {
+    background: var(--dtc-section-title-hover, var(--dtc-section-bg));
+    border-color: var(--dtc-section-title);
+}
+
 .vertical-line {
     height: 5px;
 }

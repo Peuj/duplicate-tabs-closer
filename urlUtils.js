@@ -13,9 +13,28 @@ const isValidURL = (url) => _VALID_URL_RE.test(url);
 
 const isHttps = (url) => _HTTPS_RE.test(url);
 
-const getMatchingURL = (url) => {	
+const applyNormalizationRules = (url, rules) => {
+	const uri = new URL(url);
+	for (const rule of rules) {
+		if (rule.type === "hostname") {
+			if (rule.regex.test(uri.hostname)) {
+				return url.replace(`://${uri.hostname}`, `://${rule.normalized}`);
+			}
+		} else if (rule.type === "url") {
+			const result = url.replace(rule.regex, rule.replacement);
+			if (result !== url) return result;
+		}
+	}
+	return url;
+};
+
+const getMatchingURL = (url) => {
 	if (!isValidURL(url)) return url;
 	let matchingURL = url;
+	const normRules = options.urlRules.filter(r => r.type === "hostname" || r.type === "url");
+	if (normRules.length > 0) {
+		matchingURL = applyNormalizationRules(matchingURL, normRules);
+	}
 	if (options.ignorePathPart) {
 		const uri = new URL(matchingURL);
 		if (uri.protocol !== "file:") matchingURL = uri.origin;
@@ -41,6 +60,7 @@ const getMatchingURL = (url) => {
 };
 
 const getMatchPatternURL = (url) => {
+	if (options.urlRules.some(r => r.type === "hostname" || r.type === "url")) return null;
 	let urlPattern = null;
 	if (isValidURL(url)) {
 		const uri = new URL(url);

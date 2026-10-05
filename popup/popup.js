@@ -12,6 +12,12 @@ let _highlightOnOpen = false;
 let titleSimilarityThresholdPopupVisible = true;
 let titleRegexRulesPopupVisible = false;
 
+const _saveUrlRules = () => {
+    const widgetEl = document.getElementById("urlRulesWidget");
+    if (!widgetEl) return;
+    saveOption("urlRules", collectUrlRulesJson(widgetEl), true);
+};
+
 const toggleShrunkMode = (checked) => {
     getElements(".list-group-form").forEach(el => el.classList.toggle("shrunk", checked));
     if (!checked && document.getElementById("optionHeader").classList.contains("collapsed")) {
@@ -206,6 +212,25 @@ const setPanelOptions = async () => {
         if (storedOption === "environment") {
             if (value === "chrome") getElements(".containerItem").forEach(el => el.classList.toggle("hidden", true));
         }
+        else if (storedOption === "urlRules") {
+            const widgetEl = document.getElementById("urlRulesWidget");
+            if (widgetEl) {
+                widgetEl.replaceChildren();
+                let rules = null;
+                try {
+                    rules = JSON.parse(value);
+                } catch {
+                    // ignore: invalid JSON in urlRules storage value
+                }
+                const rulesArr = Array.isArray(rules) ? rules : [];
+                rulesArr.forEach(rule => widgetEl.appendChild(buildUrlRuleRow(rule, _saveUrlRules)));
+                if (isLockedKey) {
+                    widgetEl.querySelectorAll("input, select, button").forEach(input => {
+                        input.disabled = true;
+                    });
+                }
+            }
+        }
         else {
             const el = document.getElementById(storedOption);
             // checkbox
@@ -230,8 +255,7 @@ const setPanelOptions = async () => {
             else if (typeof (value) === "number") {
                 if (el) el.value = value;
             }
-            // textarea (pattern rules and whitelist — whiteList not shown in popup, el will be null)
-            else if (storedOption === "urlRegexRules" || storedOption === "titleRegexRules" || storedOption === "whiteList") {
+            else if (storedOption === "titleRegexRules" || storedOption === "whiteList") {
                 if (el) el.value = value;
             }
             // combobox
@@ -279,13 +303,16 @@ const updateTitleMatchModeDependents = (value) => {
 const applyPopupRuleVisibility = (storedOptions) => {
     const rules = [
 "caseInsensitive", "ignore3w", "ignoreHashPart", "ignoreSearchPart",
-        "ignorePathPart", "urlRegexRules", "titleMatchMode"
+        "ignorePathPart", "titleMatchMode"
 ];
     rules.forEach(rule => {
         const visible = storedOptions[`${rule}_popup`] ? storedOptions[`${rule}_popup`].value : true;
         const el = document.getElementById(rule);
         if (el) el.closest(".checkboxes").classList.toggle("hidden", !visible);
     });
+    const urlRulesVisible = storedOptions.urlRules_popup ? storedOptions.urlRules_popup.value : true;
+    const urlRulesWidgetEl = document.getElementById("urlRulesWidget");
+    if (urlRulesWidgetEl) urlRulesWidgetEl.closest(".checkboxes").classList.toggle("hidden", !urlRulesVisible);
     titleSimilarityThresholdPopupVisible = storedOptions.titleSimilarityThreshold_popup ? storedOptions.titleSimilarityThreshold_popup.value : true;
     titleRegexRulesPopupVisible = storedOptions.titleRegexRules_popup ? storedOptions.titleRegexRules_popup.value : false;
     const titleMatchValue = storedOptions.titleMatchMode ? storedOptions.titleMatchMode.value : "N";
@@ -303,7 +330,8 @@ const handleMessage = (message) => {
             const titleMatchModeEl = document.getElementById("titleMatchMode");
             updateTitleMatchModeDependents(titleMatchModeEl ? titleMatchModeEl.value : "N");
         } else {
-            const el = document.getElementById(rule);
+            const elId = rule === "urlRules" ? "urlRulesWidget" : rule;
+            const el = document.getElementById(elId);
             if (el) el.closest(".checkboxes").classList.toggle("hidden", !visible);
         }
         resizeDuplicateTabsPanel();
@@ -356,8 +384,20 @@ const loadListenerEvents = () => {
         saveOption("titleSimilarityThreshold", val, true);
     });
 
-    /* Save URL/title pattern rules */
-    ["urlRegexRules", "titleRegexRules"].forEach(id => {
+    /* URL rules widget */
+    const urlRulesAddBtn = document.getElementById("urlRulesAdd");
+    if (urlRulesAddBtn) {
+        urlRulesAddBtn.addEventListener("click", () => {
+            const widgetEl = document.getElementById("urlRulesWidget");
+            if (!widgetEl) return;
+            const row = buildUrlRuleRow({ type: "group", pattern: "" }, _saveUrlRules);
+            widgetEl.appendChild(row);
+            row.querySelector(".url-rule-pattern").focus();
+        });
+    }
+
+    /* Save title pattern rules */
+    ["titleRegexRules"].forEach(id => {
         const el = document.getElementById(id);
         if (!el) return;
         el.addEventListener("change", function () {

@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="optionPage.css">
   <script src="../helper.js"></script>
   <script src="../panelHelper.js"></script>
+  <script src="../panel/urlRulesWidget.js"></script>
   <script src="optionPage.js"></script>
 </head>
 
@@ -159,14 +160,14 @@
                 </label>
               </div>
               <div class="checkboxes checkboxes-regex-label d-flex align-items-center justify-content-between">
-                <label for="urlRegexRules"><span i18n-content="urlRegexRules"></span></label>
-                <input type="checkbox" class="checkbox-fa" id="urlRegexRules_popup" />
-                <label for="urlRegexRules_popup" class="checkbox-fa-label popup-pin-label" title="popupPinTooltip">
+                <label for="urlRulesWidget"><span i18n-content="urlRules"></span></label>
+                <input type="checkbox" class="checkbox-fa" id="urlRules_popup" />
+                <label for="urlRules_popup" class="checkbox-fa-label popup-pin-label" title="popupPinTooltip">
                   <span class="fa-regular fa-eye"></span>
                 </label>
               </div>
-              <textarea id="urlRegexRules" class="form-control rules-textarea" rows="3"></textarea>
-              <small class="form-text text-muted" i18n-content="urlRegexRulesHint"></small>
+              <div id="urlRulesWidget" class="url-rules-widget"></div>
+              <button type="button" id="urlRulesAdd" class="btn-add-rule" i18n-content="addUrlRule"></button>
               <div id="titleSimilarityThresholdGroup">
                 <div class="checkboxes checkboxes-threshold d-flex align-items-center justify-content-between">
                   <label for="titleSimilarityThreshold">
