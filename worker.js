@@ -160,7 +160,6 @@ const getCloseInfo = (details) => {
 const searchForDuplicateTabsToClose = async (observedTab, queryComplete, loadingUrl) => {
     const observedTabUrl = loadingUrl || observedTab.url;
     const observedWindowsId = observedTab.windowId;
-    await tabsInfo.awaitPendingCheck(observedTab.id);
     if (tabsInfo.isClosingTab(observedTab.id)) return;
     if (tabsInfo.isIntentionalDuplicate(observedTab.id)) {
         refreshDuplicateTabsInfo(observedWindowsId);
@@ -538,7 +537,6 @@ const dispatchTabCompletion = (tab, activeTabId, { queryComplete = false, alread
         clearTimeout(startupBurst.timerId);
         startupBurst.timerId = setTimeout(() => {
             startupBurst.active = false;
-            _seededTabIds.clear();
         }, POST_STARTUP_BURST_EXTEND_MS);
     }
     if (options.autoCloseTab) {

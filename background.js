@@ -7,17 +7,12 @@ if (typeof importScripts === "function") {
 
 let initPromise = null;
 let monitoringPaused = false;
-const generateTabSessionId = () => `dtc-${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
 
 // Firefox fires onBeforeNavigate twice per navigation (once on URL resolve, once on request start).
 // Track last dispatched URL+timestamp per tab to skip the redundant second call.
 // tabId -> { url, ts }
 const _lastNavigate = new Map();
 
-// Tabs that existed when DTC initialized — their session IDs are seeded by initializeTabSessionIds.
-// onCreatedTab fires for these tabs too at startup, but they must NOT be marked intentional-duplicate
-// (they are pre-existing tabs, not undo-close restores).
-const _seededTabIds = new Set();
 // Chrome: before-navigate fired before tab-created (= Duplicate Tab command)
 const _preCreatedTabs = new Set();
 
@@ -42,14 +37,11 @@ const initialize = async () => {
 	}
 	setBadgeIcon();
 	if (monitoringPaused) setPausedBadge();
-	if (environment.isFirefox) await initializeTabSessionIds();
 	if (!monitoringPaused) await refreshGlobalDuplicateTabsInfo();
 	startupBurst.active = true;
 	startupBurst.startedAt = Date.now();
 	startupBurst.timerId = setTimeout(() => {
 		startupBurst.active = false;
-		// all startup onCreatedTab events have now been processed
-		_seededTabIds.clear();
 	}, 3000);
 };
 
@@ -74,50 +66,12 @@ const toggleMonitorPause = async () => {
 		chrome.runtime.sendMessage({ action: "setStoredOption", data: { name: "onDuplicateTabDetected", value: options.autoCloseTab ? "A" : "N" } }).catch(() => {
 			// ignore: panel may not be open
 		});
-		// initializeTabSessionIds is intentionally not re-called on unpause: tabs created during
-		// the pause have no session-ID tracking, but they are re-seeded as normal tabs by
-		// tabsInfo.initialize() above — the safe fallback (no false intentional-dup risk).
 	}
-};
-
-const initializeTabSessionIds = async () => {
-	const tabs = await getTabs();
-	if (!tabs) return;
-	await Promise.allSettled(tabs.map(async tab => {
-		_seededTabIds.add(tab.id);
-		const existingId = await browser.sessions.getTabValue(tab.id, "dtc-tab-id");
-		const id = existingId || generateTabSessionId();
-		// in-memory first: no await before this, so the store always runs
-		tabsInfo.storeTabSessionId(tab.id, id);
-		if (!existingId) await browser.sessions.setTabValue(tab.id, "dtc-tab-id", id);
-	}));
 };
 
 const onCreatedTab = async (tab) => {
 	await ensureInitialized();
 	if (monitoringPaused) return;
-	if (typeof browser !== "undefined" && browser.sessions) {
-		// Register pending session check synchronously (no await before this block)
-		// to prevent race with webNavigation events
-		const checkPromise = (async () => {
-			if (!environment.isFirefox) return;
-			try {
-				const existingId = await browser.sessions.getTabValue(tab.id, "dtc-tab-id");
-				if (typeof existingId !== "undefined" && tabsInfo.isKnownSessionId(existingId) && !_seededTabIds.has(tab.id)) {
-					tabsInfo.setIntentionalDuplicate(tab.id);
-				}
-				const newId = generateTabSessionId();
-				tabsInfo.storeTabSessionId(tab.id, newId);
-				await browser.sessions.setTabValue(tab.id, "dtc-tab-id", newId);
-			} catch {
-				// session API error: tab will not be marked intentional-duplicate
-			} finally {
-				// clean up: always runs even if sessions API throws
-				_seededTabIds.delete(tab.id);
-			}
-		})();
-		tabsInfo.setPendingCheck(tab.id, checkPromise);
-	}
 	if (environment.isChrome && _preCreatedTabs.has(tab.id)) {
 		_preCreatedTabs.delete(tab.id);
 		tabsInfo.setIntentionalDuplicate(tab.id);
@@ -227,7 +181,6 @@ const onRemovedTab = async (removedTabId, removeInfo) => {
 	tabsInfo.removeTab(removedTabId);
 	_preCreatedTabs.delete(removedTabId);
 	_lastNavigate.delete(removedTabId);
-	_seededTabIds.delete(removedTabId);
 	const needsGlobalRefresh = options.searchInAllWindows && tabsInfo.needsRefresh(removeInfo.windowId);
 	if (removeInfo.isWindowClosing) {
 		if (options.searchInAllWindows && tabsInfo.needsRefresh(removeInfo.windowId)) {
@@ -272,7 +225,6 @@ const onReplacedTab = async (addedTabId, removedTabId) => {
 	tabsInfo.removeTab(removedTabId);
 	_lastNavigate.delete(removedTabId);
 	_preCreatedTabs.delete(removedTabId);
-	_seededTabIds.delete(removedTabId);
 	if (monitoringPaused) return;
 	const tab = await getTab(addedTabId);
 	tabsInfo.setTab(addedTabId, tab && prevLastComplete !== null

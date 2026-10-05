@@ -5,10 +5,7 @@ class TabsInfo {
     constructor() {
         this.storedTabs = new Map();
         this.nbDuplicateTabs = new Map();
-        this.knownSessionIds = new Set();
         this.intentionalDuplicates = new Set();
-        this.pendingChecks = new Map();
-        this.tabSessionIdMap = new Map();
     }
 
     async initialize() {
@@ -63,12 +60,6 @@ class TabsInfo {
             this.intentionalDuplicates.delete(tabId);
             this._persistIntentionalDuplicates();
         }
-        const sessionId = this.tabSessionIdMap.get(tabId);
-        if (typeof sessionId !== "undefined") {
-            this.knownSessionIds.delete(sessionId);
-            this.tabSessionIdMap.delete(tabId);
-        }
-        this.pendingChecks.delete(tabId);
     }
 
     hasTab(tabId) {
@@ -99,15 +90,6 @@ class TabsInfo {
         if (this.nbDuplicateTabs.has(windowId)) this.nbDuplicateTabs.delete(windowId);
     }
 
-    storeTabSessionId(tabId, sessionId) {
-        this.knownSessionIds.add(sessionId);
-        this.tabSessionIdMap.set(tabId, sessionId);
-    }
-
-    isKnownSessionId(sessionId) {
-        return this.knownSessionIds.has(sessionId);
-    }
-
     setIntentionalDuplicate(tabId) {
         this.intentionalDuplicates.add(tabId);
         this._persistIntentionalDuplicates();
@@ -125,20 +107,6 @@ class TabsInfo {
 
     isIntentionalDuplicate(tabId) {
         return this.intentionalDuplicates.has(tabId);
-    }
-
-    setPendingCheck(tabId, promise) {
-        this.pendingChecks.set(tabId, promise);
-        promise.finally(() => {
-            if (this.pendingChecks.get(tabId) === promise) this.pendingChecks.delete(tabId);
-        });
-    }
-
-    awaitPendingCheck(tabId) {
-        const p = this.pendingChecks.get(tabId);
-        return p ? p.catch(() => {
-            // ignore pending check rejection
-        }) : Promise.resolve();
     }
 
 }

@@ -88,7 +88,6 @@ module.exports = [
                 setPausedBadge: "readonly",
                 startupBurst: "readonly",
                 _savingLocally: "writable",
-                _seededTabIds: "writable",
                 activeWindowId: "writable",
                 defaultOptions: "readonly",
                 expandTSTTabIfCollapsed: "readonly",
