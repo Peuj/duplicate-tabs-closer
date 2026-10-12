@@ -36,8 +36,10 @@ const getMatchingURL = (url) => {
 		matchingURL = applyNormalizationRules(matchingURL, normRules);
 	}
 	if (options.ignorePathPart) {
-		const uri = new URL(matchingURL);
-		if (uri.protocol !== "file:") matchingURL = uri.origin;
+		if (isValidURL(matchingURL)) {
+			const uri = new URL(matchingURL);
+			if (uri.protocol !== "file:") matchingURL = uri.origin;
+		}
 	} else {
 		if (options.ignoreSearchPart) {
 			matchingURL = matchingURL.split("?")[0];

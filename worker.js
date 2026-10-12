@@ -93,8 +93,8 @@ const getLastUpdatedTabId = (observedTab, openedTab) => {
     const observedTabLastUpdate = tabsInfo.getLastComplete(observedTab.id);
     const openedTabLastUpdate = tabsInfo.getLastComplete(openedTab.id);
     if (options.keepNewerTab) {
-        if (observedTabLastUpdate === null) return openedTab.id;
-        if (openedTabLastUpdate === null) return observedTab.id;
+        if (observedTabLastUpdate === null) return observedTab.id;
+        if (openedTabLastUpdate === null) return openedTab.id;
         return (observedTabLastUpdate > openedTabLastUpdate) ? observedTab.id : openedTab.id;
     }
     if (observedTabLastUpdate === null) return openedTab.id;
@@ -205,7 +205,7 @@ const searchForDuplicateTabsToClose = async (observedTab, queryComplete, loading
             (!options.requireTitleMatch || titleMatchesExact(openedTab, observedTab))) ||
             matchTitle(openedTab, observedTab) ||
             matchByUrlPattern(openedTab.url, observedTabUrl) ||
-            (options.compareWithTitle && isTabComplete(openedTab) && isTabComplete(observedTab) && openedTab.title && observedTab.title && matchByTitlePattern(openedTab.title, observedTab.title))) {
+            (options.compareWithTitle && isTabOrStoredComplete(openedTab) && isTabOrStoredComplete(observedTab) && openedTab.title && observedTab.title && matchByTitlePattern(openedTab.title, observedTab.title))) {
             match = true;
             const [tabToCloseId, remainingTabInfo] = getCloseInfo({ observedTab, observedTabUrl, openedTab, activeWindowId });
             closeDuplicateTab(tabToCloseId, remainingTabInfo);
@@ -304,7 +304,7 @@ const findRetainedTab = (observedTab, retainedTabs, matchingTabURL, matchingTabT
         }
     }
     // 4. Title pattern key
-    if (options.compareWithTitle && isTabComplete(observedTab) && options.titleRegexRules.length > 0) {
+    if (options.compareWithTitle && isTabOrStoredComplete(observedTab) && options.titleRegexRules.length > 0) {
         const titlePatSource = findPatternSource(observedTab.title, options.titleRegexRules);
         if (titlePatSource) {
             const patKey = `titlepattern=${titlePatSource}`;
@@ -325,7 +325,7 @@ const registerTab = (observedTab, retainedTabs, matchingTabURL, matchingTabTitle
             if (!retainedTabs.has(patKey)) retainedTabs.set(patKey, observedTab);
         }
     }
-    if (options.compareWithTitle && isTabComplete(observedTab) && options.titleRegexRules.length > 0) {
+    if (options.compareWithTitle && isTabOrStoredComplete(observedTab) && options.titleRegexRules.length > 0) {
         const titlePatSource = findPatternSource(observedTab.title, options.titleRegexRules);
         if (titlePatSource) {
             const patKey = `titlepattern=${titlePatSource}`;
@@ -363,7 +363,7 @@ const applyDuplicateAction = (details, observedTab, match) => {
 const handleObservedTab = (details) => {
     const observedTab = details.tab;
     let matchingTabURL = getMatchingURL(observedTab.url);
-    let matchingTabTitle = options.compareWithTitle && isTabComplete(observedTab) && observedTab.title ? `title=${observedTab.title.toLowerCase()}` : null;
+    let matchingTabTitle = options.compareWithTitle && isTabOrStoredComplete(observedTab) && observedTab.title ? `title=${observedTab.title.toLowerCase()}` : null;
     if (options.searchPerContainer) {
         matchingTabURL += observedTab.cookieStoreId;
         if (matchingTabTitle) matchingTabTitle += observedTab.cookieStoreId;
