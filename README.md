@@ -131,7 +131,7 @@ Each rule is a row with a **type** and a **pattern**. Two rule types are availab
 
 Any two tabs whose URLs both match the same rule are treated as duplicates, even if their full URLs differ. Useful for grouping all tabs from a service as duplicates of each other regardless of the specific page.
 
-Pattern syntax: `*` matches any sequence of characters. All other characters match literally. For more complex matching, wrap the pattern in `/` slashes to use a regular expression: `/regex/flags`.
+Pattern syntax: `*` matches any sequence of characters. All other characters match literally. Patterns are tested as substrings of the full URL, so including the protocol (`https://`) is optional but makes rules more precise. For more complex matching, wrap the pattern in `/` slashes to use a regular expression: `/regex/flags`.
 
 ```text
 youtube.com/watch/*
@@ -141,9 +141,11 @@ youtube.com/watch/*
 
 ##### Normalize
 
-Rewrites the hostname before comparison. Useful for sites that serve identical content under several domain names or top-level domains. The path and query string are preserved, so only tabs at the same path are treated as duplicates.
+Rewrites a URL to a canonical form before comparison. Two tabs whose URLs produce the same canonical form are treated as duplicates.
 
-Pattern syntax: a hostname glob where `*` matches any sequence of characters including `.`. The canonical hostname used for comparison is the pattern with `*` replaced by `x`.
+Two syntaxes are available.
+
+**Hostname glob:** normalizes the hostname. `*` matches any sequence of characters including `.`. The canonical hostname is the pattern with `*` replaced by `x`. The path and query string are preserved, so only tabs at the same path are treated as duplicates.
 
 ```text
 bunkr.*    (bunkr.cr = bunkr.site = bunkr.ph, same path only)
@@ -151,6 +153,20 @@ yandex.*   (yandex.com = yandex.ru = yandex.tr, same path only)
 ```
 
 With `bunkr.*`, the tabs `bunkr.cr/video/abc` and `bunkr.site/video/abc` are treated as duplicates, but `bunkr.cr/video/abc` and `bunkr.site/video/xyz` are not.
+
+**URL regex:** rewrites the full URL using a capture group. Wrap the pattern in `/` slashes and include at least one capture group. The URL is normalized to whatever group 1 captures. Useful for treating a base page and all its subpaths as the same URL.
+
+```text
+/(https?:\/\/[^\/]+\/[^\/]+).*/
+```
+
+With this rule, `https://example.com/issue/45` and `https://example.com/issue/45/comments` both normalize to `https://example.com/issue/45` and are treated as duplicates, while `https://example.com/issue/46` remains distinct.
+
+```text
+/(https?:\/\/tracker\.example\.com\/tickets\/\d+).*/
+```
+
+A more precise pattern that only normalizes a specific site and only numeric ticket IDs.
 
 #### Title Pattern Rules
 
