@@ -337,16 +337,25 @@ const parseUrlRules = (jsonText) => {
                 }
             } else {
                 if ((line.match(/\*/g) || []).length > MAX_WILDCARDS) continue;
-                let pattern = "^";
+                let pattern = "";
                 for (const ch of line) pattern = ch === "*" ? `${pattern}.*` : pattern + escapeRegexChar(ch);
-                results.push({ type: "group", source: line, regex: new RegExp(`${pattern}$`) });
+                results.push({ type: "group", source: line, regex: new RegExp(pattern) });
             }
         } else if (type === "normalize") {
-            if ((line.match(/\*/g) || []).length > MAX_WILDCARDS) continue;
-            let pattern = "^";
-            for (const ch of line) pattern = ch === "*" ? `${pattern}.*` : pattern + escapeRegexChar(ch);
-            const normalized = line.replace(/\*/g, "x");
-            results.push({ type: "hostname", regex: new RegExp(`${pattern}$`), normalized });
+            const regexMatch = line.match(/^\/(.+)\/([gimsuy]*)$/);
+            if (regexMatch) {
+                try {
+                    results.push({ type: "url", regex: new RegExp(regexMatch[1], regexMatch[2].replace(/[gy]/g, "")) });
+                } catch {
+                    // ignore: invalid regex in normalize rule
+                }
+            } else {
+                if ((line.match(/\*/g) || []).length > MAX_WILDCARDS) continue;
+                let pattern = "^";
+                for (const ch of line) pattern = ch === "*" ? `${pattern}.*` : pattern + escapeRegexChar(ch);
+                const normalized = line.replace(/\*/g, "x");
+                results.push({ type: "hostname", regex: new RegExp(`${pattern}$`), normalized });
+            }
         }
     }
     return results;

@@ -2,12 +2,12 @@
 
 const _urlRuleTypePlaceholders = {
     group: "youtube.com/watch/* or /reddit\\.com\\/(r|user)\\/.*/",
-    normalize: "bunkr.* (e.g. bunkr.cr = bunkr.site)"
+    normalize: "bunkr.* or /(https?:\\/\\/[^\\/]+\\/[^\\/]+).*/"
 };
 
 const _urlRuleTypeTooltips = {
     group: "Groups tabs matching this pattern as duplicates of each other (supports * wildcard or /regex/flags)",
-    normalize: "Treats matching hostnames as the same site: bunkr.* makes bunkr.cr and bunkr.site match at the same path"
+    normalize: "Hostname glob (bunkr.* makes bunkr.cr = bunkr.site) or /regex/ with capture group 1 to strip URL suffixes"
 };
 
 const buildUrlRuleRow = (rule, onChangeFn) => {

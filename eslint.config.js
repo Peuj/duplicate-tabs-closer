@@ -102,6 +102,7 @@ module.exports = [
                 titleSimilarity: "readonly",
                 toggleMonitorPause: "readonly",
                 _pendingTriggerTabId: "writable",
+                parseUrlRules: "readonly",
                 updatePrioritizeActiveWindowState: "readonly"
             }
         },

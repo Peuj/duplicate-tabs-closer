@@ -21,8 +21,8 @@ const applyNormalizationRules = (url, rules) => {
 				return url.replace(`://${uri.hostname}`, `://${rule.normalized}`);
 			}
 		} else if (rule.type === "url") {
-			const result = url.replace(rule.regex, rule.replacement);
-			if (result !== url) return result;
+			const match = rule.regex.exec(url);
+			if (match && typeof match[1] === "string") return match[1];
 		}
 	}
 	return url;
