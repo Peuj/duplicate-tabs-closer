@@ -19,10 +19,6 @@
     "message": "偵測到重複分頁時開啟彈出面板",
     "description": "Open popup panel when a new duplicate tab is detected"
   },
-  "tabPriority": {
-    "message": "分頁優先順序",
-    "description": "Priority"
-  },
   "priorityAndExclusions": {
     "message": "優先順序與排除",
     "description": "Section title for tab priority and exclusion rules (whitelist, skip blank)"
@@ -39,7 +35,7 @@
     "message": "保留並重新載入較舊的分頁",
     "description": "Keep and reload older tab"
   },
-  "keeptabwithHttps": {
+  "keepTabWithHttps": {
     "message": "保留使用 https 的分頁",
     "description": "Keep tab with https"
   },
@@ -112,7 +108,7 @@
     "description": "URL rules widget label"
   },
   "addUrlRule": {
-    "message": "Add rule",
+    "message": "新增規則",
     "description": "Button to add a new URL rule row"
   },
   "titleRegexRules": {
@@ -123,7 +119,7 @@
     "message": "使用 * 作為萬用字元，或使用 /regex/flags 表示正規表示式",
     "description": "Hint below title pattern rules textarea"
   },
-  "duplicatetabs": {
+  "duplicateTabs": {
     "message": "重複的分頁",
     "description": "Duplicate tabs"
   },
@@ -139,11 +135,11 @@
     "message": "跳過空白分頁（about:blank、新分頁）",
     "description": "Completely ignore blank and new tab pages from duplicate detection"
   },
-  "activewindow": {
+  "activeWindow": {
     "message": "目前視窗",
     "description": "Active window"
   },
-  "allwindows": {
+  "allWindows": {
     "message": "所有視窗",
     "description": "All windows"
   },
@@ -176,7 +172,7 @@
     "description": "Aria-label for the close button on each duplicate tab row"
   },
   "tabsCount": {
-    "message": "$COUNT$ tabs",
+    "message": "$COUNT$ 個標籤頁",
     "description": "Badge showing how many tabs are in a group",
     "placeholders": {
       "count": {
@@ -216,10 +212,6 @@
   "toggleOptionsPanelTooltip": {
     "message": "切換選項面板",
     "description": "Tooltip for the button that shows/hides the options column in two-column mode"
-  },
-  "customization": {
-    "message": "個人化設定",
-    "description": "Customization"
   },
   "advanced": {
     "message": "進階",
@@ -342,23 +334,23 @@
     "description": "Placeholder for Path depth URL rule hostname input"
   },
   "urlRuleGroupTooltip": {
-    "message": "Groups tabs matching this pattern as duplicates of each other (supports * wildcard or /regex/flags)",
+    "message": "將符合此模式的分頁視為彼此的重複項（支援 * 萬用字元或 /regex/flags）",
     "description": "Tooltip for Group type selector in URL rules widget"
   },
   "urlRuleNormalizeTooltip": {
-    "message": "Hostname glob (example.* makes example.com = example.net) or URL /regex/ with capture group 1 (example.com/items/42 = example.com/items/42/comments)",
+    "message": "主機名稱 glob（example.* 使 example.com = example.net）或帶捕獲組 1 的 URL /regex/（example.com/items/42 = example.com/items/42/comments）",
     "description": "Tooltip for Normalize type selector in URL rules widget"
   },
   "urlRulePathDepthTooltip": {
-    "message": "Treats tabs on this hostname as duplicates when their first N path segments match (e.g. example.com depth 2: example.com/items/42 = example.com/items/42/comments)",
+    "message": "當此主機名稱上的分頁前 N 個路徑段相同時視為重複（例如：example.com 深度 2：example.com/items/42 = example.com/items/42/comments）",
     "description": "Tooltip for Path depth type selector in URL rules widget"
   },
   "urlRulePathDepthPatternTitle": {
-    "message": "Hostname to scope this rule (supports * wildcard, e.g. *.example.com)",
+    "message": "限定此規則的主機名稱（支援 * 萬用字元，例如 *.example.com）",
     "description": "Title attribute for pattern input when type is Path depth"
   },
   "urlRuleDepthTitle": {
-    "message": "Number of path segments to keep",
+    "message": "保留的路徑段數量",
     "description": "Title attribute for depth number input in Path depth rules"
   }
 }

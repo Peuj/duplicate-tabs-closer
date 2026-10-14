@@ -19,10 +19,6 @@
     "message": "Ouvrir le panneau lors d'un doublon détecté",
     "description": "Open popup panel when a new duplicate tab is detected"
   },
-  "tabPriority": {
-    "message": "Priorité",
-    "description": "Priority"
-  },
   "priorityAndExclusions": {
     "message": "Priorité & Exclusions",
     "description": "Section title for tab priority and exclusion rules (whitelist, skip blank)"
@@ -39,7 +35,7 @@
     "message": "Conserver et actualiser l'ancien onglet",
     "description": "Keep and reload older tab"
   },
-  "keeptabwithHttps": {
+  "keepTabWithHttps": {
     "message": "Conserver l'onglet avec https",
     "description": "Keep tab with https"
   },
@@ -112,7 +108,7 @@
     "description": "URL rules widget label"
   },
   "addUrlRule": {
-    "message": "Add rule",
+    "message": "Ajouter une règle",
     "description": "Button to add a new URL rule row"
   },
   "titleRegexRules": {
@@ -123,7 +119,7 @@
     "message": "Utilisez * comme joker, ou /regex/flags pour les expressions régulières",
     "description": "Hint below title pattern rules textarea"
   },
-  "duplicatetabs": {
+  "duplicateTabs": {
     "message": "Onglets en doublon",
     "description": "Duplicate tabs"
   },
@@ -139,11 +135,11 @@
     "message": "Ignorer les onglets vides (about:blank, nouvel onglet)",
     "description": "Completely ignore blank and new tab pages from duplicate detection"
   },
-  "activewindow": {
+  "activeWindow": {
     "message": "Fenêtre active",
     "description": "Active window"
   },
-  "allwindows": {
+  "allWindows": {
     "message": "Toutes les fenêtres",
     "description": "All windows"
   },
@@ -176,7 +172,7 @@
     "description": "Aria-label for the close button on each duplicate tab row"
   },
   "tabsCount": {
-    "message": "$COUNT$ tabs",
+    "message": "$COUNT$ onglets",
     "description": "Badge showing how many tabs are in a group",
     "placeholders": {
       "count": {
@@ -217,10 +213,6 @@
     "message": "Afficher/masquer le panneau d'options",
     "description": "Tooltip for the button that shows/hides the options column in two-column mode"
   },
-  "customization": {
-    "message": "Personnalisation",
-    "description": "Customization"
-  },
   "advanced": {
     "message": "Avancé",
     "description": "Divider label above advanced sections (Theme, Popup, Badge)"
@@ -247,7 +239,7 @@
   },
   "noDuplicateTabs": {
     "message": "Aucun onglet en doublon",
-    "description": "No duplicate tabs"    
+    "description": "No duplicate tabs"
   },
   "closePopup": {
     "message": "Fermer le panneau de popup après la fermeture des onglets en doublon",
@@ -266,12 +258,12 @@
     "description": "Two column popup layout option"
   },
   "moreOptions": {
-    "message":  "Plus d'options...",
-    "description":  "Plus d'options..."
+    "message": "Plus d'options...",
+    "description": "Plus d'options..."
   },
   "shrunkMode": {
-    "message":  "Mode compact :\nQuand il est activé, cache les options non épinglées.",
-    "description":  "Mode compact\nQuand il est activé, cache les options non épinglées."
+    "message": "Mode compact :\nQuand il est activé, cache les options non épinglées.",
+    "description": "Mode compact\nQuand il est activé, cache les options non épinglées."
   },
   "theme": {
     "message": "Thème",
@@ -342,23 +334,23 @@
     "description": "Placeholder for Path depth URL rule hostname input"
   },
   "urlRuleGroupTooltip": {
-    "message": "Groups tabs matching this pattern as duplicates of each other (supports * wildcard or /regex/flags)",
+    "message": "Regroupe les onglets correspondant à ce motif comme doublons (supporte les caractères génériques * ou /regex/flags)",
     "description": "Tooltip for Group type selector in URL rules widget"
   },
   "urlRuleNormalizeTooltip": {
-    "message": "Hostname glob (example.* makes example.com = example.net) or URL /regex/ with capture group 1 (example.com/items/42 = example.com/items/42/comments)",
+    "message": "Glob de nom d'hôte (example.* rend example.com = example.net) ou URL /regex/ avec le groupe de capture 1 (example.com/items/42 = example.com/items/42/comments)",
     "description": "Tooltip for Normalize type selector in URL rules widget"
   },
   "urlRulePathDepthTooltip": {
-    "message": "Treats tabs on this hostname as duplicates when their first N path segments match (e.g. example.com depth 2: example.com/items/42 = example.com/items/42/comments)",
+    "message": "Traite les onglets sur ce nom d'hôte comme des doublons lorsque leurs N premiers segments de chemin correspondent (ex. : example.com profondeur 2 : example.com/items/42 = example.com/items/42/comments)",
     "description": "Tooltip for Path depth type selector in URL rules widget"
   },
   "urlRulePathDepthPatternTitle": {
-    "message": "Hostname to scope this rule (supports * wildcard, e.g. *.example.com)",
+    "message": "Nom d'hôte pour cibler cette règle (supporte le caractère générique *, ex. : *.example.com)",
     "description": "Title attribute for pattern input when type is Path depth"
   },
   "urlRuleDepthTitle": {
-    "message": "Number of path segments to keep",
+    "message": "Nombre de segments de chemin à conserver",
     "description": "Title attribute for depth number input in Path depth rules"
   }
 }

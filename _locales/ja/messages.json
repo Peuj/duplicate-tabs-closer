@@ -19,10 +19,6 @@
     "message": "重複タブ検出時にポップアップを開く",
     "description": "Open popup panel when a new duplicate tab is detected"
   },
-  "tabPriority": {
-    "message": "優先順位",
-    "description": "Priority"
-  },
   "priorityAndExclusions": {
     "message": "優先順位と除外",
     "description": "Section title for tab priority and exclusion rules (whitelist, skip blank)"
@@ -39,7 +35,7 @@
     "message": "古い方のタブを残して再読み込みする",
     "description": "Keep and reload older tab"
   },
-  "keeptabwithHttps": {
+  "keepTabWithHttps": {
     "message": "HTTPSのタブを残す",
     "description": "Keep tab with https"
   },
@@ -112,7 +108,7 @@
     "description": "URL rules widget label"
   },
   "addUrlRule": {
-    "message": "Add rule",
+    "message": "ルールを追加",
     "description": "Button to add a new URL rule row"
   },
   "titleRegexRules": {
@@ -123,7 +119,7 @@
     "message": "ワイルドカードには * を、正規表現には /regex/flags を使用してください",
     "description": "Hint below title pattern rules textarea"
   },
-  "duplicatetabs": {
+  "duplicateTabs": {
     "message": "重複したタブ",
     "description": "Duplicate tabs"
   },
@@ -139,11 +135,11 @@
     "message": "空白タブをスキップ（about:blank、新しいタブ）",
     "description": "Completely ignore blank and new tab pages from duplicate detection"
   },
-  "activewindow": {
+  "activeWindow": {
     "message": "アクティブなウィンドウ",
     "description": "Active window"
   },
-  "allwindows": {
+  "allWindows": {
     "message": "すべてのウィンドウ",
     "description": "All windows"
   },
@@ -176,7 +172,7 @@
     "description": "Aria-label for the close button on each duplicate tab row"
   },
   "tabsCount": {
-    "message": "$COUNT$ tabs",
+    "message": "$COUNT$ 個のタブ",
     "description": "Badge showing how many tabs are in a group",
     "placeholders": {
       "count": {
@@ -217,10 +213,6 @@
     "message": "オプションパネルを切り替える",
     "description": "Tooltip for the button that shows/hides the options column in two-column mode"
   },
-  "customization": {
-    "message": "カスタマイズ",
-    "description": "Customization"
-  },
   "advanced": {
     "message": "詳細設定",
     "description": "Divider label above advanced sections (Theme, Popup, Badge)"
@@ -247,7 +239,7 @@
   },
   "noDuplicateTabs": {
     "message": "タブの重複はありません",
-    "description": "No duplicate tabs"    
+    "description": "No duplicate tabs"
   },
   "closePopup": {
     "message": "重複したタブを閉じた後にポップアップパネルを閉じる",
@@ -266,12 +258,12 @@
     "description": "Two column popup layout option"
   },
   "moreOptions": {
-    "message":  "その他のオプション...",
-    "description":  "More options..."
+    "message": "その他のオプション...",
+    "description": "More options..."
   },
   "shrunkMode": {
-    "message":  "コンパクトモード:\n有効にすると、固定されていないオプションを非表示にします。",
-    "description":  "Shrunk mode\nWhen activated, hide unpinned options."
+    "message": "コンパクトモード:\n有効にすると、固定されていないオプションを非表示にします。",
+    "description": "Shrunk mode\nWhen activated, hide unpinned options."
   },
   "theme": {
     "message": "テーマ",
@@ -342,23 +334,23 @@
     "description": "Placeholder for Path depth URL rule hostname input"
   },
   "urlRuleGroupTooltip": {
-    "message": "Groups tabs matching this pattern as duplicates of each other (supports * wildcard or /regex/flags)",
+    "message": "このパターンに一致するタブを互いに重複として扱います（* ワイルドカードまたは /regex/flags をサポート）",
     "description": "Tooltip for Group type selector in URL rules widget"
   },
   "urlRuleNormalizeTooltip": {
-    "message": "Hostname glob (example.* makes example.com = example.net) or URL /regex/ with capture group 1 (example.com/items/42 = example.com/items/42/comments)",
+    "message": "ホスト名グロブ（example.* で example.com = example.net）またはキャプチャグループ 1 付き URL /regex/（example.com/items/42 = example.com/items/42/comments）",
     "description": "Tooltip for Normalize type selector in URL rules widget"
   },
   "urlRulePathDepthTooltip": {
-    "message": "Treats tabs on this hostname as duplicates when their first N path segments match (e.g. example.com depth 2: example.com/items/42 = example.com/items/42/comments)",
+    "message": "このホスト名のタブを、最初の N 個のパスセグメントが一致する場合に重複として扱います（例: example.com の深さ 2: example.com/items/42 = example.com/items/42/comments）",
     "description": "Tooltip for Path depth type selector in URL rules widget"
   },
   "urlRulePathDepthPatternTitle": {
-    "message": "Hostname to scope this rule (supports * wildcard, e.g. *.example.com)",
+    "message": "このルールのスコープとなるホスト名（* ワイルドカードをサポート、例: *.example.com）",
     "description": "Title attribute for pattern input when type is Path depth"
   },
   "urlRuleDepthTitle": {
-    "message": "Number of path segments to keep",
+    "message": "保持するパスセグメントの数",
     "description": "Title attribute for depth number input in Path depth rules"
   }
 }

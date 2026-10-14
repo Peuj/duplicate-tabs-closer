@@ -19,10 +19,6 @@
     "message": "Abrir popup ao detectar aba duplicada",
     "description": "Open popup panel when a new duplicate tab is detected"
   },
-  "tabPriority": {
-    "message": "Prioridade",
-    "description": "Priority"
-  },
   "priorityAndExclusions": {
     "message": "Prioridade & Exclusões",
     "description": "Section title for tab priority and exclusion rules (whitelist, skip blank)"
@@ -39,7 +35,7 @@
     "message": "Manter e recarregar a aba mais antiga",
     "description": "Keep and reload older tab"
   },
-  "keeptabwithHttps": {
+  "keepTabWithHttps": {
     "message": "Mantenha a aba com https",
     "description": "Keep tab with https"
   },
@@ -112,7 +108,7 @@
     "description": "URL rules widget label"
   },
   "addUrlRule": {
-    "message": "Add rule",
+    "message": "Adicionar regra",
     "description": "Button to add a new URL rule row"
   },
   "titleRegexRules": {
@@ -123,7 +119,7 @@
     "message": "Use * como curinga, ou /regex/flags para expressões regulares",
     "description": "Hint below title pattern rules textarea"
   },
-  "duplicatetabs": {
+  "duplicateTabs": {
     "message": "Abas duplicadas",
     "description": "Duplicate tabs"
   },
@@ -139,11 +135,11 @@
     "message": "Ignorar abas em branco (about:blank, nova aba)",
     "description": "Completely ignore blank and new tab pages from duplicate detection"
   },
-  "activewindow": {
+  "activeWindow": {
     "message": "Janela ativa",
     "description": "Active window"
   },
-  "allwindows": {
+  "allWindows": {
     "message": "Todas as janelas",
     "description": "All windows"
   },
@@ -176,7 +172,7 @@
     "description": "Aria-label for the close button on each duplicate tab row"
   },
   "tabsCount": {
-    "message": "$COUNT$ tabs",
+    "message": "$COUNT$ abas",
     "description": "Badge showing how many tabs are in a group",
     "placeholders": {
       "count": {
@@ -216,10 +212,6 @@
   "toggleOptionsPanelTooltip": {
     "message": "Mostrar/ocultar painel de opções",
     "description": "Tooltip for the button that shows/hides the options column in two-column mode"
-  },
-  "customization": {
-    "message": "Customização",
-    "description": "Customization"
   },
   "advanced": {
     "message": "Avançado",
@@ -342,23 +334,23 @@
     "description": "Placeholder for Path depth URL rule hostname input"
   },
   "urlRuleGroupTooltip": {
-    "message": "Groups tabs matching this pattern as duplicates of each other (supports * wildcard or /regex/flags)",
+    "message": "Agrupa abas que correspondem a este padrão como duplicadas entre si (suporta curinga * ou /regex/flags)",
     "description": "Tooltip for Group type selector in URL rules widget"
   },
   "urlRuleNormalizeTooltip": {
-    "message": "Hostname glob (example.* makes example.com = example.net) or URL /regex/ with capture group 1 (example.com/items/42 = example.com/items/42/comments)",
+    "message": "Glob de hostname (example.* faz example.com = example.net) ou URL /regex/ com grupo de captura 1 (example.com/items/42 = example.com/items/42/comments)",
     "description": "Tooltip for Normalize type selector in URL rules widget"
   },
   "urlRulePathDepthTooltip": {
-    "message": "Treats tabs on this hostname as duplicates when their first N path segments match (e.g. example.com depth 2: example.com/items/42 = example.com/items/42/comments)",
+    "message": "Trata abas neste hostname como duplicadas quando seus primeiros N segmentos de caminho correspondem (ex.: example.com profundidade 2: example.com/items/42 = example.com/items/42/comments)",
     "description": "Tooltip for Path depth type selector in URL rules widget"
   },
   "urlRulePathDepthPatternTitle": {
-    "message": "Hostname to scope this rule (supports * wildcard, e.g. *.example.com)",
+    "message": "Hostname para delimitar esta regra (suporta curinga *, ex.: *.example.com)",
     "description": "Title attribute for pattern input when type is Path depth"
   },
   "urlRuleDepthTitle": {
-    "message": "Number of path segments to keep",
+    "message": "Número de segmentos de caminho a manter",
     "description": "Title attribute for depth number input in Path depth rules"
   }
 }

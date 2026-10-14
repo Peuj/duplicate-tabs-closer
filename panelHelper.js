@@ -296,4 +296,7 @@ const localizePopup = (node = document.documentElement) => {
     node.querySelectorAll("[i18n-aria-label]").forEach(el => {
         el.setAttribute("aria-label", chrome.i18n.getMessage(el.getAttribute("i18n-aria-label")));
     });
+    node.querySelectorAll("[i18n-title]").forEach(el => {
+        el.setAttribute("title", chrome.i18n.getMessage(el.getAttribute("i18n-title")));
+    });
 };

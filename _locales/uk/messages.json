@@ -19,10 +19,6 @@
     "message": "Відкривати панель при виявленні дубліката",
     "description": "Open popup panel when a new duplicate tab is detected"
   },
-  "tabPriority": {
-    "message": "Пріоритет",
-    "description": "Priority"
-  },
   "priorityAndExclusions": {
     "message": "Пріоритет і виключення",
     "description": "Section title for tab priority and exclusion rules (whitelist, skip blank)"
@@ -39,7 +35,7 @@
     "message": "Зберегти й оновити старішу вкладку",
     "description": "Keep and reload older tab"
   },
-  "keeptabwithHttps": {
+  "keepTabWithHttps": {
     "message": "Зберегти вкладку з https",
     "description": "Keep tab with https"
   },
@@ -112,7 +108,7 @@
     "description": "URL rules widget label"
   },
   "addUrlRule": {
-    "message": "Add rule",
+    "message": "Додати правило",
     "description": "Button to add a new URL rule row"
   },
   "titleRegexRules": {
@@ -123,7 +119,7 @@
     "message": "Використовуйте * як шаблон або /regex/flags для регулярних виразів",
     "description": "Hint below title pattern rules textarea"
   },
-  "duplicatetabs": {
+  "duplicateTabs": {
     "message": "Дублікати вкладок",
     "description": "Duplicate tabs"
   },
@@ -139,11 +135,11 @@
     "message": "Пропустити порожні вкладки (about:blank, нова вкладка)",
     "description": "Completely ignore blank and new tab pages from duplicate detection"
   },
-  "activewindow": {
+  "activeWindow": {
     "message": "Активне вікно",
     "description": "Active window"
   },
-  "allwindows": {
+  "allWindows": {
     "message": "Всі вікна",
     "description": "All windows"
   },
@@ -176,7 +172,7 @@
     "description": "Aria-label for the close button on each duplicate tab row"
   },
   "tabsCount": {
-    "message": "$COUNT$ tabs",
+    "message": "$COUNT$ вкладок",
     "description": "Badge showing how many tabs are in a group",
     "placeholders": {
       "count": {
@@ -217,10 +213,6 @@
     "message": "Показати/приховати панель параметрів",
     "description": "Tooltip for the button that shows/hides the options column in two-column mode"
   },
-  "customization": {
-    "message": "Налаштування",
-    "description": "Customization"
-  },
   "advanced": {
     "message": "Додатково",
     "description": "Divider label above advanced sections (Theme, Popup, Badge)"
@@ -247,7 +239,7 @@
   },
   "noDuplicateTabs": {
     "message": "Вкладок-дублікатів наразі нема",
-    "description": "No duplicate tabs"    
+    "description": "No duplicate tabs"
   },
   "closePopup": {
     "message": "Закрити спливаюче вікно після закриття дублікатів вкладок",
@@ -266,12 +258,12 @@
     "description": "Two column popup layout option"
   },
   "moreOptions": {
-    "message":  "Більше налаштувань...",
-    "description":  "More options..."
+    "message": "Більше налаштувань...",
+    "description": "More options..."
   },
   "shrunkMode": {
-    "message":  "Компактний режим:\nПри активації приховує незакріплені параметри.",
-    "description":  "Shrunk mode\nWhen activated, hide unpinned options."
+    "message": "Компактний режим:\nПри активації приховує незакріплені параметри.",
+    "description": "Shrunk mode\nWhen activated, hide unpinned options."
   },
   "theme": {
     "message": "Тема",
@@ -342,23 +334,23 @@
     "description": "Placeholder for Path depth URL rule hostname input"
   },
   "urlRuleGroupTooltip": {
-    "message": "Groups tabs matching this pattern as duplicates of each other (supports * wildcard or /regex/flags)",
+    "message": "Групує вкладки, що відповідають цьому шаблону, як дублікати одна одної (підтримує символ * або /regex/flags)",
     "description": "Tooltip for Group type selector in URL rules widget"
   },
   "urlRuleNormalizeTooltip": {
-    "message": "Hostname glob (example.* makes example.com = example.net) or URL /regex/ with capture group 1 (example.com/items/42 = example.com/items/42/comments)",
+    "message": "Глоб імені хоста (example.* робить example.com = example.net) або URL /regex/ з групою захоплення 1 (example.com/items/42 = example.com/items/42/comments)",
     "description": "Tooltip for Normalize type selector in URL rules widget"
   },
   "urlRulePathDepthTooltip": {
-    "message": "Treats tabs on this hostname as duplicates when their first N path segments match (e.g. example.com depth 2: example.com/items/42 = example.com/items/42/comments)",
+    "message": "Вважає вкладки на цьому хості дублікатами, коли перші N сегментів шляху збігаються (напр., example.com глибина 2: example.com/items/42 = example.com/items/42/comments)",
     "description": "Tooltip for Path depth type selector in URL rules widget"
   },
   "urlRulePathDepthPatternTitle": {
-    "message": "Hostname to scope this rule (supports * wildcard, e.g. *.example.com)",
+    "message": "Ім'я хоста для застосування цього правила (підтримує символ *, напр., *.example.com)",
     "description": "Title attribute for pattern input when type is Path depth"
   },
   "urlRuleDepthTitle": {
-    "message": "Number of path segments to keep",
+    "message": "Кількість сегментів шляху",
     "description": "Title attribute for depth number input in Path depth rules"
   }
 }
