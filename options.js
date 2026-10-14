@@ -356,6 +356,12 @@ const parseUrlRules = (jsonText) => {
                 const normalized = line.replace(/\*/g, "x");
                 results.push({ type: "hostname", regex: new RegExp(`${pattern}$`), normalized });
             }
+        } else if (type === "pathDepth") {
+            if ((line.match(/\*/g) || []).length > MAX_WILDCARDS) continue;
+            const depth = Math.max(1, parseInt(row.depth, 10) || 1);
+            let hostnamePattern = "^";
+            for (const ch of line) hostnamePattern = ch === "*" ? `${hostnamePattern}.*` : hostnamePattern + escapeRegexChar(ch);
+            results.push({ type: "pathdepth", regex: new RegExp(`${hostnamePattern}$`), depth });
         }
     }
     return results;

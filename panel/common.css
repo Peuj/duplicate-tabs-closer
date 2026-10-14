@@ -782,6 +782,14 @@ input[type="number"].form-control-xs {
     height: 22px;
 }
 
+.url-rule-depth {
+    flex: 0 0 auto;
+    width: 45px;
+    font-size: 11px;
+    padding: 2px 4px;
+    height: 22px;
+}
+
 .url-rule-delete {
     flex: 0 0 auto;
     background: none;

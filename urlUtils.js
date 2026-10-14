@@ -23,6 +23,13 @@ const applyNormalizationRules = (url, rules) => {
 		} else if (rule.type === "url") {
 			const match = rule.regex.exec(url);
 			if (match && typeof match[1] === "string") return match[1];
+		} else if (rule.type === "pathdepth") {
+			if (rule.regex.test(uri.hostname)) {
+				const segments = uri.pathname.split("/").filter(Boolean);
+				if (segments.length > rule.depth) {
+					return uri.origin + "/" + segments.slice(0, rule.depth).join("/");
+				}
+			}
 		}
 	}
 	return url;
@@ -31,7 +38,7 @@ const applyNormalizationRules = (url, rules) => {
 const getMatchingURL = (url) => {
 	if (!isValidURL(url)) return url;
 	let matchingURL = url;
-	const normRules = options.urlRules.filter(r => r.type === "hostname" || r.type === "url");
+	const normRules = options.urlRules.filter(r => r.type === "hostname" || r.type === "url" || r.type === "pathdepth");
 	if (normRules.length > 0) {
 		matchingURL = applyNormalizationRules(matchingURL, normRules);
 	}
@@ -62,7 +69,7 @@ const getMatchingURL = (url) => {
 };
 
 const getMatchPatternURL = (url) => {
-	if (options.urlRules.some(r => r.type === "hostname" || r.type === "url")) return null;
+	if (options.urlRules.some(r => r.type === "hostname" || r.type === "url" || r.type === "pathdepth")) return null;
 	let urlPattern = null;
 	if (isValidURL(url)) {
 		const uri = new URL(url);

@@ -1,13 +1,21 @@
 "use strict";
 
 const _urlRuleTypePlaceholders = {
-    group: "youtube.com/watch/* or /reddit\\.com\\/(r|user)\\/.*/",
-    normalize: "bunkr.* or /(https?:\\/\\/[^\\/]+\\/[^\\/]+).*/"
+    group: chrome.i18n.getMessage("urlRuleGroupPlaceholder"),
+    normalize: chrome.i18n.getMessage("urlRuleNormalizePlaceholder"),
+    pathDepth: chrome.i18n.getMessage("urlRulePathDepthPlaceholder")
 };
 
 const _urlRuleTypeTooltips = {
-    group: "Groups tabs matching this pattern as duplicates of each other (supports * wildcard or /regex/flags)",
-    normalize: "Hostname glob (bunkr.* makes bunkr.cr = bunkr.site) or /regex/ with capture group 1 to strip URL suffixes"
+    group: chrome.i18n.getMessage("urlRuleGroupTooltip"),
+    normalize: chrome.i18n.getMessage("urlRuleNormalizeTooltip"),
+    pathDepth: chrome.i18n.getMessage("urlRulePathDepthTooltip")
+};
+
+const _urlRulePatternTitles = {
+    group: "",
+    normalize: "",
+    pathDepth: chrome.i18n.getMessage("urlRulePathDepthPatternTitle")
 };
 
 const buildUrlRuleRow = (rule, onChangeFn) => {
@@ -25,11 +33,12 @@ const buildUrlRuleRow = (rule, onChangeFn) => {
     patternInput.className = "url-rule-pattern form-control form-control-sm";
     patternInput.value = pattern;
     patternInput.placeholder = _urlRuleTypePlaceholders[type] || _urlRuleTypePlaceholders.group;
+    patternInput.title = _urlRulePatternTitles[type] || "";
 
     const typeSelect = document.createElement("select");
     typeSelect.className = "url-rule-type form-select form-select-sm";
     typeSelect.title = _urlRuleTypeTooltips[type] || "";
-    [["group", "Group"], ["normalize", "Normalize"]].forEach(([val, label]) => {
+    [["group", "Group"], ["normalize", "Normalize"], ["pathDepth", "Path depth"]].forEach(([val, label]) => {
         const opt = document.createElement("option");
         opt.value = val;
         opt.textContent = label;
@@ -37,22 +46,35 @@ const buildUrlRuleRow = (rule, onChangeFn) => {
         typeSelect.appendChild(opt);
     });
 
+    const depthInput = document.createElement("input");
+    depthInput.type = "number";
+    depthInput.className = "url-rule-depth form-control form-control-sm";
+    depthInput.min = "1";
+    depthInput.value = rule.depth ?? 1;
+    depthInput.title = chrome.i18n.getMessage("urlRuleDepthTitle");
+    if (type !== "pathDepth") depthInput.classList.add("hidden");
+
     const deleteBtn = document.createElement("button");
     deleteBtn.type = "button";
     deleteBtn.className = "url-rule-delete";
     deleteBtn.setAttribute("aria-label", "Remove rule");
     deleteBtn.textContent = "×";
 
-    main.append(patternInput, typeSelect, deleteBtn);
+    main.append(patternInput, typeSelect, depthInput, deleteBtn);
     row.appendChild(main);
 
     typeSelect.addEventListener("change", function () {
         patternInput.placeholder = _urlRuleTypePlaceholders[this.value] || _urlRuleTypePlaceholders.group;
+        patternInput.title = _urlRulePatternTitles[this.value] || "";
         this.title = _urlRuleTypeTooltips[this.value] || "";
+        depthInput.classList.toggle("hidden", this.value !== "pathDepth");
         if (onChangeFn) onChangeFn();
     });
 
     patternInput.addEventListener("change", () => {
+        if (onChangeFn) onChangeFn();
+    });
+    depthInput.addEventListener("change", () => {
         if (onChangeFn) onChangeFn();
     });
     deleteBtn.addEventListener("click", () => {
@@ -69,7 +91,12 @@ const collectUrlRulesJson = (containerEl) => {
         const type = row.querySelector(".url-rule-type").value;
         const pattern = row.querySelector(".url-rule-pattern").value.trim();
         if (!pattern) return;
-        rules.push({ type, pattern });
+        if (type === "pathDepth") {
+            const depth = Math.max(1, parseInt(row.querySelector(".url-rule-depth").value, 10) || 1);
+            rules.push({ type, pattern, depth });
+        } else {
+            rules.push({ type, pattern });
+        }
     });
     return JSON.stringify(rules);
 };

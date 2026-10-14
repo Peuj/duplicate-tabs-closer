@@ -61,7 +61,7 @@ Determines what happens to the kept tab after its duplicate is closed.
 
 Tabs opened on purpose using the browser's built-in **Duplicate Tab** command are never auto-closed. They are still detected and shown in the duplicate tabs list (marked with a shield icon), so you can review and close them manually if needed. Navigating the duplicated tab to a different URL removes the protection.
 
-> **Note:** Intentional duplicate protection is supported on Chrome and other Chromium-based browsers (Edge, Vivaldi, Brave) only. Detection relies on the order in which browser events fire — the navigation event arrives before the tab creation event only for the built-in Duplicate Tab command, distinguishing it from links or address bar navigation.
+> **Note:** Intentional duplicate protection is supported on Chrome and other Chromium-based browsers (Edge, Vivaldi, Brave) only. Detection relies on the order in which browser events fire: the navigation event arrives before the tab creation event only for the built-in Duplicate Tab command, distinguishing it from links or address bar navigation.
 >
 > **Firefox:** Intentional duplicate protection is not available on Firefox due to a browser bug ([Bug 1701900](https://bugzilla.mozilla.org/show_bug.cgi?id=1701900) and a regression introduced in Firefox 153 that prevents extensions from detecting tab duplication). Tabs duplicated via the Duplicate Tab command will be treated as normal duplicates and auto-closed. Other browsers are not currently supported.
 
@@ -91,7 +91,7 @@ Determines which of two duplicate tabs is kept when one must be closed, and defi
 
 > Available in the **Options page** only.
 
-When enabled, blank tabs (`about:blank` and new tab pages) are completely invisible to the extension — they are never shown in the duplicate tabs list, never auto-closed, and never used as a reference when comparing tabs. This is distinct from the whitelist: whitelisted tabs are still detected and shown; skipped blank tabs are not processed at all.
+When enabled, blank tabs (`about:blank` and new tab pages) are completely invisible to the extension: they are never shown in the duplicate tabs list, never auto-closed, and never used as a reference when comparing tabs. This is distinct from the whitelist: whitelisted tabs are still detected and shown; skipped blank tabs are not processed at all.
 
 #### Whitelisted URLs
 
@@ -125,48 +125,73 @@ Controls how two tabs are compared to determine whether they are duplicates.
 
 #### URL Rules
 
-Each rule is a row with a **type** and a **pattern**. Two rule types are available.
+Each rule is a row with a **type** and a **pattern**. Three rule types are available.
 
 ##### Group
 
-Any two tabs whose URLs both match the same rule are treated as duplicates, even if their full URLs differ. Useful for grouping all tabs from a service as duplicates of each other regardless of the specific page.
+Any two tabs whose URLs both match the same rule are treated as duplicates, even if their full URLs differ. Useful for grouping all tabs from a section of a site as duplicates of each other regardless of which specific page is open.
 
 Pattern syntax: `*` matches any sequence of characters. All other characters match literally. Patterns are tested as substrings of the full URL, so including the protocol (`https://`) is optional but makes rules more precise. For more complex matching, wrap the pattern in `/` slashes to use a regular expression: `/regex/flags`.
 
 ```text
-youtube.com/watch/*
-*://github.com/*/pull/*
-/reddit\.com\/(r|user)\/.*/
+example.com/items/*
 ```
+
+With this rule, `https://example.com/items/42` and `https://example.com/items/43` are treated as duplicates: both match the pattern, so whichever was opened first is kept and the other is closed.
+
+```text
+example.com/items/*/comments
+```
+
+Matches any comments page under any item. `https://example.com/items/42/comments` and `https://example.com/items/43/comments` are duplicates.
+
+```text
+/example\.com\/(items|pages)\/.*/
+```
+
+A regex rule that matches both `/items/` and `/pages/` URLs, treating them all as duplicates of each other.
 
 ##### Normalize
 
-Rewrites a URL to a canonical form before comparison. Two tabs whose URLs produce the same canonical form are treated as duplicates.
+Rewrites a URL to a canonical form before comparison. Two tabs whose URLs produce the same canonical form are treated as duplicates. Two tabs for different content are never collapsed, because they produce different canonical URLs.
 
 Two syntaxes are available.
 
 **Hostname glob:** normalizes the hostname. `*` matches any sequence of characters including `.`. The canonical hostname is the pattern with `*` replaced by `x`. The path and query string are preserved, so only tabs at the same path are treated as duplicates.
 
 ```text
-bunkr.*    (bunkr.cr = bunkr.site = bunkr.ph, same path only)
-yandex.*   (yandex.com = yandex.ru = yandex.tr, same path only)
+example.*
 ```
 
-With `bunkr.*`, the tabs `bunkr.cr/video/abc` and `bunkr.site/video/abc` are treated as duplicates, but `bunkr.cr/video/abc` and `bunkr.site/video/xyz` are not.
+With this rule, `https://example.com/items/42` and `https://example.net/items/42` are treated as duplicates (same path, different TLD). But `https://example.com/items/42` and `https://example.net/items/43` are not (different path).
 
 **URL regex:** rewrites the full URL using a capture group. Wrap the pattern in `/` slashes and include at least one capture group. The URL is normalized to whatever group 1 captures. Useful for treating a base page and all its subpaths as the same URL.
+
+```text
+/(https?:\/\/example\.com\/items\/\d+).*/
+```
+
+With this rule, `https://example.com/items/42` and `https://example.com/items/42/comments` both normalize to `https://example.com/items/42` and are treated as duplicates, while `https://example.com/items/43` remains distinct.
 
 ```text
 /(https?:\/\/[^\/]+\/[^\/]+).*/
 ```
 
-With this rule, `https://example.com/issue/45` and `https://example.com/issue/45/comments` both normalize to `https://example.com/issue/45` and are treated as duplicates, while `https://example.com/issue/46` remains distinct.
+A general pattern that works on any site: normalizes any URL to its first two path segments. Use a site-specific pattern (like the one above) when you want to limit the rule to one site.
+
+##### Path depth
+
+Treats tabs on a given hostname as duplicates when their URLs share the same first N path segments. Unlike a URL regex Normalize rule which scopes to a specific path pattern, Path depth applies to all paths on the hostname uniformly. Enter the hostname in the text field (supports `*` wildcard) and the number of segments to keep in the depth field.
+
+Use **Path depth** when the rule should apply to the entire hostname. Use **Normalize (URL regex)** instead when you want to scope the rule to a specific section of the site (e.g. only `/items/` pages, not everything on the domain).
 
 ```text
-/(https?:\/\/tracker\.example\.com\/tickets\/\d+).*/
+example.com   depth: 2
 ```
 
-A more precise pattern that only normalizes a specific site and only numeric ticket IDs.
+`https://example.com/items/42` and `https://example.com/items/42/comments` both have the same first two segments (`items` and `42`), so they normalize to `https://example.com/items/42` and are treated as duplicates. `https://example.com/items/43` has a different second segment and is not affected.
+
+**When to use which type:** a Group rule makes every matching tab a duplicate of every other matching tab regardless of content. `example.com/items/*` closes all your open item tabs as duplicates of each other, even if they show different items. Normalize and Path depth keep tabs separate unless they resolve to the exact same canonical URL, so item 42 and item 43 are never collapsed together. Between Normalize (URL regex) and Path depth: a URL regex rule applies only to paths that match the pattern, leaving the rest of the site unaffected. Path depth applies to every path on the hostname uniformly.
 
 #### Title Pattern Rules
 
@@ -177,11 +202,11 @@ Only active when *Detect duplicates by* is set to *URL match or title match*.
 **Pattern syntax:** `*` matches any sequence of characters. All other characters match literally. Wrap in `/` slashes for regex: `/regex/flags`.
 
 ```text
-* - Gmail
-GitHub - *
+* - Webmail
+Projects - *
 ```
 
-> **Pattern syntax note:** The Whitelist, URL Group rules, and Title Pattern Rules all support the same syntax. Use `*` as a wildcard (matches any sequence of characters). To use a regular expression, wrap the pattern in `/` slashes: `/regex/flags`. Plain patterns treat `.`, `+`, `?`, `(`, `)` etc. as literals, not regex metacharacters.
+> **Pattern syntax note:** The Whitelist, URL Group rules, URL Path depth rules, and Title Pattern Rules all support the same syntax for hostname/URL patterns. Use `*` as a wildcard (matches any sequence of characters). To use a regular expression, wrap the pattern in `/` slashes: `/regex/flags`. Plain patterns treat `.`, `+`, `?`, `(`, `)` etc. as literals, not regex metacharacters.
 
 ### Scope
 

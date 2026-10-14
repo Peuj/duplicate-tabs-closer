@@ -328,5 +328,37 @@
   "fileAccessWarning": {
     "message": "Попередження: розширення не отримало доступ до локальних URL-адрес file://. Перейдіть на about:addons, відкрийте Duplicate Tabs Closer і перевірте вкладку «Дозволи», щоб увімкнути доступ до файлів.",
     "description": "Warning shown on Firefox when isAllowedFileSchemeAccess() returns false"
+  },
+  "urlRuleGroupPlaceholder": {
+    "message": "example.com/items/* or /example\\.com\\/(items|pages)\\/.*/",
+    "description": "Placeholder for Group URL rule pattern input"
+  },
+  "urlRuleNormalizePlaceholder": {
+    "message": "example.* or /(https?:\\/\\/example\\.com\\/items\\/\\d+).*/",
+    "description": "Placeholder for Normalize URL rule pattern input"
+  },
+  "urlRulePathDepthPlaceholder": {
+    "message": "example.com",
+    "description": "Placeholder for Path depth URL rule hostname input"
+  },
+  "urlRuleGroupTooltip": {
+    "message": "Groups tabs matching this pattern as duplicates of each other (supports * wildcard or /regex/flags)",
+    "description": "Tooltip for Group type selector in URL rules widget"
+  },
+  "urlRuleNormalizeTooltip": {
+    "message": "Hostname glob (example.* makes example.com = example.net) or URL /regex/ with capture group 1 (example.com/items/42 = example.com/items/42/comments)",
+    "description": "Tooltip for Normalize type selector in URL rules widget"
+  },
+  "urlRulePathDepthTooltip": {
+    "message": "Treats tabs on this hostname as duplicates when their first N path segments match (e.g. example.com depth 2: example.com/items/42 = example.com/items/42/comments)",
+    "description": "Tooltip for Path depth type selector in URL rules widget"
+  },
+  "urlRulePathDepthPatternTitle": {
+    "message": "Hostname to scope this rule (supports * wildcard, e.g. *.example.com)",
+    "description": "Title attribute for pattern input when type is Path depth"
+  },
+  "urlRuleDepthTitle": {
+    "message": "Number of path segments to keep",
+    "description": "Title attribute for depth number input in Path depth rules"
   }
 }
