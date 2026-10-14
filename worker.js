@@ -532,7 +532,7 @@ const _pendingTriggerTabId = new Map();
 const debouncedBatchClose = debounce(closeDuplicateTabs, 300, false);
 
 // Dispatch the appropriate action after a tab completes or navigates.
-// alreadyComplete: onUpdatedTab already stamped this completion — skip search/refresh in both modes.
+// alreadyComplete: onUpdatedTab already stamped this completion, skip search/refresh in both modes.
 // queryComplete:  require matched tabs to be complete before matching (pre-navigation scan).
 const dispatchTabCompletion = (tab, activeTabId, { queryComplete = false, alreadyComplete = false } = {}) => {
     if (startupBurst.active && (Date.now() - startupBurst.startedAt) < POST_STARTUP_BURST_MAX_MS) {

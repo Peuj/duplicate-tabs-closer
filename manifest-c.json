@@ -37,7 +37,7 @@
     }
   },
   "externally_connectable": {
-    "_comment": "DEV ONLY — allows dtc-test companion extension to send messages. Remove or restrict to a specific extension ID before publishing to the Chrome Web Store.",
+    "_comment": "DEV ONLY: allows dtc-test companion extension to send messages. Remove or restrict to a specific extension ID before publishing to the Chrome Web Store.",
     "ids": ["*"]
   },
   "options_ui": {

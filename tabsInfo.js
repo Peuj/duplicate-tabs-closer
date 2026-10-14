@@ -68,7 +68,7 @@ class TabsInfo {
 
     needsRefresh(windowId) {
         // Returns true when undefined (never initialized, forces badge init for new windows)
-        // or > 0 (duplicates exist). Do NOT simplify to a boolean — the undefined case is
+        // or > 0 (duplicates exist). Do NOT simplify to a boolean: the undefined case is
         // load-bearing for badge initialization on newly created windows.
         return this.nbDuplicateTabs.get(windowId) !== 0;
     }

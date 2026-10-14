@@ -1,6 +1,6 @@
 "use strict";
 
-// Chrome MV3 service worker only — Firefox loads scripts via manifest background.scripts
+// Chrome MV3 service worker only. Firefox loads scripts via manifest background.scripts
 if (typeof importScripts === "function") {
 	importScripts("helper.js", "tabsInfo.js", "options.js", "urlUtils.js", "badge.js", "tst.js", "worker.js", "messageListener.js");
 }
@@ -218,7 +218,7 @@ const onActivatedTab = async (activeInfo) => {
 	setBadge(activeInfo.windowId, activeInfo.tabId);
 };
 
-// Chrome only — Firefox does not fire tabs.onReplaced (used when a tab is discarded/replaced by a new one).
+// Chrome only. Firefox does not fire tabs.onReplaced (used when a tab is discarded/replaced by a new one).
 const onReplacedTab = async (addedTabId, removedTabId) => {
 	await ensureInitialized();
 	const prevLastComplete = tabsInfo.getLastComplete(removedTabId);
