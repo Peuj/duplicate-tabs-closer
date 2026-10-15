@@ -125,7 +125,7 @@ Controls how two tabs are compared to determine whether they are duplicates.
 
 #### URL Rules
 
-Each rule is a row with a **type** and a **pattern**. Three rule types are available.
+Each rule is a row with a **type** and a **pattern**. Each row has a checkbox to enable or disable the rule: unchecking it disables the rule without deleting it; disabled rules are stored but skipped during duplicate detection. Three rule types are available.
 
 ##### Group
 
@@ -190,6 +190,10 @@ example.com   depth: 2
 ```
 
 `https://example.com/items/42` and `https://example.com/items/42/comments` both have the same first two segments (`items` and `42`), so they normalize to `https://example.com/items/42` and are treated as duplicates. `https://example.com/items/43` has a different second segment and is not affected.
+
+##### Rule ordering
+
+Within Normalize and Path depth rules, exact rules (no `*` wildcard in the hostname) are applied before wildcard rules, regardless of the order they appear in the list. A specific rule such as `docs.example.com` depth 1 will always take priority over a broader wildcard rule such as `*.example.com` depth 3, even if the wildcard rule appears earlier in the list. Group rules are applied in the order they appear and are not reordered.
 
 **When to use which type:** a Group rule makes every matching tab a duplicate of every other matching tab regardless of content. `example.com/items/*` closes all your open item tabs as duplicates of each other, even if they show different items. Normalize and Path depth keep tabs separate unless they resolve to the exact same canonical URL, so item 42 and item 43 are never collapsed together. Between Normalize (URL regex) and Path depth: a URL regex rule applies only to paths that match the pattern, leaving the rest of the site unaffected. Path depth applies to every path on the hostname uniformly.
 
@@ -288,8 +292,10 @@ In the duplicate tabs list, tabs that will be closed show a strikethrough title.
 | Ignore path part in URL | Yes |
 | Detect duplicates by | Yes |
 | % title similarity | Yes |
-| URL rules | Yes |
+| URL rules | No |
 | Title pattern rules | No |
+
+> When the URL rules eye icon is enabled, URL rules are shown in the popup as a read-only list, but only when at least one rule exists. Patterns, types, and enabled/disabled state are visible but cannot be changed from the popup. To add, edit, remove, or toggle rules, open the Options page.
 
 ### Hotkeys
 

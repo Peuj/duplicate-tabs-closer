@@ -71,18 +71,22 @@ const buildUrlRuleRow = (rule, onChangeFn, { readOnly = false } = {}) => {
 
     if (readOnly) {
         row.classList.add("url-rule-row--readonly");
-        patternInput.readOnly = true;
+        const patternDisplay = document.createElement("div");
+        patternDisplay.className = "url-rule-pattern form-control form-control-sm";
         typeSelect.classList.add("hidden");
         depthInput.classList.add("hidden");
         deleteBtn.classList.add("hidden");
         const typeLabels = { group: "Group", normalize: "Normalize", pathDepth: "Path depth" };
         const typeLabel = typeLabels[type] || type;
-        patternInput.title = type === "pathDepth"
+        patternDisplay.textContent = pattern;
+        patternDisplay.title = type === "pathDepth"
             ? `${typeLabel}: ${pattern} (depth: ${rule.depth ?? 1})`
             : `${typeLabel}: ${pattern}`;
+        main.append(enabledCheckbox, patternDisplay, typeSelect, depthInput, deleteBtn);
+    } else {
+        main.append(enabledCheckbox, patternInput, typeSelect, depthInput, deleteBtn);
     }
 
-    main.append(enabledCheckbox, patternInput, typeSelect, depthInput, deleteBtn);
     row.appendChild(main);
 
     if (!readOnly) {

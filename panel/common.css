@@ -824,8 +824,16 @@ input[type="number"].form-control-xs {
     opacity: 0.4;
 }
 
+.url-rule-row--readonly .url-rule-pattern {
+    cursor: default;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
 .btn-add-rule {
     margin-top: 4px;
+    margin-bottom: 5px;
     font-size: 11px;
     padding: 2px 8px;
     cursor: pointer;

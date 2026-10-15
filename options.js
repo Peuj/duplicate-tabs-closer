@@ -80,7 +80,7 @@ const defaultOptions = {
         value: true
     },
     urlRules_popup: {
-        value: true
+        value: false
     },
     titleRegexRules_popup: {
         value: false
