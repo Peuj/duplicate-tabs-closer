@@ -27,7 +27,7 @@ const applyNormalizationRules = (url, rules) => {
 			if (rule.regex.test(uri.hostname)) {
 				const segments = uri.pathname.split("/").filter(Boolean);
 				if (segments.length > rule.depth) {
-					return uri.origin + "/" + segments.slice(0, rule.depth).join("/");
+					return `${uri.origin}/${segments.slice(0, rule.depth).join("/")}`;
 				}
 			}
 		}

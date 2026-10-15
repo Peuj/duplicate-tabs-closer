@@ -350,19 +350,35 @@ const parseUrlRules = (jsonText) => {
                     // ignore: invalid regex in normalize rule
                 }
             } else {
-                if ((line.match(/\*/g) || []).length > MAX_WILDCARDS) continue;
+                const wildcards = (line.match(/\*/g) || []).length;
+                if (wildcards > MAX_WILDCARDS) continue;
                 let pattern = "^";
                 for (const ch of line) pattern = ch === "*" ? `${pattern}.*` : pattern + escapeRegexChar(ch);
                 const normalized = line.replace(/\*/g, "x");
-                results.push({ type: "hostname", regex: new RegExp(`${pattern}$`), normalized });
+                results.push({ type: "hostname", regex: new RegExp(`${pattern}$`), normalized, _wc: wildcards });
             }
         } else if (type === "pathDepth") {
-            if ((line.match(/\*/g) || []).length > MAX_WILDCARDS) continue;
+            const wildcards = (line.match(/\*/g) || []).length;
+            if (wildcards > MAX_WILDCARDS) continue;
             const depth = Math.max(1, parseInt(row.depth, 10) || 1);
             let hostnamePattern = "^";
             for (const ch of line) hostnamePattern = ch === "*" ? `${hostnamePattern}.*` : hostnamePattern + escapeRegexChar(ch);
-            results.push({ type: "pathdepth", regex: new RegExp(`${hostnamePattern}$`), depth });
+            results.push({ type: "pathdepth", regex: new RegExp(`${hostnamePattern}$`), depth, _wc: wildcards });
         }
     }
-    return results;
+    // Sort normalization rules by specificity: exact hostname patterns (0 wildcards) beat wildcard
+    // patterns. url (regex) rules have no natural specificity and sort last. Group rules keep
+    // their original order (first-match-wins is intentional for grouping).
+    const normRules = [];
+    const groupRules = [];
+    for (const r of results) {
+        (r.type === "group" ? groupRules : normRules).push(r);
+    }
+    normRules.sort((a, b) => {
+        const wA = a._wc ?? Infinity;
+        const wB = b._wc ?? Infinity;
+        return wA === wB ? 0 : wA < wB ? -1 : 1;
+    });
+    for (const r of normRules) delete r._wc;
+    return [...normRules, ...groupRules];
 };
