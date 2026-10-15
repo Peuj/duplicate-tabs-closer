@@ -345,6 +345,14 @@
     "message": "このホスト名のタブを、最初の N 個のパスセグメントが一致する場合に重複として扱います（例: example.com の深さ 2: example.com/items/42 = example.com/items/42/comments）",
     "description": "Tooltip for Path depth type selector in URL rules widget"
   },
+  "urlRuleGroupPatternTitle": {
+    "message": "URL パターン（例: example.com/items/*）または /regex/flags。Enter か Tab で自動保存。",
+    "description": "Title attribute for pattern input when type is Group"
+  },
+  "urlRuleNormalizePatternTitle": {
+    "message": "ホスト名パターン（例: example.*）またはキャプチャグループ 1 の /regex/（正規化後の URL）。Enter か Tab で自動保存。",
+    "description": "Title attribute for pattern input when type is Normalize"
+  },
   "urlRulePathDepthPatternTitle": {
     "message": "このルールのスコープとなるホスト名（* ワイルドカードをサポート、例: *.example.com）",
     "description": "Title attribute for pattern input when type is Path depth"

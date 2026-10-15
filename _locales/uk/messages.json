@@ -345,6 +345,14 @@
     "message": "Вважає вкладки на цьому хості дублікатами, коли перші N сегментів шляху збігаються (напр., example.com глибина 2: example.com/items/42 = example.com/items/42/comments)",
     "description": "Tooltip for Path depth type selector in URL rules widget"
   },
+  "urlRuleGroupPatternTitle": {
+    "message": "URL-шаблон (напр., example.com/items/*) або /regex/flags. Автозбереження при натисканні Enter або Tab.",
+    "description": "Title attribute for pattern input when type is Group"
+  },
+  "urlRuleNormalizePatternTitle": {
+    "message": "Шаблон хосту (напр., example.*) або /regex/ з групою захоплення 1 як канонічний URL. Автозбереження при натисканні Enter або Tab.",
+    "description": "Title attribute for pattern input when type is Normalize"
+  },
   "urlRulePathDepthPatternTitle": {
     "message": "Ім'я хоста для застосування цього правила (підтримує символ *, напр., *.example.com)",
     "description": "Title attribute for pattern input when type is Path depth"

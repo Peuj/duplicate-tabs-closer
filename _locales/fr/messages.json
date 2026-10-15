@@ -345,6 +345,14 @@
     "message": "Traite les onglets sur ce nom d'hôte comme des doublons lorsque leurs N premiers segments de chemin correspondent (ex. : example.com profondeur 2 : example.com/items/42 = example.com/items/42/comments)",
     "description": "Tooltip for Path depth type selector in URL rules widget"
   },
+  "urlRuleGroupPatternTitle": {
+    "message": "Glob d'URL (ex. : example.com/items/*) ou /regex/flags. Sauvegardé automatiquement sur Entrée ou Tab.",
+    "description": "Title attribute for pattern input when type is Group"
+  },
+  "urlRuleNormalizePatternTitle": {
+    "message": "Glob de nom d'hôte (ex. : example.*) ou /regex/ avec le groupe de capture 1 comme URL canonique. Sauvegardé automatiquement sur Entrée ou Tab.",
+    "description": "Title attribute for pattern input when type is Normalize"
+  },
   "urlRulePathDepthPatternTitle": {
     "message": "Nom d'hôte pour cibler cette règle (supporte le caractère générique *, ex. : *.example.com)",
     "description": "Title attribute for pattern input when type is Path depth"

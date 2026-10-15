@@ -345,6 +345,14 @@
     "message": "Trata abas neste hostname como duplicadas quando seus primeiros N segmentos de caminho correspondem (ex.: example.com profundidade 2: example.com/items/42 = example.com/items/42/comments)",
     "description": "Tooltip for Path depth type selector in URL rules widget"
   },
+  "urlRuleGroupPatternTitle": {
+    "message": "Glob de URL (ex.: example.com/items/*) ou /regex/flags. Salvo automaticamente ao pressionar Enter ou Tab.",
+    "description": "Title attribute for pattern input when type is Group"
+  },
+  "urlRuleNormalizePatternTitle": {
+    "message": "Glob de hostname (ex.: example.*) ou /regex/ com grupo de captura 1 como URL canônica. Salvo automaticamente ao pressionar Enter ou Tab.",
+    "description": "Title attribute for pattern input when type is Normalize"
+  },
   "urlRulePathDepthPatternTitle": {
     "message": "Hostname para delimitar esta regra (suporta curinga *, ex.: *.example.com)",
     "description": "Title attribute for pattern input when type is Path depth"

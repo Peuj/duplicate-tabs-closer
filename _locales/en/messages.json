@@ -345,6 +345,14 @@
     "message": "Treats tabs on this hostname as duplicates when their first N path segments match (e.g. example.com depth 2: example.com/items/42 = example.com/items/42/comments)",
     "description": "Tooltip for Path depth type selector in URL rules widget"
   },
+  "urlRuleGroupPatternTitle": {
+    "message": "URL glob (e.g. example.com/items/*) or /regex/flags. Auto-saves on Enter or Tab.",
+    "description": "Title attribute for pattern input when type is Group"
+  },
+  "urlRuleNormalizePatternTitle": {
+    "message": "Hostname glob (e.g. example.*) or /regex/ with capture group 1 as canonical URL. Auto-saves on Enter or Tab.",
+    "description": "Title attribute for pattern input when type is Normalize"
+  },
   "urlRulePathDepthPatternTitle": {
     "message": "Hostname to scope this rule (supports * wildcard, e.g. *.example.com)",
     "description": "Title attribute for pattern input when type is Path depth"

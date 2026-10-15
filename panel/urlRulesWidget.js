@@ -13,8 +13,8 @@ const _urlRuleTypeTooltips = {
 };
 
 const _urlRulePatternTitles = {
-    group: "",
-    normalize: "",
+    group: chrome.i18n.getMessage("urlRuleGroupPatternTitle"),
+    normalize: chrome.i18n.getMessage("urlRuleNormalizePatternTitle"),
     pathDepth: chrome.i18n.getMessage("urlRulePathDepthPatternTitle")
 };
 
@@ -73,6 +73,9 @@ const buildUrlRuleRow = (rule, onChangeFn) => {
 
     patternInput.addEventListener("change", () => {
         if (onChangeFn) onChangeFn();
+    });
+    patternInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") { e.preventDefault(); patternInput.blur(); }
     });
     depthInput.addEventListener("change", () => {
         if (onChangeFn) onChangeFn();

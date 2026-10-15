@@ -345,6 +345,14 @@
     "message": "當此主機名稱上的分頁前 N 個路徑段相同時視為重複（例如：example.com 深度 2：example.com/items/42 = example.com/items/42/comments）",
     "description": "Tooltip for Path depth type selector in URL rules widget"
   },
+  "urlRuleGroupPatternTitle": {
+    "message": "URL 模式（例如 example.com/items/*）或 /regex/flags。按 Enter 或 Tab 自動儲存。",
+    "description": "Title attribute for pattern input when type is Group"
+  },
+  "urlRuleNormalizePatternTitle": {
+    "message": "主機名稱模式（例如 example.*）或帶第 1 捕獲組的 /regex/ 作為標準 URL。按 Enter 或 Tab 自動儲存。",
+    "description": "Title attribute for pattern input when type is Normalize"
+  },
   "urlRulePathDepthPatternTitle": {
     "message": "限定此規則的主機名稱（支援 * 萬用字元，例如 *.example.com）",
     "description": "Title attribute for pattern input when type is Path depth"
