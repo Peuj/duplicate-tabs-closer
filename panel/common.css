@@ -248,7 +248,7 @@ html.theme-violet {
 
 .checkboxes input {
     vertical-align: middle;
-    margin-right: 3px;
+    margin: 0 3px 0 0;
 }
 
 .checkboxes label span {
@@ -396,9 +396,15 @@ html.theme-violet {
     margin-bottom: 5px;
 }
 
-#titleMatchMode {
-    margin-top: 3px;
-    margin-bottom: 8px;
+/* Inline-width select for option rows that mix selects with checkboxes */
+.select-inline {
+    display: inline-block;
+    vertical-align: middle;
+    width: auto;
+}
+
+label + .select-inline {
+    margin-left: 4px;
 }
 
 /* ── Table scrollable ── */

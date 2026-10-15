@@ -98,17 +98,19 @@
           <li class="list-group-item">
             <div class="form-group" id="matchingRulesBody">
               <div class="checkboxes d-flex align-items-center justify-content-between">
-                <label for="titleMatchMode"><span i18n-content="titleMatchMode"></span></label>
+                <div class="d-flex align-items-center">
+                  <label for="titleMatchMode"><span i18n-content="titleMatchMode"></span></label>
+                  <select class="form-select form-control-xs select-inline" id="titleMatchMode" name="titleMatchMode">
+                    <option value="N" i18n-content="titleMatchModeN"></option>
+                    <option value="T" i18n-content="titleMatchModeT"></option>
+                    <option value="U" i18n-content="titleMatchModeU"></option>
+                  </select>
+                </div>
                 <input type="checkbox" class="checkbox-fa" id="titleMatchMode_popup" />
                 <label for="titleMatchMode_popup" class="checkbox-fa-label popup-pin-label" i18n-title="popupPinTooltip">
                   <span class="fa-regular fa-eye"></span>
                 </label>
               </div>
-              <select class="form-select form-control-xs" id="titleMatchMode" name="titleMatchMode">
-                <option value="N" i18n-content="titleMatchModeN"></option>
-                <option value="T" i18n-content="titleMatchModeT"></option>
-                <option value="U" i18n-content="titleMatchModeU"></option>
-              </select>
               <div class="checkboxes d-flex align-items-center justify-content-between">
                 <label for="caseInsensitive">
                   <input type="checkbox" class="checkbox-filter" id="caseInsensitive" />
@@ -236,7 +238,7 @@
             <div class="form-group" id="popupSectionBody">
               <div class="checkboxes">
                 <label for="popupTwoColumns" class="titleLabel" i18n-content="popupTwoColumns"></label>
-                <select class="form-select form-control-xs" id="popupTwoColumns" name="popupTwoColumns">
+                <select class="form-select form-control-xs select-inline" id="popupTwoColumns" name="popupTwoColumns">
                   <option value="1" i18n-content="popupOneColumn"></option>
                   <option value="2" i18n-content="popupTwoColumnsOption"></option>
                 </select>
