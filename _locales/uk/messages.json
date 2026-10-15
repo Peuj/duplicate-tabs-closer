@@ -360,5 +360,9 @@
   "urlRuleDepthTitle": {
     "message": "Кількість сегментів шляху",
     "description": "Title attribute for depth number input in Path depth rules"
+  },
+  "urlRuleEnabled": {
+    "message": "Увімкнути правило",
+    "description": "Title attribute for enable/disable checkbox in URL rules widget"
   }
 }

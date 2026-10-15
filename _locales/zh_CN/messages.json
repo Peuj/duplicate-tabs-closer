@@ -360,5 +360,9 @@
   "urlRuleDepthTitle": {
     "message": "保留的路径段数量",
     "description": "Title attribute for depth number input in Path depth rules"
+  },
+  "urlRuleEnabled": {
+    "message": "启用规则",
+    "description": "Title attribute for enable/disable checkbox in URL rules widget"
   }
 }

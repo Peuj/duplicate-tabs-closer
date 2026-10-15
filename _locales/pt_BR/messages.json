@@ -360,5 +360,9 @@
   "urlRuleDepthTitle": {
     "message": "Número de segmentos de caminho a manter",
     "description": "Title attribute for depth number input in Path depth rules"
+  },
+  "urlRuleEnabled": {
+    "message": "Habilitar regra",
+    "description": "Title attribute for enable/disable checkbox in URL rules widget"
   }
 }

@@ -18,15 +18,24 @@ const _urlRulePatternTitles = {
     pathDepth: chrome.i18n.getMessage("urlRulePathDepthPatternTitle")
 };
 
-const buildUrlRuleRow = (rule, onChangeFn) => {
+const _urlRuleEnabledTitle = chrome.i18n.getMessage("urlRuleEnabled");
+
+const buildUrlRuleRow = (rule, onChangeFn, { readOnly = false } = {}) => {
     const type = rule.type || "group";
     const pattern = rule.pattern || "";
+    const enabled = rule.enabled !== false;
 
     const row = document.createElement("div");
-    row.className = "url-rule-row";
+    row.className = "url-rule-row" + (enabled ? "" : " url-rule-row--disabled");
 
     const main = document.createElement("div");
     main.className = "url-rule-main";
+
+    const enabledCheckbox = document.createElement("input");
+    enabledCheckbox.type = "checkbox";
+    enabledCheckbox.className = "url-rule-enabled";
+    enabledCheckbox.checked = enabled;
+    enabledCheckbox.title = _urlRuleEnabledTitle;
 
     const patternInput = document.createElement("input");
     patternInput.type = "text";
@@ -60,28 +69,48 @@ const buildUrlRuleRow = (rule, onChangeFn) => {
     deleteBtn.setAttribute("aria-label", "Remove rule");
     deleteBtn.textContent = "×";
 
-    main.append(patternInput, typeSelect, depthInput, deleteBtn);
+    if (readOnly) {
+        row.classList.add("url-rule-row--readonly");
+        patternInput.readOnly = true;
+        typeSelect.classList.add("hidden");
+        depthInput.classList.add("hidden");
+        deleteBtn.classList.add("hidden");
+        const typeLabels = { group: "Group", normalize: "Normalize", pathDepth: "Path depth" };
+        const typeLabel = typeLabels[type] || type;
+        patternInput.title = type === "pathDepth"
+            ? `${typeLabel}: ${pattern} (depth: ${rule.depth ?? 1})`
+            : `${typeLabel}: ${pattern}`;
+    }
+
+    main.append(enabledCheckbox, patternInput, typeSelect, depthInput, deleteBtn);
     row.appendChild(main);
 
-    typeSelect.addEventListener("change", function () {
-        patternInput.placeholder = _urlRuleTypePlaceholders[this.value] || _urlRuleTypePlaceholders.group;
-        patternInput.title = _urlRulePatternTitles[this.value] || "";
-        this.title = _urlRuleTypeTooltips[this.value] || "";
-        depthInput.classList.toggle("hidden", this.value !== "pathDepth");
-        if (onChangeFn) onChangeFn();
-    });
+    if (!readOnly) {
+        typeSelect.addEventListener("change", function () {
+            patternInput.placeholder = _urlRuleTypePlaceholders[this.value] || _urlRuleTypePlaceholders.group;
+            patternInput.title = _urlRulePatternTitles[this.value] || "";
+            this.title = _urlRuleTypeTooltips[this.value] || "";
+            depthInput.classList.toggle("hidden", this.value !== "pathDepth");
+            if (onChangeFn) onChangeFn();
+        });
 
-    patternInput.addEventListener("change", () => {
-        if (onChangeFn) onChangeFn();
-    });
-    patternInput.addEventListener("keydown", (e) => {
-        if (e.key === "Enter") { e.preventDefault(); patternInput.blur(); }
-    });
-    depthInput.addEventListener("change", () => {
-        if (onChangeFn) onChangeFn();
-    });
-    deleteBtn.addEventListener("click", () => {
-        row.remove();
+        patternInput.addEventListener("change", () => {
+            if (onChangeFn) onChangeFn();
+        });
+        patternInput.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") { e.preventDefault(); patternInput.blur(); }
+        });
+        depthInput.addEventListener("change", () => {
+            if (onChangeFn) onChangeFn();
+        });
+        deleteBtn.addEventListener("click", () => {
+            row.remove();
+            if (onChangeFn) onChangeFn();
+        });
+    }
+
+    enabledCheckbox.addEventListener("change", function () {
+        row.classList.toggle("url-rule-row--disabled", !this.checked);
         if (onChangeFn) onChangeFn();
     });
 
@@ -94,11 +123,16 @@ const collectUrlRulesJson = (containerEl) => {
         const type = row.querySelector(".url-rule-type").value;
         const pattern = row.querySelector(".url-rule-pattern").value.trim();
         if (!pattern) return;
+        const enabled = row.querySelector(".url-rule-enabled").checked;
         if (type === "pathDepth") {
             const depth = Math.max(1, parseInt(row.querySelector(".url-rule-depth").value, 10) || 1);
-            rules.push({ type, pattern, depth });
+            const entry = { type, pattern, depth };
+            if (!enabled) entry.enabled = false;
+            rules.push(entry);
         } else {
-            rules.push({ type, pattern });
+            const entry = { type, pattern };
+            if (!enabled) entry.enabled = false;
+            rules.push(entry);
         }
     });
     return JSON.stringify(rules);

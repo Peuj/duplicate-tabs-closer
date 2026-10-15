@@ -324,6 +324,7 @@ const parseUrlRules = (jsonText) => {
     const results = [];
     for (const row of rows) {
         if (!row || !row.type || !row.pattern) continue;
+        if (row.enabled === false) continue;
         const { type } = row;
         const line = String(row.pattern).trim().slice(0, MAX_LINE_LENGTH);
         if (!line) continue;

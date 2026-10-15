@@ -812,6 +812,18 @@ input[type="number"].form-control-xs {
     opacity: 1;
 }
 
+.url-rule-enabled {
+    flex: 0 0 auto;
+    margin: 0;
+    cursor: pointer;
+}
+
+.url-rule-row--disabled .url-rule-pattern,
+.url-rule-row--disabled .url-rule-type,
+.url-rule-row--disabled .url-rule-depth {
+    opacity: 0.4;
+}
+
 .btn-add-rule {
     margin-top: 4px;
     font-size: 11px;

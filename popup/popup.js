@@ -223,7 +223,7 @@ const setPanelOptions = async () => {
                     // ignore: invalid JSON in urlRules storage value
                 }
                 const rulesArr = Array.isArray(rules) ? rules : [];
-                rulesArr.forEach(rule => widgetEl.appendChild(buildUrlRuleRow(rule, _saveUrlRules)));
+                rulesArr.forEach(rule => widgetEl.appendChild(buildUrlRuleRow(rule, _saveUrlRules, { readOnly: true })));
                 if (isLockedKey) {
                     widgetEl.querySelectorAll("input, select, button").forEach(input => {
                         input.disabled = true;
@@ -383,18 +383,6 @@ const loadListenerEvents = () => {
         this.value = val;
         saveOption("titleSimilarityThreshold", val, true);
     });
-
-    /* URL rules widget */
-    const urlRulesAddBtn = document.getElementById("urlRulesAdd");
-    if (urlRulesAddBtn) {
-        urlRulesAddBtn.addEventListener("click", () => {
-            const widgetEl = document.getElementById("urlRulesWidget");
-            if (!widgetEl) return;
-            const row = buildUrlRuleRow({ type: "group", pattern: "" }, _saveUrlRules);
-            widgetEl.appendChild(row);
-            row.querySelector(".url-rule-pattern").focus();
-        });
-    }
 
     /* Save title pattern rules */
     ["titleRegexRules"].forEach(id => {
