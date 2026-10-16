@@ -846,14 +846,14 @@ input[type="number"].form-control-xs {
     font-size: 11px;
     padding: 2px 8px;
     cursor: pointer;
-    background: color-mix(in srgb, currentColor 12%, var(--dtc-textarea-bg));
+    background: color-mix(in srgb, currentcolor 12%, var(--dtc-textarea-bg));
     color: var(--dtc-text);
-    border: 1px solid color-mix(in srgb, currentColor 35%, var(--dtc-textarea-bg));
+    border: 1px solid color-mix(in srgb, currentcolor 35%, var(--dtc-textarea-bg));
     border-radius: 3px;
 }
 
 .btn-add-rule:hover {
-    background: color-mix(in srgb, currentColor 22%, var(--dtc-textarea-bg));
+    background: color-mix(in srgb, currentcolor 22%, var(--dtc-textarea-bg));
     border-color: var(--dtc-section-title);
 }
 

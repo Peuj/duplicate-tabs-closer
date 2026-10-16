@@ -26,7 +26,7 @@ const buildUrlRuleRow = (rule, onChangeFn, { readOnly = false } = {}) => {
     const enabled = rule.enabled !== false;
 
     const row = document.createElement("div");
-    row.className = "url-rule-row" + (enabled ? "" : " url-rule-row--disabled");
+    row.className = `url-rule-row${enabled ? "" : " url-rule-row--disabled"}`;
 
     const main = document.createElement("div");
     main.className = "url-rule-main";
@@ -102,7 +102,10 @@ const buildUrlRuleRow = (rule, onChangeFn, { readOnly = false } = {}) => {
             if (onChangeFn) onChangeFn();
         });
         patternInput.addEventListener("keydown", (e) => {
-            if (e.key === "Enter") { e.preventDefault(); patternInput.blur(); }
+            if (e.key === "Enter") {
+                e.preventDefault();
+                patternInput.blur();
+            }
         });
         depthInput.addEventListener("change", () => {
             if (onChangeFn) onChangeFn();

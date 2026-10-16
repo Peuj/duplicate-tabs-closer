@@ -313,7 +313,11 @@ const applyPopupRuleVisibility = (storedOptions) => {
     });
     urlRulesPopupVisible = storedOptions.urlRules_popup ? storedOptions.urlRules_popup.value : false;
     let urlRulesCount = 0;
-    try { urlRulesCount = JSON.parse(storedOptions.urlRules?.value ?? "[]").length; } catch (_) {}
+    try {
+        urlRulesCount = JSON.parse(storedOptions.urlRules?.value ?? "[]").length;
+    } catch {
+        // ignore: invalid JSON in urlRules storage value
+    }
     const urlRulesWidgetEl = document.getElementById("urlRulesWidget");
     if (urlRulesWidgetEl) urlRulesWidgetEl.closest(".checkboxes").classList.toggle("hidden", !urlRulesPopupVisible || urlRulesCount === 0);
     titleSimilarityThresholdPopupVisible = storedOptions.titleSimilarityThreshold_popup ? storedOptions.titleSimilarityThreshold_popup.value : true;
@@ -349,7 +353,11 @@ const handleMessage = (message) => {
     }
     if (message.action === "setStoredOption" && message.data.name === "urlRules") {
         let count = 0;
-        try { count = JSON.parse(message.data.value).length; } catch (_) {}
+        try {
+            count = JSON.parse(message.data.value).length;
+        } catch {
+            // ignore: invalid JSON in urlRules storage value
+        }
         const urlRulesWidgetEl = document.getElementById("urlRulesWidget");
         if (urlRulesWidgetEl) urlRulesWidgetEl.closest(".checkboxes").classList.toggle("hidden", !urlRulesPopupVisible || count === 0);
         resizeDuplicateTabsPanel();
