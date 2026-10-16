@@ -155,6 +155,7 @@ body.two-columns #optionsTitle {
 
 body.two-columns #optionsCard .card-body {
     margin-right: 0;
+    scrollbar-gutter: stable;
 }
 
 body.two-columns #duplicateTabsCard .card-body {

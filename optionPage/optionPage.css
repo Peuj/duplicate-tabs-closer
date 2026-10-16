@@ -22,6 +22,7 @@ body {
   max-height: calc(100vh - 60px);
   overflow: auto;
   scrollbar-width: thin;
+  scrollbar-gutter: stable;
 }
 
 .list-group-item {
