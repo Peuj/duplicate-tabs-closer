@@ -217,6 +217,10 @@ html.theme-violet {
 
 /* ── Shared UI ── */
 
+::selection {
+    background-color: color-mix(in srgb, var(--dtc-section-title) 35%, transparent);
+}
+
 .card {
     margin-bottom: 5px;
 }
@@ -272,19 +276,19 @@ html.theme-violet {
 }
 
 .checkbox-fa+.checkbox-fa-label>.fa-thumbtack:not(:hover) {
-    color: #ffd39e;
+    color: color-mix(in srgb, var(--dtc-header-text) 45%, transparent);
 }
 
 .checkbox-fa:checked+.checkbox-fa-label>.fa-thumbtack:not(:hover) {
-    color: #ff8c00;
+    color: var(--dtc-header-text);
 }
 
 .checkbox-fa+.checkbox-fa-label>.fa-thumbtack:hover {
-    color: #fdbc6c;
+    color: color-mix(in srgb, var(--dtc-header-text) 70%, transparent);
 }
 
 .checkbox-fa:checked+.checkbox-fa-label>.fa-thumbtack:hover {
-    color: #ffaa42;
+    color: var(--dtc-header-text);
 }
 
 .fa-thumbtack {
@@ -305,11 +309,11 @@ html.theme-violet {
 }
 
 #pauseMonitorBtn.paused {
-    color: #f59e0b;
+    color: var(--dtc-section-title);
 }
 
 #pauseMonitorBtn.paused:hover {
-    color: #fbbf24;
+    color: var(--dtc-section-hover);
     transform: scale(1.2);
 }
 
@@ -325,12 +329,12 @@ html.theme-violet {
 }
 
 #groupDuplicateTabsBtn.active {
-    color: #0ea5e9;
+    color: var(--dtc-section-title);
     opacity: 1;
 }
 
 #groupDuplicateTabsBtn.active:hover {
-    color: #38bdf8;
+    color: var(--dtc-section-hover);
     transform: scale(1.2);
 }
 
@@ -352,12 +356,12 @@ html.theme-violet {
 }
 
 #hideWhitelistedTabsBtn.active {
-    color: #0ea5e9;
+    color: var(--dtc-section-title);
     opacity: 1;
 }
 
 #hideWhitelistedTabsBtn.active:hover {
-    color: #38bdf8;
+    color: var(--dtc-section-hover);
     transform: scale(1.2);
 }
 
@@ -371,7 +375,7 @@ html.theme-violet {
     position: absolute;
     top: -5px;
     right: -6px;
-    background: #0ea5e9;
+    background: var(--dtc-header-bg);
     color: #fff;
     border-radius: 50%;
     font-size: 8px;
@@ -505,7 +509,7 @@ html.theme-oled .table {
 
 .whitelist-row-badge {
     font-size: 11px;
-    color: #888;
+    color: var(--dtc-section-collapsed);
     margin-right: 3px;
     vertical-align: -0.05em;
 }
@@ -656,26 +660,28 @@ html.theme-oled .table {
 
 /* ── Buttons ── */
 
-.btn-xs {
-    padding: 1px 5px;
-    font-size: 12px;
-    line-height: 1.4;
-    border-radius: 1px;
-}
-
 .btn-close-tabs {
     color: var(--dtc-header-text);
     background-color: var(--dtc-header-bg);
     border-color: var(--dtc-header-border);
     font-size: 13px;
+    padding: 3px 8px;
+    border-radius: 3px;
+    appearance: none;
+    -webkit-appearance: none;
     margin-left: auto;
     min-width: 120px;
 }
 
 .btn-close-tabs:hover {
     color: var(--dtc-header-text);
-    background-color: var(--dtc-header-border);
-    border-color: color-mix(in srgb, var(--dtc-header-border) 80%, black);
+    background-color: color-mix(in srgb, var(--dtc-header-bg) 80%, black);
+    border-color: color-mix(in srgb, var(--dtc-header-bg) 65%, black);
+}
+
+html.theme-oled .btn-close-tabs:hover {
+    background-color: color-mix(in srgb, var(--dtc-header-bg) 60%, white);
+    border-color: color-mix(in srgb, var(--dtc-header-bg) 70%, white);
 }
 
 .btn-close-tabs.disabled:hover, .btn-close-tabs:disabled:hover {
@@ -689,7 +695,6 @@ html.theme-oled .table {
 .btn-close-tabs.disabled, .btn-close-tabs:disabled {
     color: var(--dtc-header-text);
     background-color: var(--dtc-header-bg);
-    border-color: var(--dtc-header-bg);
 }
 
 #duplicateTabsTable.hide-whitelisted tr[data-whitelisted="true"] {
@@ -730,10 +735,14 @@ textarea.rules-textarea {
 }
 
 textarea.rules-textarea:focus,
-input[type="number"].form-control-xs:focus {
+input[type="number"].form-control-xs:focus,
+.form-select:focus,
+.form-control-xs:focus,
+.url-rule-pattern:focus,
+.url-rule-type:focus {
     outline: 0;
-    border-color: #86b7fe;
-    box-shadow: 0 0 0 .25rem rgb(13, 110, 253, .25);
+    border-color: var(--dtc-header-bg);
+    box-shadow: 0 0 0 .25rem color-mix(in srgb, var(--dtc-header-bg) 30%, transparent);
 }
 
 input[type="number"].form-control-xs {
@@ -837,14 +846,14 @@ input[type="number"].form-control-xs {
     font-size: 11px;
     padding: 2px 8px;
     cursor: pointer;
-    background: var(--dtc-btn-bg, var(--dtc-section-bg));
+    background: color-mix(in srgb, currentColor 12%, var(--dtc-textarea-bg));
     color: var(--dtc-text);
-    border: 1px solid var(--dtc-header-border);
+    border: 1px solid color-mix(in srgb, currentColor 35%, var(--dtc-textarea-bg));
     border-radius: 3px;
 }
 
 .btn-add-rule:hover {
-    background: var(--dtc-section-title-hover, var(--dtc-section-bg));
+    background: color-mix(in srgb, currentColor 22%, var(--dtc-textarea-bg));
     border-color: var(--dtc-section-title);
 }
 
@@ -873,7 +882,6 @@ html.theme-oled .form-select {
 /* ── Scrollbars (Chrome/Edge/Safari) ── */
 
 ::-webkit-scrollbar-track {
-    box-shadow: inset 0 0 1px #0000004d;
     background-color: var(--dtc-scrollbar-track);
 }
 
