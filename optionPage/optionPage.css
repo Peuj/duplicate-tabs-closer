@@ -73,16 +73,16 @@ body {
 }
 
 .checkbox-fa + .popup-pin-label > .fa-eye:not(:hover) {
-  color: color-mix(in srgb, var(--dtc-section-collapsed) 55%, transparent);
+  color: color-mix(in srgb, #0ea5e9 35%, transparent);
 }
 
 .checkbox-fa:checked + .popup-pin-label > .fa-eye:not(:hover) {
-  color: var(--dtc-section-title);
+  color: #0ea5e9;
 }
 
 .checkbox-fa + .popup-pin-label > .fa-eye:hover,
 .checkbox-fa:checked + .popup-pin-label > .fa-eye:hover {
-  color: var(--dtc-section-hover);
+  color: #38bdf8;
   cursor: pointer;
 }
 

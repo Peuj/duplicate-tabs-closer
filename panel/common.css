@@ -276,19 +276,19 @@ html.theme-violet {
 }
 
 .checkbox-fa+.checkbox-fa-label>.fa-thumbtack:not(:hover) {
-    color: color-mix(in srgb, var(--dtc-header-text) 45%, transparent);
+    color: color-mix(in srgb, #0ea5e9 35%, transparent);
 }
 
 .checkbox-fa:checked+.checkbox-fa-label>.fa-thumbtack:not(:hover) {
-    color: var(--dtc-header-text);
+    color: #0ea5e9;
 }
 
 .checkbox-fa+.checkbox-fa-label>.fa-thumbtack:hover {
-    color: color-mix(in srgb, var(--dtc-header-text) 70%, transparent);
+    color: color-mix(in srgb, #0ea5e9 60%, transparent);
 }
 
 .checkbox-fa:checked+.checkbox-fa-label>.fa-thumbtack:hover {
-    color: var(--dtc-header-text);
+    color: #38bdf8;
 }
 
 .fa-thumbtack {
