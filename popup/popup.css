@@ -90,6 +90,11 @@ body {
     display: none;
 }
 
+#titleMatchMode {
+    flex: 1;
+    margin-left: 4px;
+}
+
 .last-list-group.shrunk .list-group-item {
     border-bottom-style: none;
 }
@@ -155,7 +160,10 @@ body.two-columns #optionsTitle {
 
 body.two-columns #optionsCard .card-body {
     margin-right: 0;
-    scrollbar-gutter: stable;
+}
+
+body.two-columns #optionsCard .card-body::-webkit-scrollbar {
+    width: 0;
 }
 
 body.two-columns #duplicateTabsCard .card-body {
