@@ -87,7 +87,6 @@ const loadPopupEvents = () => {
     const whiteList = cleanUpWhiteList(this.value);
     setWhiteList(whiteList);
     saveOption(this.id, whiteList, true);
-    updateFileAccessWarning();
   });
 
   /* URL rules widget */
@@ -180,14 +179,6 @@ const loadPopupEvents = () => {
 const setWhiteList = (whiteList) => {
   const el = document.getElementById("whiteList");
   if (el) el.value = whiteList;
-};
-
-const updateFileAccessWarning = () => {
-  const el = document.getElementById("fileAccessWarning");
-  if (!el) return;
-  const whiteList = document.getElementById("whiteList")?.value ?? "";
-  const hasFileEntry = whiteList.split("\n").some(line => line.trim().startsWith("file://"));
-  el.classList.toggle("hidden", !hasFileEntry);
 };
 
 const cleanUpWhiteList = (whiteList) => {
@@ -361,7 +352,6 @@ const setPanelOptions = async () => {
   }
   updateIgnorePathPartDependents(storedOptions.ignorePathPart ? storedOptions.ignorePathPart.value : false);
   updateTitleMatchModeDependents(storedOptions.titleMatchMode ? storedOptions.titleMatchMode.value : "N");
-  updateFileAccessWarning();
 };
 
 const handleMessage = (message) => {

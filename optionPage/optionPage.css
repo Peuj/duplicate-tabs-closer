@@ -160,15 +160,3 @@ body {
   cursor: pointer;
   margin: 0;
 }
-
-.file-access-warning {
-  color: #b45309;
-}
-
-html.theme-ocean .file-access-warning,
-html.theme-charcoal .file-access-warning,
-html.theme-purple .file-access-warning,
-html.theme-teal .file-access-warning,
-html.theme-oled .file-access-warning {
-  color: #fbbf24;
-}
