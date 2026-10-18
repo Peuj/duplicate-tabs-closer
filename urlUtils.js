@@ -31,7 +31,6 @@ const applyNormalizationRules = (url, rules) => {
 				if (segments.length > rule.depth) {
 					return `${uri.origin}/${segments.slice(0, rule.depth).join("/")}`;
 				}
-				return url;
 			}
 		} else if (rule.type === "stripparams") {
 			if (rule.regex.test(url)) {
@@ -84,7 +83,7 @@ const getMatchingURL = (url) => {
 };
 
 const getMatchPatternURL = (url) => {
-	if (options.urlRules.some(r => r.type === "hostname" || r.type === "url" || r.type === "pathdepth")) return null;
+	if (options.urlRules.some(r => r.type === "hostname" || r.type === "url" || r.type === "pathdepth" || r.type === "stripparams" || r.type === "keepparams")) return null;
 	let urlPattern = null;
 	if (isValidURL(url)) {
 		const uri = new URL(url);

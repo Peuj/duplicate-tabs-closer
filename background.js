@@ -227,10 +227,10 @@ const onReplacedTab = async (addedTabId, removedTabId) => {
 	_preCreatedTabs.delete(removedTabId);
 	if (monitoringPaused) return;
 	const tab = await getTab(addedTabId);
-	tabsInfo.setTab(addedTabId, tab && prevLastComplete !== null
-		? { url: tab.url, complete: true, lastComplete: prevLastComplete }
-		: tab ? { url: tab.url } : {});
 	if (tab) {
+		tabsInfo.setTab(addedTabId, prevLastComplete !== null
+			? { url: tab.url, complete: true, lastComplete: prevLastComplete }
+			: { url: tab.url });
 		if (_pendingTriggerTabId.get(tab.windowId) === removedTabId) {
 			_pendingTriggerTabId.set(tab.windowId, addedTabId);
 		}
