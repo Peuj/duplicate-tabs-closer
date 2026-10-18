@@ -851,6 +851,13 @@ input[type="number"].form-control-xs {
     text-overflow: ellipsis;
 }
 
+.url-rule-warning {
+    margin: 2px 4px 4px;
+    font-size: 0.78em;
+    color: var(--bs-warning-text-emphasis, #8a6d00);
+    line-height: 1.3;
+}
+
 .btn-add-rule {
     margin-top: 4px;
     margin-bottom: 5px;

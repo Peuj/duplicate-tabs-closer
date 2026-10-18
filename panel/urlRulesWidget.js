@@ -26,6 +26,25 @@ const _urlRulePatternTitles = {
 
 const _urlRuleEnabledTitle = chrome.i18n.getMessage("urlRuleEnabled");
 
+const _isRegexPattern = (p) => p.startsWith("/") && (/\/[gimsuy]*$/).test(p);
+
+const _validateRule = (type, pattern) => {
+    if (!pattern) return null;
+    const p = pattern.trim();
+    if (p === "*") {
+        if (type === "group") return "A bare * treats every open tab as a duplicate of every other tab. This rule will not be saved.";
+        if (type === "normalize") return "A bare * replaces every website's hostname with a placeholder, causing cross-site false duplicates. This rule will not be saved.";
+    }
+    if (_isRegexPattern(p)) {
+        if (type === "normalize") {
+            const inner = p.slice(1, p.lastIndexOf("/"));
+            if (!inner.includes("(")) return "A normalize regex requires a capture group (...) to extract the canonical URL. Without one it has no effect and will not be saved.";
+        }
+        if (type === "pathDepth" || type === "stripParams" || type === "keepParams") return "This rule type uses glob patterns only. Regex syntax (/.../) is not supported here and will not be saved.";
+    }
+    return null;
+};
+
 const buildUrlRuleRow = (rule, onChangeFn, { readOnly = false } = {}) => {
     const type = rule.type || "group";
     const pattern = rule.pattern || "";
@@ -73,7 +92,7 @@ const buildUrlRuleRow = (rule, onChangeFn, { readOnly = false } = {}) => {
     paramsInput.type = "text";
     paramsInput.className = "url-rule-params form-control form-control-sm";
     paramsInput.placeholder = "z, page, utm_*";
-    paramsInput.title = chrome.i18n.getMessage("urlRuleParamsTitle");
+    paramsInput.title = `${chrome.i18n.getMessage("urlRuleParamsTitle")} A lone * matches all parameter names.`;
     paramsInput.value = Array.isArray(rule.params) ? rule.params.join(", ") : "";
     if (type !== "stripParams" && type !== "keepParams") paramsInput.classList.add("hidden");
 
@@ -85,6 +104,10 @@ const buildUrlRuleRow = (rule, onChangeFn, { readOnly = false } = {}) => {
     deleteBtnIcon.className = "fa-solid fa-xmark";
     deleteBtnIcon.setAttribute("aria-hidden", "true");
     deleteBtn.appendChild(deleteBtnIcon);
+
+    const warningEl = document.createElement("p");
+    warningEl.className = "url-rule-warning";
+    warningEl.hidden = true;
 
     if (readOnly) {
         row.classList.add("url-rule-row--readonly");
@@ -106,22 +129,36 @@ const buildUrlRuleRow = (rule, onChangeFn, { readOnly = false } = {}) => {
             patternDisplay.title = `${typeLabel}: ${pattern}`;
         }
         main.append(enabledCheckbox, patternDisplay, paramsInput, typeSelect, depthInput, deleteBtn);
+        const initMsg = _validateRule(type, pattern);
+        if (initMsg) {
+            warningEl.textContent = initMsg;
+            warningEl.hidden = false;
+        }
     } else {
         main.append(enabledCheckbox, patternInput, depthInput, paramsInput, typeSelect, deleteBtn);
     }
 
     row.appendChild(main);
+    row.appendChild(warningEl);
 
     if (!readOnly) {
+        const _updateWarning = () => {
+            const msg = _validateRule(typeSelect.value, patternInput.value);
+            warningEl.textContent = msg || "";
+            warningEl.hidden = !msg;
+        };
+
         typeSelect.addEventListener("change", function () {
             patternInput.placeholder = _urlRuleTypePlaceholders[this.value] || _urlRuleTypePlaceholders.group;
             patternInput.title = _urlRulePatternTitles[this.value] || "";
             this.title = _urlRuleTypeTooltips[this.value] || "";
             depthInput.classList.toggle("hidden", this.value !== "pathDepth");
             paramsInput.classList.toggle("hidden", this.value !== "stripParams" && this.value !== "keepParams");
+            _updateWarning();
             if (onChangeFn) onChangeFn();
         });
 
+        patternInput.addEventListener("input", _updateWarning);
         patternInput.addEventListener("change", () => {
             if (onChangeFn) onChangeFn();
         });
@@ -147,6 +184,8 @@ const buildUrlRuleRow = (rule, onChangeFn, { readOnly = false } = {}) => {
             row.remove();
             if (onChangeFn) onChangeFn();
         });
+
+        _updateWarning();
     }
 
     enabledCheckbox.addEventListener("change", function () {
@@ -164,6 +203,7 @@ const collectUrlRulesJson = (containerEl) => {
         const patternEl = row.querySelector(".url-rule-pattern");
         const pattern = (patternEl.value ?? patternEl.textContent ?? "").trim();
         if (!pattern) return;
+        if (_validateRule(type, pattern)) return;
         const enabled = row.querySelector(".url-rule-enabled").checked;
         if (type === "pathDepth") {
             const depth = Math.max(1, parseInt(row.querySelector(".url-rule-depth").value, 10) || 1);
@@ -171,8 +211,8 @@ const collectUrlRulesJson = (containerEl) => {
             if (!enabled) entry.enabled = false;
             rules.push(entry);
         } else if (type === "stripParams" || type === "keepParams") {
-            const rawParams = (row.querySelector(".url-rule-params").value || "")
-                .split(",").map(s => s.trim()).filter(Boolean);
+            const rawParams = (row.querySelector(".url-rule-params").value || "").split(",").map(s => s.trim()).filter(Boolean);
+            if (!rawParams.length) return;
             const entry = { type, pattern, params: rawParams };
             if (!enabled) entry.enabled = false;
             rules.push(entry);

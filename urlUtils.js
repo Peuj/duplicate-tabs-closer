@@ -13,8 +13,7 @@ const isValidURL = (url) => _VALID_URL_RE.test(url);
 
 const isHttps = (url) => _HTTPS_RE.test(url);
 
-const _matchesParam = (name, patterns) =>
-	patterns.some(p => p.endsWith("*") ? name.startsWith(p.slice(0, -1)) : name === p);
+const _matchesParam = (name, patterns) => patterns.some(p => (p.endsWith("*") ? name.startsWith(p.slice(0, -1)) : name === p));
 
 const applyNormalizationRules = (url, rules) => {
 	const uri = new URL(url);
@@ -32,21 +31,18 @@ const applyNormalizationRules = (url, rules) => {
 				if (segments.length > rule.depth) {
 					return `${uri.origin}/${segments.slice(0, rule.depth).join("/")}`;
 				}
+				return url;
 			}
 		} else if (rule.type === "stripparams") {
 			if (rule.regex.test(url)) {
 				const uri2 = new URL(url);
-				for (const name of [...uri2.searchParams.keys()]) {
-					if (_matchesParam(name, rule.params)) uri2.searchParams.delete(name);
-				}
+				[...uri2.searchParams.keys()].filter(k => _matchesParam(k, rule.params)).forEach(k => uri2.searchParams.delete(k));
 				return uri2.href;
 			}
 		} else if (rule.type === "keepparams") {
 			if (rule.regex.test(url)) {
 				const uri2 = new URL(url);
-				for (const name of [...uri2.searchParams.keys()]) {
-					if (!_matchesParam(name, rule.params)) uri2.searchParams.delete(name);
-				}
+				[...uri2.searchParams.keys()].filter(k => !_matchesParam(k, rule.params)).forEach(k => uri2.searchParams.delete(k));
 				return uri2.href;
 			}
 		}
