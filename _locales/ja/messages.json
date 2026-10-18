@@ -362,7 +362,7 @@
     "description": "Title attribute for enable/disable checkbox in URL rules widget"
   },
   "urlRuleStripParamsPlaceholder": {
-    "message": "example.com/items*",
+    "message": "example.com/items",
     "description": "Placeholder for Strip params URL rule pattern input"
   },
   "urlRuleStripParamsTooltip": {
@@ -370,11 +370,11 @@
     "description": "Tooltip for Strip params type selector in URL rules widget"
   },
   "urlRuleStripParamsPatternTitle": {
-    "message": "URL glob to scope this rule (e.g. example.com/items*, *.example.com/*). Supports * wildcard.",
+    "message": "URL pattern to scope this rule (e.g. example.com/items, *.example.com, *). Use * to match all URLs.",
     "description": "Title attribute for pattern input when type is Strip params"
   },
   "urlRuleKeepParamsPlaceholder": {
-    "message": "example.com/items*",
+    "message": "example.com/items",
     "description": "Placeholder for Keep params URL rule pattern input"
   },
   "urlRuleKeepParamsTooltip": {
@@ -382,7 +382,7 @@
     "description": "Tooltip for Keep params type selector in URL rules widget"
   },
   "urlRuleKeepParamsPatternTitle": {
-    "message": "URL glob to scope this rule (e.g. example.com/items*, *.example.com/*). Supports * wildcard.",
+    "message": "URL pattern to scope this rule (e.g. example.com/items, *.example.com, *). Use * to match all URLs.",
     "description": "Title attribute for pattern input when type is Keep params"
   },
   "urlRuleParamsTitle": {
