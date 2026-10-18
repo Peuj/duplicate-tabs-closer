@@ -3,19 +3,25 @@
 const _urlRuleTypePlaceholders = {
     group: chrome.i18n.getMessage("urlRuleGroupPlaceholder"),
     normalize: chrome.i18n.getMessage("urlRuleNormalizePlaceholder"),
-    pathDepth: chrome.i18n.getMessage("urlRulePathDepthPlaceholder")
+    pathDepth: chrome.i18n.getMessage("urlRulePathDepthPlaceholder"),
+    stripParams: chrome.i18n.getMessage("urlRuleStripParamsPlaceholder"),
+    keepParams: chrome.i18n.getMessage("urlRuleKeepParamsPlaceholder")
 };
 
 const _urlRuleTypeTooltips = {
     group: chrome.i18n.getMessage("urlRuleGroupTooltip"),
     normalize: chrome.i18n.getMessage("urlRuleNormalizeTooltip"),
-    pathDepth: chrome.i18n.getMessage("urlRulePathDepthTooltip")
+    pathDepth: chrome.i18n.getMessage("urlRulePathDepthTooltip"),
+    stripParams: chrome.i18n.getMessage("urlRuleStripParamsTooltip"),
+    keepParams: chrome.i18n.getMessage("urlRuleKeepParamsTooltip")
 };
 
 const _urlRulePatternTitles = {
     group: chrome.i18n.getMessage("urlRuleGroupPatternTitle"),
     normalize: chrome.i18n.getMessage("urlRuleNormalizePatternTitle"),
-    pathDepth: chrome.i18n.getMessage("urlRulePathDepthPatternTitle")
+    pathDepth: chrome.i18n.getMessage("urlRulePathDepthPatternTitle"),
+    stripParams: chrome.i18n.getMessage("urlRuleStripParamsPatternTitle"),
+    keepParams: chrome.i18n.getMessage("urlRuleKeepParamsPatternTitle")
 };
 
 const _urlRuleEnabledTitle = chrome.i18n.getMessage("urlRuleEnabled");
@@ -47,7 +53,7 @@ const buildUrlRuleRow = (rule, onChangeFn, { readOnly = false } = {}) => {
     const typeSelect = document.createElement("select");
     typeSelect.className = "url-rule-type form-select form-select-sm";
     typeSelect.title = _urlRuleTypeTooltips[type] || "";
-    [["group", "Group"], ["normalize", "Normalize"], ["pathDepth", "Path depth"]].forEach(([val, label]) => {
+    [["group", "Group"], ["normalize", "Normalize"], ["pathDepth", "Path depth"], ["stripParams", "Strip params"], ["keepParams", "Keep params"]].forEach(([val, label]) => {
         const opt = document.createElement("option");
         opt.value = val;
         opt.textContent = label;
@@ -62,6 +68,14 @@ const buildUrlRuleRow = (rule, onChangeFn, { readOnly = false } = {}) => {
     depthInput.value = rule.depth ?? 1;
     depthInput.title = chrome.i18n.getMessage("urlRuleDepthTitle");
     if (type !== "pathDepth") depthInput.classList.add("hidden");
+
+    const paramsInput = document.createElement("input");
+    paramsInput.type = "text";
+    paramsInput.className = "url-rule-params form-control form-control-sm";
+    paramsInput.placeholder = "z, page, utm_*";
+    paramsInput.title = chrome.i18n.getMessage("urlRuleParamsTitle");
+    paramsInput.value = Array.isArray(rule.params) ? rule.params.join(", ") : "";
+    if (type !== "stripParams" && type !== "keepParams") paramsInput.classList.add("hidden");
 
     const deleteBtn = document.createElement("button");
     deleteBtn.type = "button";
@@ -78,16 +92,22 @@ const buildUrlRuleRow = (rule, onChangeFn, { readOnly = false } = {}) => {
         patternDisplay.className = "url-rule-pattern form-control form-control-sm";
         typeSelect.classList.add("hidden");
         depthInput.classList.add("hidden");
+        paramsInput.classList.add("hidden");
         deleteBtn.classList.add("hidden");
-        const typeLabels = { group: "Group", normalize: "Normalize", pathDepth: "Path depth" };
+        const typeLabels = { group: "Group", normalize: "Normalize", pathDepth: "Path depth", stripParams: "Strip params", keepParams: "Keep params" };
         const typeLabel = typeLabels[type] || type;
         patternDisplay.textContent = pattern;
-        patternDisplay.title = type === "pathDepth"
-            ? `${typeLabel}: ${pattern} (depth: ${rule.depth ?? 1})`
-            : `${typeLabel}: ${pattern}`;
-        main.append(enabledCheckbox, patternDisplay, typeSelect, depthInput, deleteBtn);
+        if (type === "pathDepth") {
+            patternDisplay.title = `${typeLabel}: ${pattern} (depth: ${rule.depth ?? 1})`;
+        } else if (type === "stripParams" || type === "keepParams") {
+            const paramsList = Array.isArray(rule.params) && rule.params.length ? rule.params.join(", ") : "";
+            patternDisplay.title = paramsList ? `${typeLabel}: ${pattern} (params: ${paramsList})` : `${typeLabel}: ${pattern}`;
+        } else {
+            patternDisplay.title = `${typeLabel}: ${pattern}`;
+        }
+        main.append(enabledCheckbox, patternDisplay, paramsInput, typeSelect, depthInput, deleteBtn);
     } else {
-        main.append(enabledCheckbox, patternInput, typeSelect, depthInput, deleteBtn);
+        main.append(enabledCheckbox, patternInput, paramsInput, typeSelect, depthInput, deleteBtn);
     }
 
     row.appendChild(main);
@@ -98,6 +118,7 @@ const buildUrlRuleRow = (rule, onChangeFn, { readOnly = false } = {}) => {
             patternInput.title = _urlRulePatternTitles[this.value] || "";
             this.title = _urlRuleTypeTooltips[this.value] || "";
             depthInput.classList.toggle("hidden", this.value !== "pathDepth");
+            paramsInput.classList.toggle("hidden", this.value !== "stripParams" && this.value !== "keepParams");
             if (onChangeFn) onChangeFn();
         });
 
@@ -112,6 +133,15 @@ const buildUrlRuleRow = (rule, onChangeFn, { readOnly = false } = {}) => {
         });
         depthInput.addEventListener("change", () => {
             if (onChangeFn) onChangeFn();
+        });
+        paramsInput.addEventListener("change", () => {
+            if (onChangeFn) onChangeFn();
+        });
+        paramsInput.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                paramsInput.blur();
+            }
         });
         deleteBtn.addEventListener("click", () => {
             row.remove();
@@ -138,6 +168,12 @@ const collectUrlRulesJson = (containerEl) => {
         if (type === "pathDepth") {
             const depth = Math.max(1, parseInt(row.querySelector(".url-rule-depth").value, 10) || 1);
             const entry = { type, pattern, depth };
+            if (!enabled) entry.enabled = false;
+            rules.push(entry);
+        } else if (type === "stripParams" || type === "keepParams") {
+            const rawParams = (row.querySelector(".url-rule-params").value || "")
+                .split(",").map(s => s.trim()).filter(Boolean);
+            const entry = { type, pattern, params: rawParams };
             if (!enabled) entry.enabled = false;
             rules.push(entry);
         } else {

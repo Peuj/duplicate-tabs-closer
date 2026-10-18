@@ -365,6 +365,16 @@ const parseUrlRules = (jsonText) => {
             let hostnamePattern = "^";
             for (const ch of line) hostnamePattern = ch === "*" ? `${hostnamePattern}.*` : hostnamePattern + escapeRegexChar(ch);
             results.push({ type: "pathdepth", regex: new RegExp(`${hostnamePattern}$`), depth, _wc: wildcards });
+        } else if (type === "stripParams" || type === "keepParams") {
+            const wildcards = (line.match(/\*/g) || []).length;
+            if (wildcards > MAX_WILDCARDS) continue;
+            const rawParams = Array.isArray(row.params) ? row.params : [];
+            const params = rawParams.map(p => String(p).trim()).filter(Boolean).slice(0, 20);
+            if (params.length === 0) continue;
+            let urlPattern = "";
+            for (const ch of line) urlPattern = ch === "*" ? `${urlPattern}.*` : urlPattern + escapeRegexChar(ch);
+            const runtimeType = type === "stripParams" ? "stripparams" : "keepparams";
+            results.push({ type: runtimeType, regex: new RegExp(urlPattern), params, _wc: wildcards });
         }
     }
     // Sort normalization rules by specificity: exact hostname patterns (0 wildcards) beat wildcard

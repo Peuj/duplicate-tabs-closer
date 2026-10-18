@@ -805,6 +805,14 @@ input[type="number"].form-control-xs {
     height: 22px;
 }
 
+.url-rule-params {
+    flex: 1 1 0;
+    min-width: 0;
+    font-size: 11px;
+    padding: 2px 4px;
+    height: 22px;
+}
+
 .url-rule-delete {
     flex: 0 0 auto;
     display: inline-flex;
@@ -834,7 +842,8 @@ input[type="number"].form-control-xs {
 
 .url-rule-row--disabled .url-rule-pattern,
 .url-rule-row--disabled .url-rule-type,
-.url-rule-row--disabled .url-rule-depth {
+.url-rule-row--disabled .url-rule-depth,
+.url-rule-row--disabled .url-rule-params {
     opacity: 0.4;
 }
 

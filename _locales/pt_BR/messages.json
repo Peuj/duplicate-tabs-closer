@@ -360,5 +360,33 @@
   "urlRuleEnabled": {
     "message": "Habilitar regra",
     "description": "Title attribute for enable/disable checkbox in URL rules widget"
+  },
+  "urlRuleStripParamsPlaceholder": {
+    "message": "example.com/items*",
+    "description": "Placeholder for Strip params URL rule pattern input"
+  },
+  "urlRuleStripParamsTooltip": {
+    "message": "Strips named query parameters before comparison (supports * wildcard). Tabs differing only by stripped params are treated as duplicates.",
+    "description": "Tooltip for Strip params type selector in URL rules widget"
+  },
+  "urlRuleStripParamsPatternTitle": {
+    "message": "URL glob to scope this rule (e.g. example.com/items*, *.example.com/*). Supports * wildcard.",
+    "description": "Title attribute for pattern input when type is Strip params"
+  },
+  "urlRuleKeepParamsPlaceholder": {
+    "message": "example.com/items*",
+    "description": "Placeholder for Keep params URL rule pattern input"
+  },
+  "urlRuleKeepParamsTooltip": {
+    "message": "Keeps only named query parameters before comparison (strips everything else). Tabs differing only in stripped params are treated as duplicates.",
+    "description": "Tooltip for Keep params type selector in URL rules widget"
+  },
+  "urlRuleKeepParamsPatternTitle": {
+    "message": "URL glob to scope this rule (e.g. example.com/items*, *.example.com/*). Supports * wildcard.",
+    "description": "Title attribute for pattern input when type is Keep params"
+  },
+  "urlRuleParamsTitle": {
+    "message": "Comma-separated parameter names to strip or keep. Supports prefix wildcard (utm_*).",
+    "description": "Title attribute for params input in Strip params and Keep params rules"
   }
 }

@@ -13,6 +13,9 @@ const isValidURL = (url) => _VALID_URL_RE.test(url);
 
 const isHttps = (url) => _HTTPS_RE.test(url);
 
+const _matchesParam = (name, patterns) =>
+	patterns.some(p => p.endsWith("*") ? name.startsWith(p.slice(0, -1)) : name === p);
+
 const applyNormalizationRules = (url, rules) => {
 	const uri = new URL(url);
 	for (const rule of rules) {
@@ -30,6 +33,22 @@ const applyNormalizationRules = (url, rules) => {
 					return `${uri.origin}/${segments.slice(0, rule.depth).join("/")}`;
 				}
 			}
+		} else if (rule.type === "stripparams") {
+			if (rule.regex.test(url)) {
+				const uri2 = new URL(url);
+				for (const name of [...uri2.searchParams.keys()]) {
+					if (_matchesParam(name, rule.params)) uri2.searchParams.delete(name);
+				}
+				return uri2.href;
+			}
+		} else if (rule.type === "keepparams") {
+			if (rule.regex.test(url)) {
+				const uri2 = new URL(url);
+				for (const name of [...uri2.searchParams.keys()]) {
+					if (!_matchesParam(name, rule.params)) uri2.searchParams.delete(name);
+				}
+				return uri2.href;
+			}
 		}
 	}
 	return url;
@@ -38,7 +57,7 @@ const applyNormalizationRules = (url, rules) => {
 const getMatchingURL = (url) => {
 	if (!isValidURL(url)) return url;
 	let matchingURL = url;
-	const normRules = options.urlRules.filter(r => r.type === "hostname" || r.type === "url" || r.type === "pathdepth");
+	const normRules = options.urlRules.filter(r => r.type === "hostname" || r.type === "url" || r.type === "pathdepth" || r.type === "stripparams" || r.type === "keepparams");
 	if (normRules.length > 0) {
 		matchingURL = applyNormalizationRules(matchingURL, normRules);
 	}
