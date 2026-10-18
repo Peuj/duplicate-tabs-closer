@@ -202,7 +202,7 @@
     "description": "Shown in the duplicate tabs list when monitoring is paused"
   },
   "whitelistedTab": {
-    "message": "В списке разрешённых — не закрывается автоматически",
+    "message": "В списке разрешённых - не закрывается автоматически",
     "description": "Tooltip shown on duplicate tabs that match the whitelist"
   },
   "hideWhitelistedTooltip": {
