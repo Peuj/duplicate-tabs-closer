@@ -67,7 +67,10 @@ const buildUrlRuleRow = (rule, onChangeFn, { readOnly = false } = {}) => {
     deleteBtn.type = "button";
     deleteBtn.className = "url-rule-delete";
     deleteBtn.setAttribute("aria-label", "Remove rule");
-    deleteBtn.textContent = "×";
+    const deleteBtnIcon = document.createElement("span");
+    deleteBtnIcon.className = "fa-solid fa-xmark";
+    deleteBtnIcon.setAttribute("aria-hidden", "true");
+    deleteBtn.appendChild(deleteBtnIcon);
 
     if (readOnly) {
         row.classList.add("url-rule-row--readonly");

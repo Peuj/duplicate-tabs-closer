@@ -88,7 +88,7 @@
     "description": "Title matching mode"
   },
   "titleMatchModeN": {
-    "message": "URL only",
+    "message": "URL match only",
     "description": "No title matching"
   },
   "titleMatchModeT": {
