@@ -131,7 +131,8 @@ const collectUrlRulesJson = (containerEl) => {
     const rules = [];
     containerEl.querySelectorAll(".url-rule-row").forEach(row => {
         const type = row.querySelector(".url-rule-type").value;
-        const pattern = row.querySelector(".url-rule-pattern").value.trim();
+        const patternEl = row.querySelector(".url-rule-pattern");
+        const pattern = (patternEl.value ?? patternEl.textContent ?? "").trim();
         if (!pattern) return;
         const enabled = row.querySelector(".url-rule-enabled").checked;
         if (type === "pathDepth") {
