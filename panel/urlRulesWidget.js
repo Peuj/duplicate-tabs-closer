@@ -51,7 +51,7 @@ const buildUrlRuleRow = (rule, onChangeFn, { readOnly = false } = {}) => {
     patternInput.title = _urlRulePatternTitles[type] || "";
 
     const typeSelect = document.createElement("select");
-    typeSelect.className = "url-rule-type form-select form-select-sm";
+    typeSelect.className = "url-rule-type form-select form-control-xs";
     typeSelect.title = _urlRuleTypeTooltips[type] || "";
     [["group", "Group"], ["normalize", "Normalize"], ["pathDepth", "Path depth"], ["stripParams", "Strip params"], ["keepParams", "Keep params"]].forEach(([val, label]) => {
         const opt = document.createElement("option");
@@ -107,7 +107,7 @@ const buildUrlRuleRow = (rule, onChangeFn, { readOnly = false } = {}) => {
         }
         main.append(enabledCheckbox, patternDisplay, paramsInput, typeSelect, depthInput, deleteBtn);
     } else {
-        main.append(enabledCheckbox, patternInput, paramsInput, typeSelect, depthInput, deleteBtn);
+        main.append(enabledCheckbox, patternInput, depthInput, paramsInput, typeSelect, deleteBtn);
     }
 
     row.appendChild(main);

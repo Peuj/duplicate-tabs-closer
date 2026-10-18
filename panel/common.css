@@ -783,34 +783,31 @@ input[type="number"].form-control-xs {
 .url-rule-pattern {
     flex: 1 1 0;
     min-width: 0;
-    font-size: 11px;
+    font-size: 12px;
     padding: 2px 4px;
-    height: 22px;
+    height: 26px;
 }
 
 .url-rule-type {
     flex: 0 0 auto;
     width: auto;
     min-width: 95px;
-    font-size: 11px;
-    padding: 2px 18px 2px 4px;
-    height: 22px;
 }
 
 .url-rule-depth {
     flex: 0 0 auto;
     width: 45px;
-    font-size: 11px;
+    font-size: 12px;
     padding: 2px 4px;
-    height: 22px;
+    height: 26px;
 }
 
 .url-rule-params {
     flex: 1 1 0;
     min-width: 0;
-    font-size: 11px;
+    font-size: 12px;
     padding: 2px 4px;
-    height: 22px;
+    height: 26px;
 }
 
 .url-rule-delete {
