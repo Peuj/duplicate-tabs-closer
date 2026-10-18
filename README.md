@@ -107,8 +107,6 @@ https://docs.google.com/*
 /^(?!.*google\.com)/
 ```
 
-> **Note (Firefox):** On Firefox 153 and later, a warning may appear here if the extension has not been granted access to local `file://` URLs. To resolve it, open `about:addons`, find Duplicate Tabs Closer, and check the **Permissions** tab to enable file access.
-
 ### Matching Rules
 
 Controls how two tabs are compared to determine whether they are duplicates.
@@ -120,12 +118,12 @@ Controls how two tabs are compared to determine whether they are duplicates.
 | **Ignore hash part in URL** | off | Ignores everything after `#` (`page.html#intro` = `page.html#setup`). Has no effect when *Ignore path part* is enabled. |
 | **Ignore query parameters in URL (search part)** | off | Ignores the query string (everything after `?`). Has no effect when *Ignore path part* is enabled. |
 | **Ignore path part in URL (domain only)** | off | Compares only the origin (scheme + domain), ignoring path, query string, and hash. When this is enabled, *Ignore hash part* and *Ignore search part* are redundant. |
-| **Detect duplicates by** | URL only | Controls how tabs are matched: **URL only** uses URL comparison only (default). **URL match or title match** also closes tabs whose page titles match, even across different URLs: useful for pages that display the same title on different URLs. **URL match and same title** keeps tabs with the same URL but different titles: useful when you rename tabs to distinguish them. |
+| **Detect duplicates by** | URL match only | Controls how tabs are matched: **URL match only** uses URL comparison only (default). **URL match or title match** also closes tabs whose page titles match, even across different URLs: useful for pages that display the same title on different URLs. **URL match and same title** keeps tabs with the same URL but different titles: useful when you rename tabs to distinguish them. |
 | **% title similarity** | 100 | Minimum similarity percentage (1–100) for two titles to be considered a match. `100` requires an exact match (case-insensitive). Only active when *Detect duplicates by* is set to *URL match or title match*. |
 
 #### URL Rules
 
-Each rule is a row with a **type** and a **pattern**. Each row has a checkbox to enable or disable the rule: unchecking it disables the rule without deleting it; disabled rules are stored but skipped during duplicate detection. Three rule types are available.
+Each rule is a row with a **type** and a **pattern**. Each row has a checkbox to enable or disable the rule: unchecking it disables the rule without deleting it; disabled rules are stored but skipped during duplicate detection. Five rule types are available.
 
 ##### Group
 
@@ -191,11 +189,41 @@ example.com   depth: 2
 
 `https://example.com/items/42` and `https://example.com/items/42/comments` both have the same first two segments (`items` and `42`), so they normalize to `https://example.com/items/42` and are treated as duplicates. `https://example.com/items/43` has a different second segment and is not affected.
 
+##### Strip params
+
+Removes named query parameters from a URL before comparison. Two tabs whose URLs differ only by the stripped parameters are treated as duplicates.
+
+The rule has two fields: a **URL pattern** that scopes the rule to matching URLs, and a **params** list of parameter names to strip, separated by commas. Supports `*` as a trailing wildcard on parameter names (prefix match only).
+
+```text
+example.com/items   utm_source, utm_medium, utm_campaign
+```
+
+With this rule, `https://example.com/items/42?utm_source=email` and `https://example.com/items/42` are treated as duplicates: stripping `utm_source` leaves the same base URL. But `https://example.com/items/42?page=2` and `https://example.com/items/42` are not duplicates: `page` is not in the strip list.
+
+```text
+*   utm_*
+```
+
+Strips all parameters starting with `utm_` from every URL before comparison. `utm_source`, `utm_medium`, `utm_campaign`, and so on are all removed.
+
+##### Keep params
+
+Keeps only named query parameters before comparison, removing all others. Two tabs whose URLs differ only in the removed parameters are treated as duplicates.
+
+The rule has two fields: a **URL pattern** that scopes the rule to matching URLs, and a **params** list of parameter names to keep, separated by commas. Supports `*` as a trailing wildcard on parameter names.
+
+```text
+example.com/search   q, lang
+```
+
+With this rule, `https://example.com/search?q=cats&sort=date&page=2` and `https://example.com/search?q=cats&page=1` are treated as duplicates: both reduce to `https://example.com/search?q=cats` because only `q` and `lang` are kept and everything else is stripped before comparison.
+
 ##### Rule ordering
 
-Within Normalize and Path depth rules, exact rules (no `*` wildcard in the hostname) are applied before wildcard rules, regardless of the order they appear in the list. A specific rule such as `docs.example.com` depth 1 will always take priority over a broader wildcard rule such as `*.example.com` depth 3, even if the wildcard rule appears earlier in the list. Group rules are applied in the order they appear and are not reordered.
+Within Normalize, Path depth, Strip params, and Keep params rules, exact patterns (no `*` wildcard) are applied before wildcard patterns, regardless of the order they appear in the list. A specific rule such as `docs.example.com` depth 1 will always take priority over a broader wildcard rule such as `*.example.com` depth 3, even if the wildcard rule appears earlier in the list. Group rules are applied in the order they appear and are not reordered.
 
-**When to use which type:** a Group rule makes every matching tab a duplicate of every other matching tab regardless of content. `example.com/items/*` closes all your open item tabs as duplicates of each other, even if they show different items. Normalize and Path depth keep tabs separate unless they resolve to the exact same canonical URL, so item 42 and item 43 are never collapsed together. Between Normalize (URL regex) and Path depth: a URL regex rule applies only to paths that match the pattern, leaving the rest of the site unaffected. Path depth applies to every path on the hostname uniformly.
+**When to use which type:** a Group rule makes every matching tab a duplicate of every other matching tab regardless of content. `example.com/items/*` closes all your open item tabs as duplicates of each other, even if they show different items. Normalize and Path depth keep tabs separate unless they resolve to the exact same canonical URL, so item 42 and item 43 are never collapsed together. Between Normalize (URL regex) and Path depth: a URL regex rule applies only to paths that match the pattern, leaving the rest of the site unaffected. Path depth applies to every path on the hostname uniformly. Strip params removes specific parameters before comparison, so tabs that differ only in tracking or pagination parameters are treated as duplicates while tabs with different content-bearing parameters remain distinct. Keep params is the inverse: it strips everything except the parameters you name, which is useful when only a small number of parameters determine the page content.
 
 #### Title Pattern Rules
 
