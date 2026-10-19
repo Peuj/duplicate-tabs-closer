@@ -2,7 +2,7 @@
 
 let _listWidgetIdCounter = 0;
 
-const buildListWidgetRow = (item, onChangeFn, { placeholder = "", readOnly = false } = {}) => {
+const buildListWidgetRow = (item, onChangeFn, { placeholder = "", readOnly = false, labelFn = null } = {}) => {
     const value = item.value || "";
     const enabled = item.enabled !== false;
 
@@ -28,14 +28,17 @@ const buildListWidgetRow = (item, onChangeFn, { placeholder = "", readOnly = fal
         row.classList.add("list-widget-row--readonly");
         const cbId = `list-widget-cb-${(_listWidgetIdCounter += 1)}`;
         cb.id = cbId;
+        cb.title = "";
         const valueDisplay = document.createElement("label");
         valueDisplay.htmlFor = cbId;
         valueDisplay.className = "url-rule-pattern form-control form-control-sm list-widget-value";
-        valueDisplay.textContent = value;
+        valueDisplay.textContent = labelFn ? labelFn(value) : value;
+        valueDisplay.dataset.value = value;
+        valueDisplay.title = valueDisplay.textContent;
         del.classList.add("hidden");
         row.append(cb, valueDisplay, del);
         row.addEventListener("click", (e) => {
-            if (e.target !== cb && e.target !== valueDisplay) cb.click();
+            if (e.target !== cb && !valueDisplay.contains(e.target)) cb.click();
         });
     } else {
         const input = document.createElement("input");
@@ -71,7 +74,7 @@ const collectListWidgetJson = (containerEl) => {
     const items = [];
     containerEl.querySelectorAll(".list-widget-row").forEach(row => {
         const el = row.querySelector(".list-widget-value");
-        const value = (el.value ?? el.textContent ?? "").trim();
+        const value = (el.value ?? el.dataset.value ?? el.textContent ?? "").trim();
         if (!value) return;
         const enabled = row.querySelector(".list-widget-enabled").checked;
         const entry = { value };

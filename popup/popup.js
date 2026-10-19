@@ -240,7 +240,7 @@ const setPanelOptions = async () => {
             const widgetEl = document.getElementById("titleRegexRules");
             if (widgetEl) {
                 widgetEl.replaceChildren();
-                parseListWidgetItems(value).forEach(item => widgetEl.appendChild(buildListWidgetRow(item, _saveTitleRegexRules, { readOnly: true })));
+                parseListWidgetItems(value).forEach(item => widgetEl.appendChild(buildListWidgetRow(item, _saveTitleRegexRules, { readOnly: true, labelFn: v => `Match title '${v}'` })));
                 if (isLockedKey) {
                     widgetEl.querySelectorAll("input, button").forEach(inputEl => {
                         inputEl.disabled = true;

@@ -270,6 +270,10 @@ body.two-columns.options-hidden #optionsCard {
 }
 
 /* Flat checkbox appearance: strip bordered box from URL rules and title rules */
+.checkboxes-regex-label {
+    margin-top: 0;
+}
+
 .checkboxes-regex-label .url-rules-box {
     border: none;
     background: none;
@@ -285,6 +289,14 @@ body.two-columns.options-hidden #optionsCard {
 .checkboxes-regex-label .url-rule-row--readonly,
 .checkboxes-regex-label .list-widget-row {
     margin-bottom: 0;
+    cursor: default;
+}
+
+.checkboxes-regex-label .url-rule-row--readonly .url-rule-pattern,
+.checkboxes-regex-label .list-widget-row--readonly .url-rule-pattern,
+.checkboxes-regex-label .url-rule-row--readonly .url-rule-enabled,
+.checkboxes-regex-label .list-widget-row--readonly .url-rule-enabled {
+    cursor: default;
 }
 
 .checkboxes-regex-label .url-rule-row--readonly:hover,

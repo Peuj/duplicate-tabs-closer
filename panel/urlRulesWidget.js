@@ -118,21 +118,28 @@ const buildUrlRuleRow = (rule, onChangeFn, { readOnly = false } = {}) => {
         const patternDisplay = document.createElement("label");
         patternDisplay.htmlFor = cbId;
         patternDisplay.className = "url-rule-pattern form-control form-control-sm";
+        patternDisplay.dataset.value = pattern;
         typeSelect.classList.add("hidden");
         depthInput.classList.add("hidden");
         paramsInput.classList.add("hidden");
         deleteBtn.classList.add("hidden");
-        const typeLabels = { group: "Group", normalize: "Normalize", pathDepth: "Path depth", stripParams: "Strip params", keepParams: "Keep params" };
-        const typeLabel = typeLabels[type] || type;
-        patternDisplay.textContent = pattern;
-        if (type === "pathDepth") {
-            patternDisplay.title = `${typeLabel}: ${pattern} (depth: ${rule.depth ?? 1})`;
-        } else if (type === "stripParams" || type === "keepParams") {
-            const paramsList = Array.isArray(rule.params) && rule.params.length ? rule.params.join(", ") : "";
-            patternDisplay.title = paramsList ? `${typeLabel}: ${pattern} (params: ${paramsList})` : `${typeLabel}: ${pattern}`;
+        enabledCheckbox.title = "";
+        const paramsList = Array.isArray(rule.params) && rule.params.length ? rule.params.join(", ") : "";
+        const depth = rule.depth ?? 1;
+        if (type === "group") {
+            patternDisplay.textContent = `Group tabs matching '${pattern}'`;
+        } else if (type === "normalize") {
+            patternDisplay.textContent = `Normalize URLs matching '${pattern}'`;
+        } else if (type === "pathDepth") {
+            patternDisplay.textContent = `Match path depth (${depth}) on '${pattern}'`;
+        } else if (type === "stripParams") {
+            patternDisplay.textContent = paramsList ? `Strip params (${paramsList}) from '${pattern}'` : `Strip params from '${pattern}'`;
+        } else if (type === "keepParams") {
+            patternDisplay.textContent = paramsList ? `Keep params only (${paramsList}) on '${pattern}'` : `Keep params only on '${pattern}'`;
         } else {
-            patternDisplay.title = `${typeLabel}: ${pattern}`;
+            patternDisplay.textContent = pattern;
         }
+        patternDisplay.title = patternDisplay.textContent;
         main.append(enabledCheckbox, patternDisplay, paramsInput, typeSelect, depthInput, deleteBtn);
         const initMsg = _validateRule(type, pattern);
         if (initMsg) {
@@ -140,7 +147,7 @@ const buildUrlRuleRow = (rule, onChangeFn, { readOnly = false } = {}) => {
             warningEl.hidden = false;
         }
         row.addEventListener("click", (e) => {
-            if (e.target !== enabledCheckbox && e.target !== patternDisplay) enabledCheckbox.click();
+            if (e.target !== enabledCheckbox && !patternDisplay.contains(e.target)) enabledCheckbox.click();
         });
     } else {
         main.append(enabledCheckbox, patternInput, depthInput, paramsInput, typeSelect, deleteBtn);
@@ -209,7 +216,7 @@ const collectUrlRulesJson = (containerEl) => {
     containerEl.querySelectorAll(".url-rule-row").forEach(row => {
         const type = row.querySelector(".url-rule-type").value;
         const patternEl = row.querySelector(".url-rule-pattern");
-        const pattern = (patternEl.value ?? patternEl.textContent ?? "").trim();
+        const pattern = (patternEl.value ?? patternEl.dataset.value ?? patternEl.textContent ?? "").trim();
         if (!pattern) return;
         if (_validateRule(type, pattern)) return;
         const enabled = row.querySelector(".url-rule-enabled").checked;
