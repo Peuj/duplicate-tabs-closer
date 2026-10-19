@@ -23,7 +23,9 @@ module.exports = [
                 areSameArrays: "readonly",
                 buildDuplicateTabRows: "readonly",
                 buildGroupedDuplicateTabRows: "readonly",
+                buildListWidgetRow: "readonly",
                 buildUrlRuleRow: "readonly",
+                collectListWidgetJson: "readonly",
                 changeAutoCloseOptionState: "readonly",
                 closeDuplicateTabs: "readonly",
                 collectUrlRulesJson: "readonly",
@@ -102,6 +104,7 @@ module.exports = [
                 titleSimilarity: "readonly",
                 toggleMonitorPause: "readonly",
                 _pendingTriggerTabId: "writable",
+                parseListWidgetItems: "readonly",
                 parseUrlRules: "readonly",
                 updatePrioritizeActiveWindowState: "readonly"
             }

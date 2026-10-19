@@ -238,6 +238,18 @@ const setPanelOptions = async () => {
                 }
             }
         }
+        else if (storedOption === "titleRegexRules") {
+            const widgetEl = document.getElementById("titleRegexRules");
+            if (widgetEl) {
+                widgetEl.replaceChildren();
+                parseListWidgetItems(value).forEach(item => widgetEl.appendChild(buildListWidgetRow(item, _saveTitleRegexRules, { readOnly: true })));
+                if (isLockedKey) {
+                    widgetEl.querySelectorAll("input, button").forEach(inputEl => {
+                        inputEl.disabled = true;
+                    });
+                }
+            }
+        }
         else {
             const el = document.getElementById(storedOption);
             // checkbox
@@ -262,16 +274,6 @@ const setPanelOptions = async () => {
             else if (typeof (value) === "number") {
                 if (el) el.value = value;
             }
-        else if (storedOption === "titleRegexRules") {
-            const widgetEl = document.getElementById("titleRegexRules");
-            if (widgetEl) {
-                widgetEl.replaceChildren();
-                parseListWidgetItems(value).forEach(item =>
-                    widgetEl.appendChild(buildListWidgetRow(item, _saveTitleRegexRules, { readOnly: true }))
-                );
-                if (isLockedKey) widgetEl.querySelectorAll("input, button").forEach(el => { el.disabled = true; });
-            }
-        }
             // combobox
             else {
                 const opt = getElement(`#${storedOption} option[value='${value}']`);

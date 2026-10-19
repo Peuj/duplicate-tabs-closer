@@ -265,7 +265,9 @@ const _parseListItems = (stored) => {
         try {
             const arr = JSON.parse(stored);
             if (Array.isArray(arr)) return arr;
-        } catch { /* fall through to legacy */ }
+        } catch {
+            // fall through to legacy
+        }
     }
     return typeof stored === "string"
         ? stored.split("\n").map(v => ({ value: v.trim(), enabled: true })).filter(item => item.value)

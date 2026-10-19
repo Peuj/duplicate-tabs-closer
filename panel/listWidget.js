@@ -39,11 +39,19 @@ const buildListWidgetRow = (item, onChangeFn, { placeholder = "", readOnly = fal
         input.value = value;
         if (placeholder) input.placeholder = placeholder;
         row.append(cb, input, del);
-        input.addEventListener("change", () => { if (onChangeFn) onChangeFn(); });
-        input.addEventListener("keydown", (e) => {
-            if (e.key === "Enter") { e.preventDefault(); input.blur(); }
+        input.addEventListener("change", () => {
+            if (onChangeFn) onChangeFn();
         });
-        del.addEventListener("click", () => { row.remove(); if (onChangeFn) onChangeFn(); });
+        input.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                input.blur();
+            }
+        });
+        del.addEventListener("click", () => {
+            row.remove();
+            if (onChangeFn) onChangeFn();
+        });
     }
 
     cb.addEventListener("change", function () {
@@ -57,7 +65,8 @@ const buildListWidgetRow = (item, onChangeFn, { placeholder = "", readOnly = fal
 const collectListWidgetJson = (containerEl) => {
     const items = [];
     containerEl.querySelectorAll(".list-widget-row").forEach(row => {
-        const value = row.querySelector(".list-widget-value").value.trim();
+        const el = row.querySelector(".list-widget-value");
+        const value = (el.value ?? el.textContent ?? "").trim();
         if (!value) return;
         const enabled = row.querySelector(".list-widget-enabled").checked;
         const entry = { value };
@@ -72,17 +81,19 @@ const parseListWidgetItems = (stored) => {
         try {
             const arr = JSON.parse(stored);
             if (Array.isArray(arr)) {
-                return arr
-                    .map(item => ({ value: String(item.value || "").trim(), enabled: item.enabled !== false }))
-                    .filter(item => item.value);
+                return arr.
+                    map(item => ({ value: String(item.value || "").trim(), enabled: item.enabled !== false })).
+                    filter(item => item.value);
             }
-        } catch { /* fall through to legacy */ }
+        } catch {
+            // fall through to legacy
+        }
     }
     if (typeof stored === "string") {
-        return stored.split("\n")
-            .map(line => line.trim())
-            .filter(line => line.length > 0)
-            .map(line => ({ value: line, enabled: true }));
+        return stored.split("\n").
+            map(line => line.trim()).
+            filter(line => line.length > 0).
+            map(line => ({ value: line, enabled: true }));
     }
     return [];
 };

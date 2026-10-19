@@ -265,10 +265,12 @@ const setPanelOption = (details) => {
     const widgetEl = document.getElementById("whiteList");
     if (!widgetEl) return;
     widgetEl.replaceChildren();
-    parseListWidgetItems(value).forEach(item =>
-      widgetEl.appendChild(buildListWidgetRow(item, _saveWhiteList, { placeholder: "example.com or /regex/" }))
-    );
-    if (isLockedKey) widgetEl.querySelectorAll("input, button").forEach(el => { el.disabled = true; });
+    parseListWidgetItems(value).forEach(item => widgetEl.appendChild(buildListWidgetRow(item, _saveWhiteList, { placeholder: "example.com or /regex/" })));
+    if (isLockedKey) {
+        widgetEl.querySelectorAll("input, button").forEach(inputEl => {
+            inputEl.disabled = true;
+        });
+    }
   }
   else if (storedOption === "urlRules") {
     const widgetEl = document.getElementById("urlRulesWidget");
@@ -292,10 +294,12 @@ const setPanelOption = (details) => {
     const widgetEl = document.getElementById("titleRegexRules");
     if (!widgetEl) return;
     widgetEl.replaceChildren();
-    parseListWidgetItems(value).forEach(item =>
-      widgetEl.appendChild(buildListWidgetRow(item, _saveTitleRegexRules, { placeholder: "GitHub - * or /regex/" }))
-    );
-    if (isLockedKey) widgetEl.querySelectorAll("input, button").forEach(el => { el.disabled = true; });
+    parseListWidgetItems(value).forEach(item => widgetEl.appendChild(buildListWidgetRow(item, _saveTitleRegexRules, { placeholder: "GitHub - * or /regex/" })));
+    if (isLockedKey) {
+        widgetEl.querySelectorAll("input, button").forEach(inputEl => {
+            inputEl.disabled = true;
+        });
+    }
   }
   else {
     const el = document.getElementById(storedOption);
