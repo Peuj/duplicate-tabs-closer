@@ -134,6 +134,9 @@ const buildUrlRuleRow = (rule, onChangeFn, { readOnly = false } = {}) => {
             warningEl.textContent = initMsg;
             warningEl.hidden = false;
         }
+        row.addEventListener("click", (e) => {
+            if (e.target !== enabledCheckbox) enabledCheckbox.click();
+        });
     } else {
         main.append(enabledCheckbox, patternInput, depthInput, paramsInput, typeSelect, deleteBtn);
     }

@@ -753,6 +753,7 @@ input[type="number"].form-control-xs {
 
 .url-rules-widget {
     margin-top: 4px;
+    margin-bottom: 4px;
 }
 
 .url-rules-box {
@@ -834,16 +835,35 @@ input[type="number"].form-control-xs {
     cursor: pointer;
 }
 
-.url-rule-row--readonly .url-rule-pattern {
+.url-rule-row--readonly .url-rule-pattern,
+.list-widget-row--readonly .url-rule-pattern {
     border: none;
     background: transparent;
     box-shadow: none;
     padding: 0 0 0 2px;
     height: auto;
-    cursor: default;
+    cursor: pointer;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+}
+
+.url-rule-row--readonly,
+.list-widget-row--readonly {
+    cursor: pointer;
+}
+
+.url-rule-row--readonly:hover,
+.list-widget-row--readonly:hover {
+    background-color: color-mix(in srgb, var(--dtc-section-title) 10%, transparent);
+    border-radius: 3px;
+}
+
+.url-rule-row--disabled .url-rule-pattern,
+.url-rule-row--disabled .url-rule-type,
+.url-rule-row--disabled .url-rule-depth,
+.url-rule-row--disabled .url-rule-params {
+    opacity: 0.5;
 }
 
 .url-rule-warning {
@@ -874,8 +894,12 @@ input[type="number"].form-control-xs {
     display: flex;
     align-items: center;
     gap: 4px;
-    padding-right: 4px;
     margin-bottom: 3px;
+}
+
+.list-widget {
+    margin-top: 4px;
+    margin-bottom: 4px;
 }
 
 .list-widget-row--disabled .list-widget-value {

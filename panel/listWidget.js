@@ -1,6 +1,6 @@
 "use strict";
 
-const buildListWidgetRow = (item, onChangeFn, { placeholder = "" } = {}) => {
+const buildListWidgetRow = (item, onChangeFn, { placeholder = "", readOnly = false } = {}) => {
     const value = item.value || "";
     const enabled = item.enabled !== false;
 
@@ -13,12 +13,6 @@ const buildListWidgetRow = (item, onChangeFn, { placeholder = "" } = {}) => {
     cb.checked = enabled;
     cb.title = chrome.i18n.getMessage("urlRuleEnabled");
 
-    const input = document.createElement("input");
-    input.type = "text";
-    input.className = "url-rule-pattern form-control form-control-sm list-widget-value";
-    input.value = value;
-    if (placeholder) input.placeholder = placeholder;
-
     const del = document.createElement("button");
     del.type = "button";
     del.className = "url-rule-delete list-widget-delete";
@@ -28,17 +22,34 @@ const buildListWidgetRow = (item, onChangeFn, { placeholder = "" } = {}) => {
     icon.setAttribute("aria-hidden", "true");
     del.appendChild(icon);
 
-    row.append(cb, input, del);
+    if (readOnly) {
+        row.classList.add("list-widget-row--readonly");
+        const valueDisplay = document.createElement("div");
+        valueDisplay.className = "url-rule-pattern form-control form-control-sm list-widget-value";
+        valueDisplay.textContent = value;
+        del.classList.add("hidden");
+        row.append(cb, valueDisplay, del);
+        row.addEventListener("click", (e) => {
+            if (e.target !== cb) cb.click();
+        });
+    } else {
+        const input = document.createElement("input");
+        input.type = "text";
+        input.className = "url-rule-pattern form-control form-control-sm list-widget-value";
+        input.value = value;
+        if (placeholder) input.placeholder = placeholder;
+        row.append(cb, input, del);
+        input.addEventListener("change", () => { if (onChangeFn) onChangeFn(); });
+        input.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") { e.preventDefault(); input.blur(); }
+        });
+        del.addEventListener("click", () => { row.remove(); if (onChangeFn) onChangeFn(); });
+    }
 
     cb.addEventListener("change", function () {
         row.classList.toggle("list-widget-row--disabled", !this.checked);
         if (onChangeFn) onChangeFn();
     });
-    input.addEventListener("change", () => { if (onChangeFn) onChangeFn(); });
-    input.addEventListener("keydown", (e) => {
-        if (e.key === "Enter") { e.preventDefault(); input.blur(); }
-    });
-    del.addEventListener("click", () => { row.remove(); if (onChangeFn) onChangeFn(); });
 
     return row;
 };

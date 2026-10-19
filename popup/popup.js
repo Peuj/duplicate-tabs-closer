@@ -267,7 +267,7 @@ const setPanelOptions = async () => {
             if (widgetEl) {
                 widgetEl.replaceChildren();
                 parseListWidgetItems(value).forEach(item =>
-                    widgetEl.appendChild(buildListWidgetRow(item, _saveTitleRegexRules, { placeholder: "GitHub - * or /regex/" }))
+                    widgetEl.appendChild(buildListWidgetRow(item, _saveTitleRegexRules, { readOnly: true }))
                 );
                 if (isLockedKey) widgetEl.querySelectorAll("input, button").forEach(el => { el.disabled = true; });
             }
@@ -418,17 +418,6 @@ const loadListenerEvents = () => {
         this.value = val;
         saveOption("titleSimilarityThreshold", val, true);
     });
-
-    /* Save title pattern rules */
-    const titleRegexRulesAddBtn = document.getElementById("titleRegexRulesAdd");
-    if (titleRegexRulesAddBtn) {
-        titleRegexRulesAddBtn.addEventListener("click", () => {
-            const widgetEl = document.getElementById("titleRegexRules");
-            const row = buildListWidgetRow({ value: "" }, _saveTitleRegexRules, { placeholder: "GitHub - * or /regex/" });
-            widgetEl.appendChild(row);
-            row.querySelector(".list-widget-value").focus();
-        });
-    }
 
     /* Pause/resume monitoring */
     const pauseBtn = document.getElementById("pauseMonitorBtn");
