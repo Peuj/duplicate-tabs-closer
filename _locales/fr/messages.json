@@ -112,8 +112,8 @@
     "description": "Button to add a new URL rule row"
   },
   "titleRegexRules": {
-    "message": "Règles de correspondance titre",
-    "description": "Title pattern rules"
+    "message": "Règles de titre",
+    "description": "Title rules"
   },
   "titleRegexRulesHint": {
     "message": "Utilisez * comme joker, ou /regex/flags pour les expressions régulières",

@@ -112,8 +112,8 @@
     "description": "Button to add a new URL rule row"
   },
   "titleRegexRules": {
-    "message": "タイトルパターンルール",
-    "description": "Title pattern rules"
+    "message": "タイトルルール",
+    "description": "Title rules"
   },
   "titleRegexRulesHint": {
     "message": "ワイルドカードには * を、正規表現には /regex/flags を使用してください",

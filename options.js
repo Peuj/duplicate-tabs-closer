@@ -79,12 +79,6 @@ const defaultOptions = {
     titleSimilarityThreshold_popup: {
         value: true
     },
-    urlRules_popup: {
-        value: false
-    },
-    titleRegexRules_popup: {
-        value: false
-    },
     onDuplicateTabDetectedPinned: {
         value: true
     },
@@ -159,9 +153,6 @@ const initializeOptions = async () => {
         if (storedOptions.urlRegexRules && !storedOptions.urlRules) {
             const oldRules = parsePatternRules(storedOptions.urlRegexRules.value || "");
             storedOptions.urlRules = { value: JSON.stringify(oldRules.map(r => ({ type: "group", pattern: r.source }))) };
-            if (storedOptions.urlRegexRules_popup) {
-                storedOptions.urlRules_popup = { value: storedOptions.urlRegexRules_popup.value };
-            }
         }
         const storedKeys = Object.keys(storedOptions).sort();
         const defaultKeys = Object.keys(defaultOptions).sort();

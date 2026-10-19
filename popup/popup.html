@@ -109,6 +109,7 @@
                                         <option value="U" i18n-content="titleMatchModeU"></option>
                                     </select>
                                 </div>
+                                <div class="checkboxes-section-subtitle" id="urlRulesSubtitle"><span i18n-content="urlRules"></span></div>
                                 <div class="checkboxes">
                                     <label for="caseInsensitive">
                                         <input type="checkbox" class="checkbox-filter" id="caseInsensitive" />
@@ -140,11 +141,11 @@
                                     </label>
                                 </div>
                                 <div class="checkboxes checkboxes-regex-label">
-                                    <label for="urlRulesWidget"><span i18n-content="urlRules"></span></label>
                                     <div class="url-rules-box">
                                         <div id="urlRulesWidget" class="url-rules-widget"></div>
                                     </div>
                                 </div>
+                                <div class="checkboxes-section-subtitle hidden" id="titlePatternRulesSubtitle"><span i18n-content="titleRegexRules"></span></div>
                                 <div class="checkboxes checkboxes-threshold">
                                     <label>
                                         <input type="number" id="titleSimilarityThreshold" min="1" max="100" class="form-control-xs" disabled />
@@ -152,7 +153,6 @@
                                     </label>
                                 </div>
                                 <div class="checkboxes checkboxes-regex-label">
-                                    <label for="titleRegexRules"><span i18n-content="titleRegexRules"></span></label>
                                     <div class="url-rules-box">
                                         <div id="titleRegexRules" class="list-widget"></div>
                                     </div>

@@ -112,8 +112,8 @@
     "description": "Button to add a new URL rule row"
   },
   "titleRegexRules": {
-    "message": "Regras de padrão de título",
-    "description": "Title pattern rules"
+    "message": "Regras de título",
+    "description": "Title rules"
   },
   "titleRegexRulesHint": {
     "message": "Use * como curinga, ou /regex/flags para expressões regulares",

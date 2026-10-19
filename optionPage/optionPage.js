@@ -47,6 +47,8 @@ const updateTitleMatchModeDependents = (value) => {
   if (threshGroup) threshGroup.classList.toggle("hidden", !showTitleDependents);
   const titleRulesGroup = document.getElementById("titleRegexRulesGroup");
   if (titleRulesGroup) titleRulesGroup.classList.toggle("hidden", !showTitleDependents);
+  const titlePatternLabel = document.getElementById("titlePatternRulesLabel");
+  if (titlePatternLabel) titlePatternLabel.classList.toggle("hidden", !showTitleDependents);
 };
 
  

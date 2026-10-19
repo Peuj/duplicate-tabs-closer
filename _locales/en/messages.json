@@ -112,8 +112,8 @@
     "description": "Button to add a new URL rule row"
   },
   "titleRegexRules": {
-    "message": "Title pattern rules",
-    "description": "Title pattern rules"
+    "message": "Title rules",
+    "description": "Title rules"
   },
   "titleRegexRulesHint": {
     "message": "Use * as wildcard, or /regex/flags for regex patterns",

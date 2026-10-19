@@ -749,6 +749,13 @@ input[type="number"].form-control-xs {
     font-weight: 600;
 }
 
+.checkboxes-section-subtitle {
+    font-weight: 600;
+    margin-top: 5px;
+    margin-bottom: 1px;
+    color: var(--dtc-section-title);
+}
+
 /* ── URL rules widget ── */
 
 .url-rules-widget {

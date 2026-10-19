@@ -112,8 +112,8 @@
     "description": "Button to add a new URL rule row"
   },
   "titleRegexRules": {
-    "message": "标题匹配规则",
-    "description": "Title pattern rules"
+    "message": "标题规则",
+    "description": "Title rules"
   },
   "titleRegexRulesHint": {
     "message": "使用 * 作为通配符，或使用 /regex/flags 表示正则表达式",

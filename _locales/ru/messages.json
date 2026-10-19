@@ -113,7 +113,7 @@
   },
   "titleRegexRules": {
     "message": "Правила заголовков",
-    "description": "Title pattern rules"
+    "description": "Title rules"
   },
   "titleRegexRulesHint": {
     "message": "Используйте * как шаблон или /regex/flags для регулярных выражений",
