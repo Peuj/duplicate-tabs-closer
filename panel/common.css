@@ -862,13 +862,6 @@ input[type="number"].form-control-xs {
     border-radius: 3px;
 }
 
-.url-rule-row--disabled .url-rule-pattern,
-.url-rule-row--disabled .url-rule-type,
-.url-rule-row--disabled .url-rule-depth,
-.url-rule-row--disabled .url-rule-params {
-    opacity: 0.5;
-}
-
 .url-rule-warning {
     margin: 2px 4px 4px;
     font-size: 0.78em;
@@ -903,10 +896,6 @@ input[type="number"].form-control-xs {
 .list-widget {
     margin-top: 4px;
     margin-bottom: 4px;
-}
-
-.list-widget-row--disabled .list-widget-value {
-    opacity: 0.5;
 }
 
 .vertical-line {

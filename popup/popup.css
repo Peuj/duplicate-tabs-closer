@@ -268,3 +268,26 @@ body.two-columns.options-hidden #optionsCard {
 #urlRulesWidget {
     margin-right: 0;
 }
+
+/* Flat checkbox appearance: strip bordered box from URL rules and title rules */
+.checkboxes-regex-label .url-rules-box {
+    border: none;
+    background: none;
+    padding: 0;
+    margin: 0;
+}
+
+.checkboxes-regex-label .url-rules-widget,
+.checkboxes-regex-label .list-widget {
+    margin: 0;
+}
+
+.checkboxes-regex-label .url-rule-row--readonly,
+.checkboxes-regex-label .list-widget-row {
+    margin-bottom: 0;
+}
+
+.checkboxes-regex-label .url-rule-row--readonly:hover,
+.checkboxes-regex-label .list-widget-row--readonly:hover {
+    background-color: transparent;
+}

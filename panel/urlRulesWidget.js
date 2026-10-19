@@ -26,6 +26,8 @@ const _urlRulePatternTitles = {
 
 const _urlRuleEnabledTitle = chrome.i18n.getMessage("urlRuleEnabled");
 
+let _urlRuleIdCounter = 0;
+
 const _isRegexPattern = (p) => p.startsWith("/") && (/\/[gimsuy]*$/).test(p);
 
 const _validateRule = (type, pattern) => {
@@ -111,7 +113,10 @@ const buildUrlRuleRow = (rule, onChangeFn, { readOnly = false } = {}) => {
 
     if (readOnly) {
         row.classList.add("url-rule-row--readonly");
-        const patternDisplay = document.createElement("div");
+        const cbId = `url-rule-cb-${(_urlRuleIdCounter += 1)}`;
+        enabledCheckbox.id = cbId;
+        const patternDisplay = document.createElement("label");
+        patternDisplay.htmlFor = cbId;
         patternDisplay.className = "url-rule-pattern form-control form-control-sm";
         typeSelect.classList.add("hidden");
         depthInput.classList.add("hidden");
@@ -135,7 +140,7 @@ const buildUrlRuleRow = (rule, onChangeFn, { readOnly = false } = {}) => {
             warningEl.hidden = false;
         }
         row.addEventListener("click", (e) => {
-            if (e.target !== enabledCheckbox) enabledCheckbox.click();
+            if (e.target !== enabledCheckbox && e.target !== patternDisplay) enabledCheckbox.click();
         });
     } else {
         main.append(enabledCheckbox, patternInput, depthInput, paramsInput, typeSelect, deleteBtn);

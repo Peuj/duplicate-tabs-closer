@@ -1,5 +1,7 @@
 "use strict";
 
+let _listWidgetIdCounter = 0;
+
 const buildListWidgetRow = (item, onChangeFn, { placeholder = "", readOnly = false } = {}) => {
     const value = item.value || "";
     const enabled = item.enabled !== false;
@@ -24,13 +26,16 @@ const buildListWidgetRow = (item, onChangeFn, { placeholder = "", readOnly = fal
 
     if (readOnly) {
         row.classList.add("list-widget-row--readonly");
-        const valueDisplay = document.createElement("div");
+        const cbId = `list-widget-cb-${(_listWidgetIdCounter += 1)}`;
+        cb.id = cbId;
+        const valueDisplay = document.createElement("label");
+        valueDisplay.htmlFor = cbId;
         valueDisplay.className = "url-rule-pattern form-control form-control-sm list-widget-value";
         valueDisplay.textContent = value;
         del.classList.add("hidden");
         row.append(cb, valueDisplay, del);
         row.addEventListener("click", (e) => {
-            if (e.target !== cb) cb.click();
+            if (e.target !== cb && e.target !== valueDisplay) cb.click();
         });
     } else {
         const input = document.createElement("input");
