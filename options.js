@@ -264,7 +264,7 @@ const _parseListItems = (stored) => {
     if (typeof stored === "string" && stored.trimStart().startsWith("[")) {
         try {
             const arr = JSON.parse(stored);
-            if (Array.isArray(arr)) return arr;
+            if (Array.isArray(arr)) return arr.map(item => ({ value: String(item.value || ""), enabled: item.enabled !== false })).filter(item => item.value);
         } catch {
             // fall through to legacy
         }

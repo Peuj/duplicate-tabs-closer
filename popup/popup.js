@@ -313,7 +313,8 @@ const updateTitleMatchModeDependents = (value) => {
     if (threshRow) threshRow.classList.toggle("hidden", !showTitleDependents || !titleSimilarityThresholdPopupVisible);
     const titleRulesEl = document.getElementById("titleRegexRules");
     const titleRulesRow = titleRulesEl?.closest(".checkboxes");
-    if (titleRulesRow) titleRulesRow.classList.toggle("hidden", !showTitleDependents || !titleRegexRulesPopupVisible);
+    const titleRulesCount = titleRulesEl ? titleRulesEl.querySelectorAll(".list-widget-row").length : 0;
+    if (titleRulesRow) titleRulesRow.classList.toggle("hidden", !showTitleDependents || !titleRegexRulesPopupVisible || titleRulesCount === 0);
 };
 
 const applyPopupRuleVisibility = (storedOptions) => {
@@ -364,6 +365,16 @@ const handleMessage = (message) => {
     }
     if (message.action === "setStoredOption" && message.data.name === "titleMatchMode") {
         updateTitleMatchModeDependents(message.data.value);
+        resizeDuplicateTabsPanel();
+    }
+    if (message.action === "setStoredOption" && message.data.name === "titleRegexRules") {
+        const widgetEl = document.getElementById("titleRegexRules");
+        if (widgetEl) {
+            widgetEl.replaceChildren();
+            parseListWidgetItems(message.data.value).forEach(item => widgetEl.appendChild(buildListWidgetRow(item, _saveTitleRegexRules, { readOnly: true })));
+        }
+        const titleMatchModeEl = document.getElementById("titleMatchMode");
+        updateTitleMatchModeDependents(titleMatchModeEl ? titleMatchModeEl.value : "N");
         resizeDuplicateTabsPanel();
     }
     if (message.action === "setStoredOption" && message.data.name === "urlRules") {
