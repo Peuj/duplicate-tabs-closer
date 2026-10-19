@@ -716,25 +716,6 @@ html.theme-oled .btn-close-tabs:hover {
     background-position: right 4px center;
 }
 
-textarea.rules-textarea {
-    height: auto;
-    padding: 4px;
-    font-size: 12px;
-    font-family: Arial, Helvetica, sans-serif;
-    color: var(--dtc-text);
-    border-radius: 3px;
-    scrollbar-width: thin;
-    background-size: 100%;
-    background-color: var(--dtc-textarea-alt-bg);
-    margin-top: 4px;
-}
-
-#urlRegexRules,
-#titleRegexRules {
-    margin-top: 4px;
-}
-
-textarea.rules-textarea:focus,
 input[type="number"].form-control-xs:focus,
 .form-select:focus,
 .form-control-xs:focus,
@@ -887,6 +868,18 @@ input[type="number"].form-control-xs {
 .btn-add-rule:hover {
     background: color-mix(in srgb, currentcolor 22%, var(--dtc-textarea-bg));
     border-color: var(--dtc-section-title);
+}
+
+.list-widget-row {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding-right: 4px;
+    margin-bottom: 3px;
+}
+
+.list-widget-row--disabled .list-widget-value {
+    opacity: 0.5;
 }
 
 .vertical-line {

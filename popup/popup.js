@@ -19,6 +19,12 @@ const _saveUrlRules = () => {
     saveOption("urlRules", collectUrlRulesJson(widgetEl), true);
 };
 
+const _saveTitleRegexRules = () => {
+    const widgetEl = document.getElementById("titleRegexRules");
+    if (!widgetEl) return;
+    saveOption("titleRegexRules", collectListWidgetJson(widgetEl), true);
+};
+
 const toggleShrunkMode = (checked) => {
     getElements(".list-group-form").forEach(el => el.classList.toggle("shrunk", checked));
     if (!checked && document.getElementById("optionHeader").classList.contains("collapsed")) {
@@ -256,9 +262,16 @@ const setPanelOptions = async () => {
             else if (typeof (value) === "number") {
                 if (el) el.value = value;
             }
-            else if (storedOption === "titleRegexRules" || storedOption === "whiteList") {
-                if (el) el.value = value;
+        else if (storedOption === "titleRegexRules") {
+            const widgetEl = document.getElementById("titleRegexRules");
+            if (widgetEl) {
+                widgetEl.replaceChildren();
+                parseListWidgetItems(value).forEach(item =>
+                    widgetEl.appendChild(buildListWidgetRow(item, _saveTitleRegexRules, { placeholder: "GitHub - * or /regex/" }))
+                );
+                if (isLockedKey) widgetEl.querySelectorAll("input, button").forEach(el => { el.disabled = true; });
             }
+        }
             // combobox
             else {
                 const opt = getElement(`#${storedOption} option[value='${value}']`);
@@ -407,21 +420,15 @@ const loadListenerEvents = () => {
     });
 
     /* Save title pattern rules */
-    ["titleRegexRules"].forEach(id => {
-        const el = document.getElementById(id);
-        if (!el) return;
-        el.addEventListener("change", function () {
-            const cleaned = this.value.split("\n").map(l => l.trim()).filter(l => l.length > 0).join("\n");
-            this.value = cleaned;
-            saveOption(this.id, cleaned, true);
+    const titleRegexRulesAddBtn = document.getElementById("titleRegexRulesAdd");
+    if (titleRegexRulesAddBtn) {
+        titleRegexRulesAddBtn.addEventListener("click", () => {
+            const widgetEl = document.getElementById("titleRegexRules");
+            const row = buildListWidgetRow({ value: "" }, _saveTitleRegexRules, { placeholder: "GitHub - * or /regex/" });
+            widgetEl.appendChild(row);
+            row.querySelector(".list-widget-value").focus();
         });
-        ["keyup", "click", "select", "focus", "scroll"].forEach(ev => el.addEventListener(ev, function () {
-            applyLineHighlight(this);
-        }));
-        el.addEventListener("blur", function () {
-            this.style.backgroundImage = "";
-        });
-    });
+    }
 
     /* Pause/resume monitoring */
     const pauseBtn = document.getElementById("pauseMonitorBtn");

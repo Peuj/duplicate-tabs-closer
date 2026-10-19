@@ -11,6 +11,7 @@
   <script src="../helper.js"></script>
   <script src="../panelHelper.js"></script>
   <script src="../panel/urlRulesWidget.js"></script>
+  <script src="../panel/listWidget.js"></script>
   <script src="optionPage.js"></script>
 </head>
 
@@ -86,7 +87,10 @@
               <div class="checkboxes checkboxes-regex-label">
                 <label for="whiteList"><span i18n-content="whiteList"></span></label>
               </div>
-              <textarea class="form-control rules-textarea" rows="4" id="whiteList"></textarea>
+              <div class="url-rules-box">
+                <div id="whiteList" class="list-widget"></div>
+                <button type="button" id="whiteListAdd" class="btn-add-rule" i18n-content="addUrlRule"></button>
+              </div>
               <small class="form-text text-muted mt-1" i18n-content="whiteListHint"></small>
             </div>
           </li>
@@ -190,7 +194,10 @@
                     <span class="fa-regular fa-eye"></span>
                   </label>
                 </div>
-                <textarea id="titleRegexRules" class="form-control rules-textarea" rows="3"></textarea>
+                <div class="url-rules-box">
+                  <div id="titleRegexRules" class="list-widget"></div>
+                  <button type="button" id="titleRegexRulesAdd" class="btn-add-rule" i18n-content="addUrlRule"></button>
+                </div>
                 <small class="form-text text-muted" i18n-content="titleRegexRulesHint"></small>
               </div>
             </div>

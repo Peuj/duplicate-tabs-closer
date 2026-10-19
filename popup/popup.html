@@ -11,6 +11,7 @@
     <script src="../helper.js"></script>
     <script src="../panelHelper.js"></script>
     <script src="../panel/urlRulesWidget.js"></script>
+    <script src="../panel/listWidget.js"></script>
     <script src="popup.js"></script>
 </head>
 
@@ -152,7 +153,10 @@
                                 </div>
                                 <div class="checkboxes checkboxes-regex-label">
                                     <label for="titleRegexRules"><span i18n-content="titleRegexRules"></span></label>
-                                    <textarea id="titleRegexRules" class="form-control rules-textarea" rows="3"></textarea>
+                                    <div class="url-rules-box">
+                                        <div id="titleRegexRules" class="list-widget"></div>
+                                        <button type="button" id="titleRegexRulesAdd" class="btn-add-rule" i18n-content="addUrlRule"></button>
+                                    </div>
                                     <small class="form-text text-muted" i18n-content="titleRegexRulesHint"></small>
                                 </div>
                             </div>

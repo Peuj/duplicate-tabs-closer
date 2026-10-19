@@ -13,6 +13,18 @@ const _saveUrlRules = () => {
   saveOption("urlRules", collectUrlRulesJson(widgetEl), true);
 };
 
+const _saveWhiteList = () => {
+  const widgetEl = document.getElementById("whiteList");
+  if (!widgetEl) return;
+  saveOption("whiteList", collectListWidgetJson(widgetEl), true);
+};
+
+const _saveTitleRegexRules = () => {
+  const widgetEl = document.getElementById("titleRegexRules");
+  if (!widgetEl) return;
+  saveOption("titleRegexRules", collectListWidgetJson(widgetEl), true);
+};
+
 const initialize = async () => {
   const [, windowId, sessionData] = await Promise.all([setPanelOptions(), getActiveWindowId(), chrome.storage.session.get("monitoringPaused")]);
   monitoringPaused = sessionData.monitoringPaused || false;
@@ -82,12 +94,15 @@ const loadPopupEvents = () => {
   });
 
   /* Save whiteList settings */
-  const whiteListEl = document.getElementById("whiteList");
-  if (whiteListEl) whiteListEl.addEventListener("change", function () {
-    const whiteList = cleanUpWhiteList(this.value);
-    setWhiteList(whiteList);
-    saveOption(this.id, whiteList, true);
-  });
+  const whiteListAddBtn = document.getElementById("whiteListAdd");
+  if (whiteListAddBtn) {
+    whiteListAddBtn.addEventListener("click", () => {
+      const widgetEl = document.getElementById("whiteList");
+      const row = buildListWidgetRow({ value: "" }, _saveWhiteList, { placeholder: "example.com or /regex/" });
+      widgetEl.appendChild(row);
+      row.querySelector(".list-widget-value").focus();
+    });
+  }
 
   /* URL rules widget */
   const urlRulesWidgetEl = document.getElementById("urlRulesWidget");
@@ -101,28 +116,13 @@ const loadPopupEvents = () => {
   }
 
   /* Save title pattern rules */
-  ["titleRegexRules"].forEach(id => {
-    const el = document.getElementById(id);
-    if (!el) return;
-    el.addEventListener("change", function () {
-      const cleaned = cleanUpWhiteList(this.value);
-      this.value = cleaned;
-      saveOption(this.id, cleaned, true);
-    });
-    ["keyup", "click", "select", "focus", "scroll"].forEach(ev => el.addEventListener(ev, function () {
-      applyLineHighlight(this);
-    }));
-    el.addEventListener("blur", function () {
-      this.style.backgroundImage = "";
-    });
-  });
-
-  if (whiteListEl) {
-    ["keyup", "click", "select", "focus", "scroll"].forEach(ev => whiteListEl.addEventListener(ev, function () {
-      applyLineHighlight(this);
-    }));
-    whiteListEl.addEventListener("blur", function () {
-      this.style.backgroundImage = "";
+  const titleRegexRulesAddBtn = document.getElementById("titleRegexRulesAdd");
+  if (titleRegexRulesAddBtn) {
+    titleRegexRulesAddBtn.addEventListener("click", () => {
+      const widgetEl = document.getElementById("titleRegexRules");
+      const row = buildListWidgetRow({ value: "" }, _saveTitleRegexRules, { placeholder: "GitHub - * or /regex/" });
+      widgetEl.appendChild(row);
+      row.querySelector(".list-widget-value").focus();
     });
   }
 
@@ -174,21 +174,6 @@ const loadPopupEvents = () => {
     saveOption("hideWhitelistedTabs", newValue, true);
   });
 
-};
-
-const setWhiteList = (whiteList) => {
-  const el = document.getElementById("whiteList");
-  if (el) el.value = whiteList;
-};
-
-const cleanUpWhiteList = (whiteList) => {
-  const whiteListCleaned = new Set();
-  const whiteListLines = whiteList.split("\n");
-  for (let whiteListLine of whiteListLines) {
-    whiteListLine = whiteListLine.trim();
-    if (whiteListLine.length !== 0) whiteListCleaned.add(whiteListLine);
-  }
-  return Array.from(whiteListCleaned).join("\n");
 };
 
 const setDuplicateTabsTable = (duplicateTabs) => {
@@ -277,11 +262,13 @@ const setPanelOption = (details) => {
     getElements(".containerItem").forEach(el => el.classList.toggle("hidden", true));
   }
   else if (storedOption === "whiteList") {
-    const el = document.getElementById("whiteList");
-    if (el) {
-      el.value = value;
-      if (isLockedKey) el.disabled = true;
-    }
+    const widgetEl = document.getElementById("whiteList");
+    if (!widgetEl) return;
+    widgetEl.replaceChildren();
+    parseListWidgetItems(value).forEach(item =>
+      widgetEl.appendChild(buildListWidgetRow(item, _saveWhiteList, { placeholder: "example.com or /regex/" }))
+    );
+    if (isLockedKey) widgetEl.querySelectorAll("input, button").forEach(el => { el.disabled = true; });
   }
   else if (storedOption === "urlRules") {
     const widgetEl = document.getElementById("urlRulesWidget");
@@ -302,11 +289,13 @@ const setPanelOption = (details) => {
     }
   }
   else if (storedOption === "titleRegexRules") {
-    const el = document.getElementById(storedOption);
-    if (el) {
-      el.value = value;
-      if (isLockedKey) el.disabled = true;
-    }
+    const widgetEl = document.getElementById("titleRegexRules");
+    if (!widgetEl) return;
+    widgetEl.replaceChildren();
+    parseListWidgetItems(value).forEach(item =>
+      widgetEl.appendChild(buildListWidgetRow(item, _saveTitleRegexRules, { placeholder: "GitHub - * or /regex/" }))
+    );
+    if (isLockedKey) widgetEl.querySelectorAll("input, button").forEach(el => { el.disabled = true; });
   }
   else {
     const el = document.getElementById(storedOption);

@@ -260,11 +260,24 @@ const isPanelOptionOpen = async () => {
 
 const escapeRegexChar = (ch) => ch.replace(/[.+?^${}()|[\]\\]/g, "\\$&");
 
+const _parseListItems = (stored) => {
+    if (typeof stored === "string" && stored.trimStart().startsWith("[")) {
+        try {
+            const arr = JSON.parse(stored);
+            if (Array.isArray(arr)) return arr;
+        } catch { /* fall through to legacy */ }
+    }
+    return typeof stored === "string"
+        ? stored.split("\n").map(v => ({ value: v.trim(), enabled: true })).filter(item => item.value)
+        : [];
+};
+
 const whiteListToPattern = (whiteList) => {
     const MAX_WILDCARDS = 5;
     const whiteListPatterns = new Set();
-    const whiteListLines = whiteList.split("\n").map(line => line.trim()).filter(line => line.length > 0);
-    whiteListLines.forEach(whiteListLine => {
+    const items = _parseListItems(whiteList);
+    for (const { value: whiteListLine, enabled } of items) {
+        if (!enabled) continue;
         const regexMatch = whiteListLine.match(/^\/(.+)\/([gimsuy]*)$/);
         if (regexMatch) {
             try {
@@ -274,7 +287,7 @@ const whiteListToPattern = (whiteList) => {
             }
         } else {
             const normalizedLine = whiteListLine.replace(/\/$/, "");
-            if ((normalizedLine.match(/\*/g) || []).length > MAX_WILDCARDS) return;
+            if ((normalizedLine.match(/\*/g) || []).length > MAX_WILDCARDS) continue;
             const length = normalizedLine.length;
             let pattern = "^";
             for (let index = 0; index < length; index += 1) {
@@ -283,15 +296,17 @@ const whiteListToPattern = (whiteList) => {
             }
             whiteListPatterns.add(new RegExp(`${pattern}\\/?$`));
         }
-    });
+    }
     return Array.from(whiteListPatterns);
 };
 
-const parsePatternRules = (text) => {
+const parsePatternRules = (storedValue) => {
     const MAX_LINE_LENGTH = 200;
     const MAX_WILDCARDS = 5;
     const results = [];
-    for (const rawLine of text.split("\n")) {
+    const items = _parseListItems(storedValue);
+    for (const { value: rawLine, enabled } of items) {
+        if (!enabled) continue;
         const line = rawLine.trim().slice(0, MAX_LINE_LENGTH);
         if (!line) continue;
         const regexMatch = line.match(/^\/(.+)\/([gimsuy]*)$/);
