@@ -804,8 +804,8 @@ input[type="number"].form-control-xs {
 }
 
 .url-rule-params {
-    flex: 1 1 0;
-    min-width: 0;
+    flex: 0 0 auto;
+    width: 120px;
     font-size: 12px;
     padding: 2px 4px;
     height: 26px;
