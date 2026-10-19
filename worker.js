@@ -373,6 +373,11 @@ const handleObservedTab = (details) => {
         registerTab(observedTab, details.retainedTabs, matchingTabURL, matchingTabTitle);
         return;
     }
+    if (match.tab.id === observedTab.id) {
+        invalidateAllRetainedKeys(match.tab, match.key, details.retainedTabs);
+        registerTab(observedTab, details.retainedTabs, matchingTabURL, matchingTabTitle);
+        return;
+    }
     applyDuplicateAction(details, observedTab, match);
 };
 
