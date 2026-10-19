@@ -100,7 +100,7 @@ const loadPopupEvents = () => {
   if (whiteListAddBtn) {
     whiteListAddBtn.addEventListener("click", () => {
       const widgetEl = document.getElementById("whiteList");
-      const row = buildListWidgetRow({ value: "" }, _saveWhiteList, { placeholder: "example.com or /regex/" });
+      const row = buildListWidgetRow({ value: "" }, _saveWhiteList, { placeholder: "example.com or example.com* or /regex/" });
       widgetEl.appendChild(row);
       row.querySelector(".list-widget-value").focus();
     });
@@ -122,7 +122,7 @@ const loadPopupEvents = () => {
   if (titleRegexRulesAddBtn) {
     titleRegexRulesAddBtn.addEventListener("click", () => {
       const widgetEl = document.getElementById("titleRegexRules");
-      const row = buildListWidgetRow({ value: "" }, _saveTitleRegexRules, { placeholder: "GitHub - * or /regex/" });
+      const row = buildListWidgetRow({ value: "" }, _saveTitleRegexRules, { placeholder: "Example Site - * or /regex/" });
       widgetEl.appendChild(row);
       row.querySelector(".list-widget-value").focus();
     });
@@ -267,7 +267,7 @@ const setPanelOption = (details) => {
     const widgetEl = document.getElementById("whiteList");
     if (!widgetEl) return;
     widgetEl.replaceChildren();
-    parseListWidgetItems(value).forEach(item => widgetEl.appendChild(buildListWidgetRow(item, _saveWhiteList, { placeholder: "example.com or /regex/" })));
+    parseListWidgetItems(value).forEach(item => widgetEl.appendChild(buildListWidgetRow(item, _saveWhiteList, { placeholder: "example.com or example.com* or /regex/" })));
     if (isLockedKey) {
         widgetEl.querySelectorAll("input, button").forEach(inputEl => {
             inputEl.disabled = true;
@@ -296,7 +296,7 @@ const setPanelOption = (details) => {
     const widgetEl = document.getElementById("titleRegexRules");
     if (!widgetEl) return;
     widgetEl.replaceChildren();
-    parseListWidgetItems(value).forEach(item => widgetEl.appendChild(buildListWidgetRow(item, _saveTitleRegexRules, { placeholder: "GitHub - * or /regex/" })));
+    parseListWidgetItems(value).forEach(item => widgetEl.appendChild(buildListWidgetRow(item, _saveTitleRegexRules, { placeholder: "Example Site - * or /regex/" })));
     if (isLockedKey) {
         widgetEl.querySelectorAll("input, button").forEach(inputEl => {
             inputEl.disabled = true;

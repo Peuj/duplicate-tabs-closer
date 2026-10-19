@@ -115,10 +115,6 @@
     "message": "Regras de título",
     "description": "Title rules"
   },
-  "titleRegexRulesHint": {
-    "message": "Use * como curinga, ou /regex/flags para expressões regulares",
-    "description": "Hint below title pattern rules textarea"
-  },
   "duplicateTabs": {
     "message": "Abas duplicadas",
     "description": "Duplicate tabs"
@@ -312,10 +308,6 @@
   "themeViolet": {
     "message": "Violet",
     "description": "Violet light theme"
-  },
-  "whiteListHint": {
-    "message": "Use * como curinga, ou envolva em /.../ para regex: /^(?!.*google\\.com)/",
-    "description": "Hint below the whitelist textarea showing pattern syntax examples"
   },
   "urlRuleGroupPlaceholder": {
     "message": "example.com/items/* or /example\\.com\\/(items|pages)\\/.*/",

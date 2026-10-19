@@ -115,10 +115,6 @@
     "message": "標題規則",
     "description": "Title rules"
   },
-  "titleRegexRulesHint": {
-    "message": "使用 * 作為萬用字元，或使用 /regex/flags 表示正規表示式",
-    "description": "Hint below title pattern rules textarea"
-  },
   "duplicateTabs": {
     "message": "重複的分頁",
     "description": "Duplicate tabs"
@@ -312,10 +308,6 @@
   "themeViolet": {
     "message": "Violet",
     "description": "Violet light theme"
-  },
-  "whiteListHint": {
-    "message": "使用 * 作為萬用字元，或用 /.../ 包裹正規表示式，例如: /^(?!.*google\\.com)/",
-    "description": "Hint below the whitelist textarea showing pattern syntax examples"
   },
   "urlRuleGroupPlaceholder": {
     "message": "example.com/items/* or /example\\.com\\/(items|pages)\\/.*/",

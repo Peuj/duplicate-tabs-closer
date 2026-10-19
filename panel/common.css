@@ -745,10 +745,6 @@ input[type="number"].form-control-xs {
     margin-top: 4px;
 }
 
-.checkboxes-regex-label > label {
-    font-weight: 600;
-}
-
 .checkboxes-section-subtitle {
     font-weight: 600;
     margin-top: 5px;

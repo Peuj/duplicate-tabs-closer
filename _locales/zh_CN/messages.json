@@ -115,10 +115,6 @@
     "message": "标题规则",
     "description": "Title rules"
   },
-  "titleRegexRulesHint": {
-    "message": "使用 * 作为通配符，或使用 /regex/flags 表示正则表达式",
-    "description": "Hint below title pattern rules textarea"
-  },
   "duplicateTabs": {
     "message": "重复标签页",
     "description": "Duplicate tabs"
@@ -312,10 +308,6 @@
   "themeViolet": {
     "message": "Violet",
     "description": "Violet light theme"
-  },
-  "whiteListHint": {
-    "message": "使用 * 作为通配符，或用 /.../ 包裹正则表达式，例如: /^(?!.*google\\.com)/",
-    "description": "Hint below the whitelist textarea showing pattern syntax examples"
   },
   "urlRuleGroupPlaceholder": {
     "message": "example.com/items/* or /example\\.com\\/(items|pages)\\/.*/",

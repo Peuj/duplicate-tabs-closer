@@ -115,10 +115,6 @@
     "message": "Правила заголовков",
     "description": "Title rules"
   },
-  "titleRegexRulesHint": {
-    "message": "Используйте * как шаблон или /regex/flags для регулярных выражений",
-    "description": "Hint below title pattern rules textarea"
-  },
   "duplicateTabs": {
     "message": "Дубликаты вкладок",
     "description": "Duplicate tabs"
@@ -312,10 +308,6 @@
   "themeViolet": {
     "message": "Violet",
     "description": "Violet light theme"
-  },
-  "whiteListHint": {
-    "message": "Используйте * как подстановочный символ или оберните в /.../ для регулярного выражения: /^(?!.*google\\.com)/",
-    "description": "Hint below the whitelist textarea showing pattern syntax examples"
   },
   "urlRuleGroupPlaceholder": {
     "message": "example.com/items/* or /example\\.com\\/(items|pages)\\/.*/",

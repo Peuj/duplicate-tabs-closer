@@ -115,10 +115,6 @@
     "message": "タイトルルール",
     "description": "Title rules"
   },
-  "titleRegexRulesHint": {
-    "message": "ワイルドカードには * を、正規表現には /regex/flags を使用してください",
-    "description": "Hint below title pattern rules textarea"
-  },
   "duplicateTabs": {
     "message": "重複したタブ",
     "description": "Duplicate tabs"
@@ -312,10 +308,6 @@
   "themeViolet": {
     "message": "Violet",
     "description": "Violet light theme"
-  },
-  "whiteListHint": {
-    "message": "* はワイルドカード。正規表現は /.../ で囲む例: /^(?!.*google\\.com)/",
-    "description": "Hint below the whitelist textarea showing pattern syntax examples"
   },
   "urlRuleGroupPlaceholder": {
     "message": "example.com/items/* or /example\\.com\\/(items|pages)\\/.*/",

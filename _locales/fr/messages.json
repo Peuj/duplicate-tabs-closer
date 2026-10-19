@@ -115,10 +115,6 @@
     "message": "Règles de titre",
     "description": "Title rules"
   },
-  "titleRegexRulesHint": {
-    "message": "Utilisez * comme joker, ou /regex/flags pour les expressions régulières",
-    "description": "Hint below title pattern rules textarea"
-  },
   "duplicateTabs": {
     "message": "Onglets en doublon",
     "description": "Duplicate tabs"
@@ -312,10 +308,6 @@
   "themeViolet": {
     "message": "Violet",
     "description": "Violet light theme"
-  },
-  "whiteListHint": {
-    "message": "Utilisez * comme joker, ou entourez de /.../ pour une regex : /^(?!.*google\\.com)/",
-    "description": "Hint below the whitelist textarea showing pattern syntax examples"
   },
   "urlRuleGroupPlaceholder": {
     "message": "example.com/items/* or /example\\.com\\/(items|pages)\\/.*/",

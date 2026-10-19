@@ -115,10 +115,6 @@
     "message": "Title rules",
     "description": "Title rules"
   },
-  "titleRegexRulesHint": {
-    "message": "Use * as wildcard, or /regex/flags for regex patterns",
-    "description": "Hint below title pattern rules textarea"
-  },
   "duplicateTabs": {
     "message": "Duplicate tabs",
     "description": "Duplicate tabs"
@@ -312,10 +308,6 @@
   "themeViolet": {
     "message": "Violet",
     "description": "Violet light theme"
-  },
-  "whiteListHint": {
-    "message": "Use * as wildcard, or wrap in /.../ for regex: /^(?!.*google\\.com)/",
-    "description": "Hint below the whitelist textarea showing pattern syntax examples"
   },
   "urlRuleGroupPlaceholder": {
     "message": "example.com/items/* or /example\\.com\\/(items|pages)\\/.*/",
