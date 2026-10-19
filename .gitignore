@@ -16,3 +16,6 @@ node_modules/
 
 # Test logs
 *.log
+
+# Local utility scripts
+build/fix-crlf.ps1
