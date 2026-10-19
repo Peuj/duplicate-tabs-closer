@@ -111,6 +111,10 @@
     "message": "ルールを追加",
     "description": "Button to add a new URL rule row"
   },
+  "listWidgetRemoveEntry": {
+    "message": "エントリを削除",
+    "description": "Aria-label for the delete button in list widget rows"
+  },
   "titleRegexRules": {
     "message": "タイトルルール",
     "description": "Title rules"

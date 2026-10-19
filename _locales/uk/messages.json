@@ -111,6 +111,10 @@
     "message": "Додати правило",
     "description": "Button to add a new URL rule row"
   },
+  "listWidgetRemoveEntry": {
+    "message": "Видалити запис",
+    "description": "Aria-label for the delete button in list widget rows"
+  },
   "titleRegexRules": {
     "message": "Правила заголовків",
     "description": "Title rules"

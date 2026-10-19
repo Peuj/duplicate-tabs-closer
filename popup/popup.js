@@ -375,7 +375,7 @@ const handleMessage = (message) => {
         const widgetEl = document.getElementById("titleRegexRules");
         if (widgetEl) {
             widgetEl.replaceChildren();
-            parseListWidgetItems(message.data.value).forEach(item => widgetEl.appendChild(buildListWidgetRow(item, _saveTitleRegexRules, { readOnly: true })));
+            parseListWidgetItems(message.data.value).forEach(item => widgetEl.appendChild(buildListWidgetRow(item, _saveTitleRegexRules, { readOnly: true, labelFn: v => `Match title '${v}'` })));
         }
         const titleMatchModeEl = document.getElementById("titleMatchMode");
         updateTitleMatchModeDependents(titleMatchModeEl ? titleMatchModeEl.value : "N");

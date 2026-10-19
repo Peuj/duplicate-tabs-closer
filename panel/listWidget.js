@@ -15,15 +15,6 @@ const buildListWidgetRow = (item, onChangeFn, { placeholder = "", readOnly = fal
     cb.checked = enabled;
     cb.title = chrome.i18n.getMessage("urlRuleEnabled");
 
-    const del = document.createElement("button");
-    del.type = "button";
-    del.className = "url-rule-delete list-widget-delete";
-    del.setAttribute("aria-label", "Remove entry");
-    const icon = document.createElement("span");
-    icon.className = "fa-solid fa-xmark";
-    icon.setAttribute("aria-hidden", "true");
-    del.appendChild(icon);
-
     if (readOnly) {
         row.classList.add("list-widget-row--readonly");
         const cbId = `list-widget-cb-${(_listWidgetIdCounter += 1)}`;
@@ -35,12 +26,20 @@ const buildListWidgetRow = (item, onChangeFn, { placeholder = "", readOnly = fal
         valueDisplay.textContent = labelFn ? labelFn(value) : value;
         valueDisplay.dataset.value = value;
         valueDisplay.title = valueDisplay.textContent;
-        del.classList.add("hidden");
-        row.append(cb, valueDisplay, del);
+        row.append(cb, valueDisplay);
         row.addEventListener("click", (e) => {
             if (e.target !== cb && !valueDisplay.contains(e.target)) cb.click();
         });
     } else {
+        const del = document.createElement("button");
+        del.type = "button";
+        del.className = "url-rule-delete list-widget-delete";
+        del.setAttribute("aria-label", chrome.i18n.getMessage("listWidgetRemoveEntry"));
+        const icon = document.createElement("span");
+        icon.className = "fa-solid fa-xmark";
+        icon.setAttribute("aria-hidden", "true");
+        del.appendChild(icon);
+
         const input = document.createElement("input");
         input.type = "text";
         input.className = "url-rule-pattern form-control form-control-sm list-widget-value";
@@ -74,7 +73,7 @@ const collectListWidgetJson = (containerEl) => {
     const items = [];
     containerEl.querySelectorAll(".list-widget-row").forEach(row => {
         const el = row.querySelector(".list-widget-value");
-        const value = (el.value ?? el.dataset.value ?? el.textContent ?? "").trim();
+        const value = (el.value ?? el.dataset.value ?? "").trim();
         if (!value) return;
         const enabled = row.querySelector(".list-widget-enabled").checked;
         const entry = { value };
