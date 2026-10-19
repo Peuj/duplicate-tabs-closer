@@ -764,6 +764,10 @@ input[type="number"].form-control-xs {
     margin-top: 4px;
 }
 
+.checkboxes-regex-label > label {
+    font-weight: 600;
+}
+
 /* ── URL rules widget ── */
 
 .url-rules-widget {
@@ -773,6 +777,10 @@ input[type="number"].form-control-xs {
 
 .url-rule-row {
     margin-bottom: 3px;
+}
+
+.url-rule-row--readonly {
+    margin-bottom: 0;
 }
 
 .url-rule-main {
@@ -838,14 +846,12 @@ input[type="number"].form-control-xs {
     cursor: pointer;
 }
 
-.url-rule-row--disabled .url-rule-pattern,
-.url-rule-row--disabled .url-rule-type,
-.url-rule-row--disabled .url-rule-depth,
-.url-rule-row--disabled .url-rule-params {
-    opacity: 0.4;
-}
-
 .url-rule-row--readonly .url-rule-pattern {
+    border: none;
+    background: transparent;
+    box-shadow: none;
+    padding: 0 0 0 2px;
+    height: auto;
     cursor: default;
     overflow: hidden;
     white-space: nowrap;

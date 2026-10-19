@@ -264,3 +264,7 @@ body.two-columns.options-hidden #optionsCard {
     box-shadow: none;
     padding: 0;
 }
+
+#urlRulesWidget {
+    margin-right: 0;
+}
