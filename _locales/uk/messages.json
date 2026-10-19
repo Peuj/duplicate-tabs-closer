@@ -178,8 +178,8 @@
     }
   },
   "whiteList": {
-    "message": "Дозволені URL",
-    "description": "Whitelisted URLs"
+    "message": "Правила дозволених URL",
+    "description": "Whitelisted URL rules"
   },
   "pauseMonitoring": {
     "message": "Призупинити моніторинг",

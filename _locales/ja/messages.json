@@ -178,8 +178,8 @@
     }
   },
   "whiteList": {
-    "message": "ホワイトリスト",
-    "description": "Whitelisted URLs"
+    "message": "ホワイトリストのルール",
+    "description": "Whitelisted URL rules"
   },
   "pauseMonitoring": {
     "message": "監視を一時停止する",

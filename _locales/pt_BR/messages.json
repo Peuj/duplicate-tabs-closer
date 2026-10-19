@@ -178,8 +178,8 @@
     }
   },
   "whiteList": {
-    "message": "URLs na lista de permissões",
-    "description": "Whitelisted URLs"
+    "message": "Regras de URL na lista de permissões",
+    "description": "Whitelisted URL rules"
   },
   "pauseMonitoring": {
     "message": "Pausar monitoramento",

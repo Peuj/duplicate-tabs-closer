@@ -178,8 +178,8 @@
     }
   },
   "whiteList": {
-    "message": "Whitelisted URLs",
-    "description": "Whitelisted URLs"
+    "message": "Whitelisted URL rules",
+    "description": "Whitelisted URL rules"
   },
   "pauseMonitoring": {
     "message": "Pause monitoring",

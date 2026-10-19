@@ -178,8 +178,8 @@
     }
   },
   "whiteList": {
-    "message": "Разрешённые URL",
-    "description": "Whitelisted URLs"
+    "message": "Правила разрешённых URL",
+    "description": "Whitelisted URL rules"
   },
   "pauseMonitoring": {
     "message": "Приостановить мониторинг",

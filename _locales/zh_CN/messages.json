@@ -178,8 +178,8 @@
     }
   },
   "whiteList": {
-    "message": "白名单 URL",
-    "description": "Whitelisted URLs"
+    "message": "白名单 URL 规则",
+    "description": "Whitelisted URL rules"
   },
   "pauseMonitoring": {
     "message": "暂停监控",

@@ -274,6 +274,10 @@ body.two-columns.options-hidden #optionsCard {
     margin-top: 0;
 }
 
+.checkboxes-threshold + .checkboxes-regex-label {
+    margin-top: 4px;
+}
+
 .checkboxes-regex-label .url-rules-box {
     border: none;
     background: none;
