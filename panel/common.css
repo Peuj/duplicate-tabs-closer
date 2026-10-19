@@ -772,7 +772,14 @@ input[type="number"].form-control-xs {
 
 .url-rules-widget {
     margin-top: 4px;
-    margin-right: 22px;
+}
+
+.url-rules-box {
+    margin-top: 4px;
+    padding: 0 0 0 4px;
+    border: 1px solid var(--dtc-border-color);
+    border-radius: 3px;
+    background-color: var(--dtc-textarea-alt-bg);
 }
 
 .url-rule-row {
