@@ -732,6 +732,11 @@ input[type="number"].form-control-xs {
     padding-bottom: 4px;
 }
 
+select.form-control-xs {
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+
 #titleSimilarityThreshold {
     width: 52px;
 }
