@@ -25,6 +25,15 @@ const ensureInitialized = () => {
 	return initPromise;
 };
 
+// Session storage survives service worker restarts but is cleared when the browser quits,
+// so the startup burst runs on browser startup only, not every time an idle worker wakes up.
+const isFirstStartInBrowserSession = async () => {
+	const { workerStarted } = await chrome.storage.session.get("workerStarted");
+	if (workerStarted) return false;
+	await chrome.storage.session.set({ workerStarted: true });
+	return true;
+};
+
 const initialize = async () => {
 	await initializeOptions();
 	await tabsInfo.initialize();
@@ -38,6 +47,7 @@ const initialize = async () => {
 	setBadgeIcon();
 	if (monitoringPaused) setPausedBadge();
 	if (!monitoringPaused) await refreshGlobalDuplicateTabsInfo();
+	if (!await isFirstStartInBrowserSession()) return;
 	startupBurst.active = true;
 	startupBurst.startedAt = Date.now();
 	startupBurst.timerId = setTimeout(() => {
